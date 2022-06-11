@@ -347,7 +347,7 @@ CONFIG.BLENDLAYERS = {
   "relief": true,
   "relief_free": true,
   "swale": true,
-  "gsjGeomap_seamless200k_v2": true
+  "gsjGeomap_seamless200k_v2": true,
   "maff-pond20200925-1": true,
   "daikiboumoritsuzouseichi": true,
   "01_flood_l2_shinsuishin_data": true,
