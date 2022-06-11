@@ -314,12 +314,14 @@ CONFIG.UI.MENU = [
     url : "https://maps.gsi.go.jp/help/"
   },
 
+  //★変更
   {
-    id : "gsivector",
     title : "",
     icon : "",
     class : "gsi-header-tool-vectorlogo-icon",
-    description : "地理院地図Vector（仮称）へジャンプ"
+    description : "全国Ｑ地図について(紹介ページへリンク)", // ポップアップされます
+    url : "https://info.qchizu.xyz",
+    target : "_blank"
   }
 
 ];

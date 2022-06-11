@@ -221,14 +221,14 @@ CONFIG.UI.MENU = [
     ]
   },
   
-  {
+  {  //★変更
     id: 'help',
-    title : "ヘルプ",
-    text : "?",
+    title : "Ｑ地図",
+    text : "Ｑ",
     icon : "",
     class : "gsi-header-tool-help-icon",
     description : "",
     target : "_blank",
-    url : "https://maps.gsi.go.jp/help/"
+    url : "https://info.qchizu.xyz"
   }
 ];

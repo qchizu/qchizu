@@ -1,0 +1,47 @@
+{
+  "layers": [
+     {
+      "type": "LayerGroup",
+      "title": "1948年 市町村名",
+      "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+      "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(建設省地理調査所「郡市町村名便覧」(1948年12月)を基に<a target=\"_blank\"href=\"https://twitter.com/hanishina\">はにしな</a>氏が作成したデータを加工)",
+      "toggleall": false,
+      "id": "gunshichosonmeibinran_00",
+      "html": "詳細は、<a target='_blank' href='https://mapdata.qchizu.xyz/vector/gunshichosonmeibinran/info.pdf'>info.pdf</a>、<a target='_blank' href='https://mapdata.qchizu.xyz/vector/gunshichosonmeibinran/info2.pdf'>info2.pdf</a>を御覧ください。",
+      "entries": [
+        {
+          "type": "Layer",
+          "id": "gunshichosonmeibinran_mesho_yomi",
+          "title": "市町村名（名称・読み）",
+          "iconUrl": "",
+          "styleurl": "",
+          "url": "https://mapdata.qchizu.xyz/vector/gunshichosonmeibinran/{z}/{x}/{y}.geojson",
+          "subdomains": "",
+          "attribution": "",
+          "errorTileUrl": "",
+          "cocotile": false,
+          "minZoom": 10,
+          "maxZoom": 24,
+          "maxNativeZoom": 10,
+          "legendUrl": "",
+          "html": ""
+        },
+        {
+          "type": "Layer",
+          "id": "gunshichosonmeibinran_rastar",
+          "title": "市町村名（ラスター）",
+          "iconUrl": "",
+          "url": "https://mapdata.qchizu.xyz/vector/gunshichosonmeibinran/{z}/{x}/{y}.png",
+          "subdomains": "",
+          "attribution": "",
+          "errorTileUrl": "",
+          "cocotile": false,
+          "minZoom": 2,
+          "maxZoom": 9,
+          "legendUrl": "",
+          "html": ""
+        }
+      ]
+    }
+  ]
+}

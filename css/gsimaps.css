@@ -5743,20 +5743,22 @@ form {
 	right: 0;
 }
 
-#title_logo_upper {
-	font-family: 'ヒラギノ丸ゴ Pro W4', 'ヒラギノ丸ゴ Pro', 'Hiragino Maru Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'HG丸ｺﾞｼｯｸM-PRO', 'HGMaruGothicMPRO';
+#title_logo_upper { /*★★変更部分（フォント＆色）★★*/
+	font-family: 'ヒラギノ丸ゴ Pro W4', 'ヒラギノ丸ゴ Pro', 'Hiragino Maru Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'BIZ UDゴシック','HG丸ｺﾞｼｯｸM-PRO', 'HGMaruGothicMPRO';
 	margin-top: 3px;
 	text-align: center;
 	font-size: 18px;
-	color: #fff;
+	color: #000000;
+	background-color: #e6b422;
 	line-height: 18px;
 }
 
-#title_logo_lower {
-	font-family: 'ヒラギノ丸ゴ Pro W4', 'ヒラギノ丸ゴ Pro', 'Hiragino Maru Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'HG丸ｺﾞｼｯｸM-PRO', 'HGMaruGothicMPRO';
+#title_logo_lower { /*★★変更部分（フォント＆色）★★*/
+	font-family: 'ヒラギノ丸ゴ Pro W4', 'ヒラギノ丸ゴ Pro', 'Hiragino Maru Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'BIZ UDゴシック', 'HG丸ｺﾞｼｯｸM-PRO', 'HGMaruGothicMPRO';
 	text-align: center;
 	font-size: 11px;
-	color: #fff;
+	color: #000000;
+	background-color: #e6b422;
 	line-height: 11px;
 }
 
@@ -5964,8 +5966,11 @@ form {
 	/* Chrome, Safari */
 }
 
-.leaflet-control-flatpanel {
-	padding-bottom: 5px;
+.leaflet-control-flatpanel { /*★★変更部分★★*/
+	padding-bottom: 0px;
+	padding-left: 60px;
+	line-height: 15px;
+	text-shadow: -1px -1px 3px #fff, 1px -1px 3px #fff, -1px 1px 3px #fff, 1px 1px 3px #fff;
 }
 
 .leaflet-control-crpanel {

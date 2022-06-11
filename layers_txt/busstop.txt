@@ -1,0 +1,46 @@
+{
+  "layers": [
+    {
+      "type": "LayerGroup",
+      "title": "2010年度 全国バス停留所マップ ",
+      "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+      "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-P11.html\">「国土数値情報（バス停留所データ）」(国土交通省)</a>を加工して作成)",
+      "toggleall": false,
+      "id": "ksj-busstop2010-01",
+      "html": "詳細は<a target='_blank' href='https://info.qchizu.xyz/tile/bus-stop/'>全国バス停留所マップについて（概要、利用上の注意）</a>を御覧ください。",
+      "entries": [
+        {
+          "type": "Layer",
+          "id": "ksj-busstop2010-text-01",
+          "title": "全国バス停留所マップ（ベクトル）",
+          "iconUrl": "",
+          "styleurl": "https://mapdata.qchizu.xyz/vector/ksj-busstop2010/style-01.js",
+          "url": "https://mapdata.qchizu.xyz/vector/ksj-busstop2010/{z}/{x}/{y}.geojson",
+          "subdomains": "",
+          "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-P11.html\">「国土数値情報（バス停留所データ）」(国土交通省)</a>を加工して作成)",
+          "errorTileUrl": "",
+          "cocotile": false,
+          "minZoom": 14,
+          "maxZoom": 18,
+          "maxNativeZoom": 14,
+          "legendUrl": "",
+          "html": ""
+        },
+        {
+          "type": "Layer",
+          "id": "ksj-busstop2010-rastar",
+          "title": "全国バス停留所マップ（ラスター）",
+          "iconUrl": "",
+          "url": "https://mapdata.qchizu.xyz/vector/ksj-busstop2010/{z}/{x}/{y}.png",
+          "subdomains": "",
+          "attribution": "",
+          "errorTileUrl": "",
+          "cocotile": false,
+          "maxZoom": 13,
+          "legendUrl": "",
+          "html": ""
+        }
+      ]
+    }
+  ]
+}

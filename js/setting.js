@@ -16,8 +16,8 @@ CONFIG.URL = "./";
 CONFIG.MOBILE_FILENAME = "index_m.html";
 CONFIG.MOBILEURL = "./" + CONFIG.MOBILE_FILENAME;
 
-// maxZoom設定
-CONFIG.MAXZOOM = 18;
+// maxZoom設定 ★変更
+CONFIG.MAXZOOM = 19;
 
 CONFIG.ISPREVIEWSITE = false;
 
@@ -341,13 +341,29 @@ CONFIG.CONFIRM_LAYERS = {
 };
 
 
-// 初期状態で合成をOnにするレイヤーID
+// 初期状態で合成をOnにするレイヤーID ★変更点
 // 火山地形分類データは排他選択(50431行目付近)と同じ箇所で処理
 CONFIG.BLENDLAYERS = {
   "relief": true,
   "relief_free": true,
   "swale": true,
   "gsjGeomap_seamless200k_v2": true
+  "maff-pond20200925-1": true,
+  "daikiboumoritsuzouseichi": true,
+  "01_flood_l2_shinsuishin_data": true,
+  "01_flood_l1_shinsuishin_oldlegend": true,
+  "07_tameike": true,
+  "04_tsunami_newlegend": true,
+  "05_kyukeishakeikaikuiki": true,
+  "05_dosekiryukeikaikuiki": true,
+  "05_jisuberikeikaikuiki": true,
+  "biodic_vg_vg": true,
+  "biodic_vg_vg3": true,
+  "biodic_vg_vg4": true,
+  "biodic_vg_vg5": true,
+  "biodic_vg_vgn": true,
+  "biodic_vg67_vg67": true,
+  "biodic_vg67_vg67c": true
 };
 
 

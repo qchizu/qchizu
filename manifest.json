@@ -1,7 +1,7 @@
 {
-  "name":"地理院地図",
-  "short_name":"地理院地図",
-  "description" : "地理院地図",
+  "name":"全国Ｑ地図",
+  "short_name":"Ｑ地図",
+  "description" : "全国Ｑ地図",
   "scope": "./index_m.html",
   "start_url": "./index_m.html",
   "display": "standalone",
