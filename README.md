@@ -1,21 +1,27 @@
 # qchizu (全国Q地図)
 
 ## 概要
--本レポジトリは、gsimaps (地理院地図)をもとに、独自の機能・レイヤーを追加した地図サイト「全国Q地図」のソースコードです。
+本レポジトリは、gsimaps (地理院地図)をもとに、独自の機能・レイヤーを追加した地図サイト「全国Q地図」のソースコードです。
 
 ## URL
--全国Q地図（紹介ページ） https://info.qchizu.xyz
--全国Q地図（地図ページ） https://maps.qchizu.xyz
--全国Q地図（github版） https://qchizu.github.io/qchizu
--※github版では、外部タイル（地理院タイル及びQ地図タイル以外のタイル）の閲覧はできません。
+- 全国Q地図（紹介ページ） https://info.qchizu.xyz
+- 全国Q地図（地図ページ） https://maps.qchizu.xyz
+- 全国Q地図（github版） https://qchizu.github.io/qchizu
+
+※github版では、外部タイル（地理院タイル及びQ地図タイル以外のタイル）の閲覧はできません。
 
 ## 利用上の留意点
--下記のgsimaps (地理院地図)利用上の留意点もあわせて御覧ください。
--全国Q地図独自に作成した部分については、政府オープンデータ戦略に基づく政府標準利用規約（第2.0版）に準拠した「<a href='https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html'>国土地理院コンテンツ利用規約</a>」を準用することとし、Leaflet と同様2項BSDライセンスとします。
+- 下記のgsimaps (地理院地図)利用上の留意点もあわせて御覧ください。
+- 全国Q地図独自に作成した部分については、政府オープンデータ戦略に基づく政府標準利用規約（第2.0版）に準拠した「<a href='https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html'>国土地理院コンテンツ利用規約</a>」を準用することとし、Leaflet と同様2項BSDライセンスとします。
 - 本レポジトリにプルリクエストをいただく場合、当該変更を当レポジトリに取り込んだ時点で、上記の国土地理院クレジットを準用した2項BSDライセンスの適用とさせていただくことを予め御承知おきください。
 
 ## 謝辞
--全国Q地図独自機能（リンク機能）を追加するに当たり、ふじぽよ <a href='https://twitter.com/mfuji810'>@mfuji810</a>様の御助言をいただきました。
+- 全国Q地図独自機能（リンク機能）を追加するに当たり、ふじぽよ <a href='https://twitter.com/mfuji810'>@mfuji810</a>様の御助言をいただきました。
+
+
+
+
+
 
 # gsimaps (地理院地図)
 <a href='https://github.com/gsi-cyberjapan/gsimaps/blob/gh-pages/README.en.md'>Tentative English translation</a> for this README is also available since 2015-03-12.
