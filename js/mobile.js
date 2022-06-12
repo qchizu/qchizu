@@ -221,7 +221,7 @@ CONFIG.UI.MENU = [
     ]
   },
   
-  {  //★変更
+  {  /*★変更*/
     id: 'help',
     title : "Ｑ地図",
     text : "Ｑ",
