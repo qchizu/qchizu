@@ -1,3 +1,16 @@
+# qchizu (全国Q地図)
+
+## 概要
+このレポジトリは、gsimaps (地理院地図)のforkにより作成したものです。
+
+## URL
+全国Q地図（紹介ページ） https://info.qchizu.xyz
+全国Q地図（地図ページ） https://maps.qchizu.xyz
+全国Q地図（github版） https://qchizu.github.io/qchizu
+※github版では、外部タイル（今昔マップなど）は閲覧できません。
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 # gsimaps (地理院地図)
 <a href='https://github.com/gsi-cyberjapan/gsimaps/blob/gh-pages/README.en.md'>Tentative English translation</a> for this README is also available since 2015-03-12.
 
