@@ -6,6 +6,8 @@
       "title": "標準地図",
       "url": "https://maps.gsi.go.jp/xyz/std/{z}/{x}/{y}.png?_=20210915a",
       "cocotile": true,
+      "maxZoom": 19,
+      "maxNativeZoom": 18,
       "html" : "",
       "legendUrl": "https://maps.gsi.go.jp/development/ichiran.html#std",
       "errorTileUrl": "./image/map/no-data-std.png"
@@ -16,6 +18,8 @@
       "title": "淡色地図",
       "url": "https://maps.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png?_=20210915a",
       "cocotile": true,
+      "maxZoom": 19,
+      "maxNativeZoom": 18,
       "html" : "",
       "legendUrl": "https://maps.gsi.go.jp/development/ichiran.html#pale",
       "errorTileUrl": "./image/map/no-data-pale.png"
@@ -48,6 +52,8 @@
       "title": "写真",
       "url": "https://maps.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
       "cocotile": true,
+      "maxZoom": 19,
+      "maxNativeZoom": 18,
       "html" : "",
       "legendUrl": "",
       "errorTileUrl": "./image/map/no-data-ort.png"
