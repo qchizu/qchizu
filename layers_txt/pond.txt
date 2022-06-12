@@ -3,7 +3,7 @@
      {
       "type": "LayerGroup",
       "title": "2020年9月 全国農業用ため池マップ",
-      "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+      "iconUrl": "../favicon.ico",
       "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://www.maff.go.jp/j/nousin/bousai/bousai_saigai/b_tameike/\">ため池管理保全法に基づく農業用ため池データベース(全国都道府県・農林水産省)</a>)",
       "toggleall": false,
       "id": "maff-pond20200925-1",

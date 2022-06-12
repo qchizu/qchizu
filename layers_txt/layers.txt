@@ -3,15 +3,6 @@
 		"url":"./layers99.txt"
 	},
 	{
-		"url":"./layers98.txt"
-	},
-	{
-		"url":"./layers97.txt"
-	},
-	{
-		"url":"./layers96.txt"
-	},
-	{
 		"url":"./layers1.txt"
 	},
 	{
