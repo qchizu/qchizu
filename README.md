@@ -15,13 +15,20 @@
 - 全国Q地図独自に作成した部分については、Leaflet と同様2項BSDライセンスとします。
 - 本レポジトリにプルリクエストをいただく場合、当該変更を当レポジトリに取り込んだ時点で、2項BSDライセンスの適用とさせていただくことを予め御承知おきください。
 
+## 利用上の留意点
+- 下記のgsimaps (地理院地図)利用上の留意点及び[LICENSE_qchizu](LICENSE_qchizu)もあわせて御覧ください。
+- 全国Q地図独自に作成した部分については、Leaflet と同様2項BSDライセンスとします。
+- 本レポジトリにプルリクエストをいただく場合、当該変更を当レポジトリに取り込んだ時点で、2項BSDライセンスの適用とさせていただくことを予め御承知おきください。
+
+## 機能の追加・改良
+- 全国Q地図では、昨日の追加・改良に御協力いただける方を募集しています。詳しくは、<a href='https://info.qchizu.xyz/qchizu/improve/'>こちらのページ</a>を御覧ください。
+
 ## 謝辞
 - 全国Q地図独自機能（リンク機能）を追加するに当たり、ふじぽよ <a href='https://twitter.com/mfuji810'>@mfuji810</a>様の御助言をいただきました。
 
-
-
-
-
+<br>
+<br>
+<br>
 
 # gsimaps (地理院地図)
 <a href='https://github.com/gsi-cyberjapan/gsimaps/blob/gh-pages/README.en.md'>Tentative English translation</a> for this README is also available since 2015-03-12.
