@@ -1183,6 +1183,21 @@
           "entries": [
             {
               "type": "Layer",
+              "id": "yoshinogawa_up_00",
+              "title": "2021年 吉野川上流域地形図(5千分1)",
+              "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+              "url": "https://mapdata.qchizu.xyz/yoshinogawa_up_00/{z}/{x}/{y}.png",
+              "subdomains": "",
+              "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(測量法に基づく国土交通省四国地方整備局四国山地砂防事務所長承認(複製)(令和3年10月1日国四整砂調第40号))",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "maxZoom": 19,
+              "maxNativeZoom": 18,
+              "legendUrl": "https://mapdata.qchizu.xyz/yoshinogawa_up_00/legend.pdf",
+              "html": ""
+            },
+            {
+              "type": "Layer",
               "id": "yoshinogawa_middle_00",
               "title": "2021年 吉野川中流域地形図(5千分1)",
               "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
@@ -1223,7 +1238,7 @@
             {
               "type": "Layer",
               "id": "40c_fukuoka_01",
-              "title": "2015-2022年 福岡市都市計画基本図",
+              "title": "2015-2022年 福岡市(2.5千分1)",
               "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
               "url": "https://mapdata.qchizu.xyz/40c/fukuoka_01/{z}/{x}/{y}.png",
               "subdomains": "",
@@ -1237,7 +1252,7 @@
             {
               "type": "Layer",
               "id": "40c_fukuoka_01_index",
-              "title": "└福岡市都市計画基本図測量年",
+              "title": "└福岡市(2.5千分1)測量年",
               "iconUrl": "",
               "url": "https://mapdata.qchizu.xyz/40c/fukuoka_01_index/{z}/{x}/{y}.png",
               "subdomains": "",
@@ -1252,7 +1267,7 @@
             {
               "type": "Layer",
               "id": "40c_fukuoka_00",
-              "title": "1977-1993年 福岡市都市計画基本図",
+              "title": "1977-1993年 福岡市",
               "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
               "url": "https://mapdata.qchizu.xyz/40c/fukuoka_00/{z}/{x}/{y}.png",
               "subdomains": "",
@@ -1266,7 +1281,7 @@
             {
               "type": "Layer",
               "id": "40c_fukuoka_00_index",
-              "title": "└福岡市都市計画基本図測量年",
+              "title": "└福岡市(2.5千分1)測量年",
               "iconUrl": "",
               "url": "https://mapdata.qchizu.xyz/40c/fukuoka_00_index/{z}/{x}/{y}.png",
               "subdomains": "",
