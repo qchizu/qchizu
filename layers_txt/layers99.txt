@@ -1267,7 +1267,7 @@
             {
               "type": "Layer",
               "id": "40c_fukuoka_00",
-              "title": "1973-1993年 福岡市",
+              "title": "1973-1993年 福岡市(2.5千分1)",
               "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
               "url": "https://mapdata.qchizu.xyz/40c/fukuoka_00/{z}/{x}/{y}.png",
               "subdomains": "",
