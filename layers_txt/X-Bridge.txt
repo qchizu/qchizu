@@ -1,0 +1,106 @@
+{
+  "layers": [
+    {
+          "type": "LayerGroup",
+          "title": "【報告結果閲覧用】",
+          "iconUrl": "https://maps.qchizu.xyz/image/layers_txt/gaibu.png",
+          "toggleall": false,
+          "id": "test_bridge_kekka",
+          "html": "水害時流失リスクの高い橋梁の可視化を試みるワークショップ「X-Bridge（クロスブリッジ」で作成したデータを閲覧できます。また、ご自身でも手順に沿って簡単にリスクの高い橋を報告することができます。説明資料は<a target=\"_blank\"href=\"https://drive.google.com/file/d/1Vq_xyIYvyX_2BgLJEuDhwGDy1xTUGM0U/view?usp=sharing\">こちら</a>。",
+          "attribution": "X-Bridge、<a target='_blank' href='https://info.qchizu.xyz/tile/mlit_road/'>この地図について</a>　<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(国土交通省・全国地方公共団体・各高速道路株式会社・各地方道路公社)",
+          "entries": [
+            {
+              "type": "Layer",
+              "id": "mlit_road2019_bridge_rastar",
+              "title": "全国橋梁マップ（ラスター）",
+              "iconUrl": "",
+              "url": "https://mapdata.qchizu.xyz/vector/mlit_road2019/bridge2/{z}/{x}/{y}.png",
+              "subdomains": "",
+              "attribution": "",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "minZoom": 2,
+              "maxZoom": 13,
+              "legendUrl": "",
+              "html": ""
+            },
+            {
+              "type": "Layer",
+              "id": "test_bridge_hokoku_vector",
+              "title": "全国橋梁マップ（名称）",
+              "iconUrl": "",
+              "styleurl": "https://qchizu.github.io/X-Bridge/style_test_bridge_hokoku.js",
+              "url": "https://mapdata.qchizu.xyz/vector/mlit_road2019/bridge2/{z}/{x}/{y}.geojson",
+              "subdomains": "",
+              "attribution": "",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "minZoom": 14,
+              "maxZoom": 18,
+              "maxNativeZoom": 14,
+              "legendUrl": "",
+              "html": ""
+            },
+            {
+              "type": "Layer",
+              "id": "mlit_road2019_bridge_mesho_yomi",
+              "title": "結果",
+              "iconUrl": "",
+              "styleurl": "https://mapdata.qchizu.xyz/vector/X-Bridge/style_test_bridge_kekka.js",
+              "url": "https://www.rulewatcher.com/rw/xbridge/{z}/{x}/{y}.geojson",
+              "subdomains": "",
+              "attribution": "",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "minZoom": 2,
+              "maxZoom": 19,
+              "maxNativeZoom": 2,
+              "legendUrl": "",
+              "html": ""
+            }
+          ]
+        },
+        {
+          "type": "LayerGroup",
+          "title": "2018年度 全国橋梁マップ【延長5m以上のみ表示】",
+          "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+          "toggleall": false,
+          "id": "test_bridge_hokoku",
+          "attribution": "X-Bridge、<a target='_blank' href='https://info.qchizu.xyz/tile/mlit_road/'>この地図について</a>　<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(国土交通省・全国地方公共団体・各高速道路株式会社・各地方道路公社)",
+          "entries": [
+            {
+              "type": "Layer",
+              "id": "test_bridge_hokoku_vector",
+              "title": "全国橋梁マップ（名称）",
+              "iconUrl": "",
+              "styleurl": "https://mapdata.qchizu.xyz/vector/X-Bridge/style_test_bridge_hokoku.js",
+              "url": "https://mapdata.qchizu.xyz/vector/mlit_road2019/bridge2/{z}/{x}/{y}.geojson",
+              "subdomains": "",
+              "attribution": "",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "minZoom": 14,
+              "maxZoom": 18,
+              "maxNativeZoom": 14,
+              "legendUrl": "",
+              "html": ""
+            },
+            {
+              "type": "Layer",
+              "id": "mlit_road2019_bridge_rastar",
+              "title": "全国橋梁マップ（ラスター）",
+              "iconUrl": "",
+              "url": "https://mapdata.qchizu.xyz/vector/mlit_road2019/bridge2/{z}/{x}/{y}.png",
+              "subdomains": "",
+              "attribution": "",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "minZoom": 2,
+              "maxZoom": 13,
+              "legendUrl": "",
+              "html": ""
+            }
+          ]
+        }
+      ]
+    }
