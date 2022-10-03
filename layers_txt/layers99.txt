@@ -207,6 +207,22 @@
               "maxNativeZoom": 2,
               "legendUrl": "",
               "html": ""
+            },
+            {
+              "type": "Layer",
+              "id": "shizuoka_minyurin_koaza",
+              "title": "2017年 静岡県民有林小字マップ",
+              "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+              "url": "https://mapdata.qchizu.xyz/vector/shizuoka_minyurin_koaza/{z}/{x}/{y}.geojson",
+              "subdomains": "",
+              "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://opendata.pref.shizuoka.jp/dataset/fuji-91.html\">静岡県資料</a>を加工)",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "minZoom": 15,
+              "maxZoom": 19,
+              "maxNativeZoom": 14,
+              "legendUrl": "",
+              "html": "この地図は、以下のウェブサイト掲載のデータを地図上にプロットしたものです。<br>\n名称：<a target=\"_blank\"href=\"https://opendata.pref.shizuoka.jp/dataset/fuji-91.html\">ふじのくにオープンデータカタログ（静岡県）</a><br>\n説明：「森林計画図に記載されている「小字」のポイントデータです。平成29年3月末時点のデータです。本データは、森林計画図（5,000分の１）に、山林の位置の目安として掲載されているものです。」"
             }
           ]
         },
