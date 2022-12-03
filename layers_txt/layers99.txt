@@ -713,6 +713,7 @@
               "errorTileUrl": "",
               "cocotile": false,
               "maxZoom": 19,
+              "maxNativeZoom": 18,
               "legendUrl": "https://mapdata.qchizu.xyz/13p/tokyo_01/legend.pdf",
               "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/13p/tokyo_01/info.pdf\">この地図の詳細</a>"
             },
@@ -742,6 +743,7 @@
               "errorTileUrl": "",
               "cocotile": false,
               "maxZoom": 19,
+              "maxNativeZoom": 18,
               "legendUrl": "https://mapdata.qchizu.xyz/13p/tokyo_01/legend.pdf",
               "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/13p/tokyo_01/info.pdf\">この地図の詳細</a>"
             },
@@ -771,6 +773,7 @@
               "errorTileUrl": "",
               "cocotile": false,
               "maxZoom": 19,
+              "maxNativeZoom": 18,
               "legendUrl": "https://mapdata.qchizu.xyz/13p/tokyo_01/legend.pdf",
               "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/13p/tokyo_01/info.pdf\">この地図の詳細</a>"
             },
@@ -800,6 +803,7 @@
               "errorTileUrl": "",
               "cocotile": false,
               "maxZoom": 19,
+              "maxNativeZoom": 18,
               "legendUrl": "https://mapdata.qchizu.xyz/13p/tokyo_01/legend.pdf",
               "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/13p/tokyo_01/info.pdf\">この地図の詳細</a>"
             },
@@ -829,6 +833,7 @@
               "errorTileUrl": "",
               "cocotile": false,
               "maxZoom": 19,
+              "maxNativeZoom": 18,
               "legendUrl": "https://mapdata.qchizu.xyz/13p/tokyo_01/legend.pdf",
               "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/13p/tokyo_01/info.pdf\">この地図の詳細</a>"
             },
@@ -858,6 +863,7 @@
               "errorTileUrl": "",
               "cocotile": false,
               "maxZoom": 19,
+              "maxNativeZoom": 18,
               "legendUrl": "https://mapdata.qchizu.xyz/13p/tokyo_01/legend.pdf",
               "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/13p/tokyo_01/info.pdf\">この地図の詳細</a>"
             },
@@ -887,6 +893,7 @@
               "errorTileUrl": "",
               "cocotile": false,
               "maxZoom": 19,
+              "maxNativeZoom": 18,
               "legendUrl": "https://mapdata.qchizu.xyz/13p/tokyo_01/legend.pdf",
               "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/13p/tokyo_01/info.pdf\">この地図の詳細</a>"
             },
@@ -916,6 +923,7 @@
               "errorTileUrl": "",
               "cocotile": false,
               "maxZoom": 19,
+              "maxNativeZoom": 18,
               "legendUrl": "https://mapdata.qchizu.xyz/13p/tokyo_01/legend.pdf",
               "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/13p/tokyo_01/info.pdf\">この地図の詳細</a>"
             },
