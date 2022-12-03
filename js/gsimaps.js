@@ -15212,7 +15212,7 @@ GSI.MapToImage.TileLayer = L.Evented.extend({
           }
           ctx.putImageData(imageData, 0, 0, 0, 0, imageData.width, imageData.height);
 
-          texture.drawImage(grayScaleCanvas, 0, 0, 256, 256,
+          texture.drawImage(grayScaleCanvas, 0, 0, grayScaleCanvas.width, grayScaleCanvas.height,
             tilePoint.pos.x, tilePoint.pos.y,
             tilePoint.size, tilePoint.size);
 
@@ -23211,6 +23211,21 @@ GSI.LakeDataLoader = GSI.ElevationLoader.extend({
     this._demUrlList = [];
   },
 
+  _makeUrlList: function (pos) {
+    var list = [];
+    for (var i = 0; i < this._demUrlList.length; i++) {
+      var demUrl = this._demUrlList[i];
+      list.push({
+        "title": demUrl.title,
+        "zoom": 18,
+        "url": demUrl.url,
+        "fixed": demUrl.fixed
+      });
+    }
+
+    return list;
+  },
+
   _parseValidUrl: function(valueError){
     if (!this._current.urlList || this._current.urlList.length <= 0) return null;   //not found
     
@@ -26778,7 +26793,15 @@ GSI.MapManager = L.Evented.extend({
     }
 
     return  this._comparePhotoControl;
-  }
+  },
+  
+  enableLakeData: function(enabled) {
+    this._enableLakeData = enabled;
+  },
+
+  lakeDataEnabled: function() {
+    return this._enableLakeData;
+  }  
 });
 
 /************************************************************************
@@ -27863,7 +27886,7 @@ GSI.Footer = L.Evented.extend({
       this._lakeStdHeightLoader.cancel();
     }
 
-    if(GSI.Footer.DISP_LAKE_DATA){
+    if(this._mapManager.lakeDataEnabled()){
       this._lakedepthLoader.load(loadCondition);
       this._lakeStdHeightLoader.load(loadCondition);
     }
@@ -28013,7 +28036,7 @@ GSI.Footer = L.Evented.extend({
   },
 
   updateLakeDepthVisible: function(enabled){
-    GSI.Footer.DISP_LAKE_DATA = enabled;
+    this._mapManager.enableLakeData(enabled);
     this._lakeDepthEnabled = enabled;
     this._lakeDepthContainer.css("display", this._dispMode == GSI.Footer.DISP_LARGE && enabled ? "block":"none");
   },
@@ -28056,8 +28079,6 @@ GSI.Footer.DISP_CLOSE = 0;
 
 GSI.Footer.DISP_ADDR_KANJI=0;
 GSI.Footer.DISP_ADDR_YOMI=1;
-
-GSI.Footer.DISP_LAKE_DATA = false;
 
 /************************************************************************
  L.Class
@@ -43088,6 +43109,8 @@ GSI.SakuzuDialog = GSI.Dialog.extend({
     
     this._listUL.empty();
 
+    var liHeight = 0;
+
     this._sakuzuList.eachItems(L.bind(function (item) {
       item._viewData = {};
 
@@ -43315,6 +43338,23 @@ GSI.SakuzuDialog = GSI.Dialog.extend({
     }, this));
 
     this._refreshToolButton();
+
+    for(var x = 0; x < this._listUL.length; x++){
+      liHeight += $(this._listUL[x]).outerHeight();
+    }
+
+    if (liHeight > 0 && this._userResized == false){
+      //ダイアログが表示されていて、変更された時
+      var ws = GSI.Utils.getScreenSize();
+      var titleHeight = this._title? this._title.outerHeight(): 30;
+      var tBarHeight = this._topPanelToolBar? this._topPanelToolBar.outerHeight() : 40;
+      var limitHeight = ws.h - 50 - titleHeight - tBarHeight - this.container.offset().top;
+
+      if (liHeight > limitHeight){
+        liHeight = limitHeight;
+      }
+      $(this.container).find(".gsi-sakuzudialog-list-container").css({"height": liHeight});
+    }
   },
 
   _onOpacityBtnClick:function(item,btn, tr) {
@@ -43697,6 +43737,26 @@ GSI.SakuzuDialog = GSI.Dialog.extend({
 
     GSI.Dialog.prototype.show.call(this);
     this._refreshFileButton();
+
+    var liHeight = 0;
+    for(var x = 0; x < this._listUL.length; x++){
+      liHeight += $(this._listUL[x]).outerHeight();
+    }
+
+    if (liHeight > 0 && this._userResized == false){
+      //ダイアログが表示されていない時に、変更された時
+      var ws = GSI.Utils.getScreenSize();
+      var titleHeight = this._title? this._title.outerHeight(): 30;
+      var tBarHeight = this._topPanelToolBar? this._topPanelToolBar.outerHeight() : 40;
+      //not offset().top, need offsetTop
+      var limitHeight = ws.h - 50 - titleHeight - tBarHeight - $(this.container)[0].offsetTop;
+
+      if (liHeight > limitHeight){
+        liHeight = limitHeight;
+      }
+      $(this.container).find(".gsi-sakuzudialog-list-container").css({"height": liHeight});
+    }
+
   },
 
   _showTopPanel: function (beforePanel) {
@@ -48596,6 +48656,7 @@ GSI.ShowingMapListPanel = GSI.MapPanelContainer.extend({
   _enableLakeDepthForItem: function(id, enabled){
     if(id == "lakedata" && this._mapManager._footer){
       this._mapManager._footer.updateLakeDepthVisible(enabled);
+      if(enabled) this._mapManager._footer._refresh();
     }
   },
 
