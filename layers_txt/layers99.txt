@@ -210,7 +210,7 @@
             },
             {
               "type": "Layer",
-              "id": "gsi_mentekikoshin202201",
+              "id": "gsi_mentekikoshin202212",
               "title": "2022年12月 電子地形図25000面的更新予定",
               "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
               "url": "https://mapdata.qchizu.xyz/vector/gsi/mentekikoshin202212/{z}/{x}/{y}.geojson",
