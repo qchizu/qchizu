@@ -210,6 +210,21 @@
             },
             {
               "type": "Layer",
+              "id": "gsi_mentekikoshin202201",
+              "title": "2022年12月 電子地形図25000面的更新予定",
+              "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+              "url": "https://mapdata.qchizu.xyz/vector/gsi/mentekikoshin202212/{z}/{x}/{y}.geojson",
+              "subdomains": "",
+              "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://www.gsi.go.jp/kibanjoho/kibanjoho40073.html\">国土地理院</a>資料を加工) ",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "minZoom": 2,
+              "maxNativeZoom": 2,
+              "legendUrl": "",
+              "html": ""
+            },
+            {
+              "type": "Layer",
               "id": "shizuoka_minyurin_koaza",
               "title": "2017年 静岡県民有林小字マップ",
               "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
@@ -246,7 +261,7 @@
               "maxZoom": 17,
               "maxNativeZoom": 16,
               "legendUrl": "",
-              "html": "2022年9月30日時点の地理院タイルです。"
+              "html": "2022年9月30日時点の地理院タイルです。\n<a target=\"_blank\"href=https://mapdata.qchizu2.xyz/99gsi/std_03/info.pdf\">この地図の詳細</a>"
             },
             {
               "type": "Layer",
@@ -261,7 +276,7 @@
               "maxZoom": 17,
               "maxNativeZoom": 16,
               "legendUrl": "",
-              "html": "2021年9月29日～10月7日時点の地理院タイルです。"
+              "html": "2021年9月29日～10月7日時点の地理院タイルです。\n<a target=\"_blank\"href=https://mapdata.qchizu2.xyz/99gsi/std_02/info.pdf\">この地図の詳細</a>"
             },
             {
               "type": "Layer",
@@ -277,7 +292,7 @@
               "maxZoom": 17,
               "maxNativeZoom": 16,
               "legendUrl": "",
-              "html": "2020年9月27日～10月7日時点の地理院タイルです。"
+              "html": "2020年9月27日～10月7日時点の地理院タイルです。\n<a target=\"_blank\"href=https://mapdata.qchizu2.xyz/99gsi/std_01/info.pdf\">この地図の詳細</a>"
             },
             {
               "type": "Layer",
