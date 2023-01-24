@@ -1867,7 +1867,7 @@ form {
 }
 
 .layertreedialog_ul li a.item.view {
-	background-color: #d6f5ff;
+	background-color: #eafaff;
 	/*
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(1.00, #C7E6E2), color-stop(0.00, #d7f6f2));
 	background: -webkit-linear-gradient(#d7f6f2, #C7E6E2);
@@ -2735,7 +2735,7 @@ form {
 
 .viewlistdialog_ul li a.item.view {
 	background-color: #e0f1e7;
-	background-color: #d6f5ff;
+	background-color: #eafaff;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 }
