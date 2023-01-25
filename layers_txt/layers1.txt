@@ -62,7 +62,8 @@
                   "url": "https://maps.gsi.go.jp/xyz/nendophoto2022/{z}/{x}/{y}.png",
                   "cocotile": true,
                   "minZoom": 14,
-                  "maxZoom": 18
+                  "maxZoom": 19,
+                  "maxNativeZoom": 18
                 },
                 {
                   "type": "Layer",
