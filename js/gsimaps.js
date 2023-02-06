@@ -27460,9 +27460,9 @@ GSI.Footer = L.Evented.extend({
         .css("padding","3px 0px 3px 0px")
         .css("text-align","center")
       this._container.append(this._mapiButton);
-  
+
       //★変更　リンク７
-      this._FanButton = $("<a>").addClass("description-button").html("Fan")
+/*       this._FanButton = $("<a>").addClass("description-button").html("Fan")
         .attr({ "target": "_blank", "href": "アドレス" ,"title":"MapFan"})
         .css("right","305px")
         .css("background","#e6b422")
@@ -27470,18 +27470,29 @@ GSI.Footer = L.Evented.extend({
         .css("height","25px")
         .css("padding","3px 0px 3px 0px")
         .css("text-align","center")
-      this._container.append(this._FanButton);
+      this._container.append(this._FanButton); */
   
-      //★変更　リンク８
+      //★変更　リンク７
       this._BngButton = $("<a>").addClass("description-button").html("Bing")
       .attr({ "target": "_blank", "href": "アドレス" ,"title":"Bing Maps"})
-      .css("right","255px")
+      .css("right","305px")
       .css("background","#e6b422")
       .css("width","40px")
       .css("height","25px")
       .css("padding","3px 0px 3px 0px")
       .css("text-align","center")
       this._container.append(this._BngButton);
+
+      //★変更　リンク８
+      this._amxButton = $("<a>").addClass("description-button").html("地番")
+        .attr({ "target": "_blank", "href": "アドレス" ,"title":"amx-a on IPFS(登記所備付地図)"})
+        .css("right","255px")
+        .css("background","#e6b422")
+        .css("width","40px")
+        .css("height","25px")
+        .css("padding","3px 0px 3px 0px")
+        .css("text-align","center")
+      this._container.append(this._amxButton);
   
       //★変更　リンク9
       this._konjakuButton = $("<a>").addClass("description-button").html("今昔")
@@ -27720,8 +27731,9 @@ GSI.Footer = L.Evented.extend({
       this._itsumoButton.attr("href","https://www.its-mo.com/maps/?lat=" + y + "&lon=" + x + "&zoom=" + String(Number(map.getZoom())-5) + "&share=true");
       //this._gooButton.attr("href","https://map.goo.ne.jp/map/latlon/E"+dms.lng.d+"."+dms.lng.m+"."+(Math.round(dms.lng.s * 100) / 100).toFixed(3)+"N"+dms.lat.d+"."+dms.lat.m+"."+(Math.round(dms.lat.s * 100) / 100).toFixed(3)+"/zoom/"+String(Number(map.getZoom())-9)+"/");
       this._mapiButton.attr("href","https://www.mapion.co.jp/m2/"+center.lat+","+center.lng+","+map.getZoom());
-      this._FanButton.attr("href","https://mapfan.com/map?c="+center.lat+","+center.lng+","+map.getZoom()+"&s=std,pc,ja&p=none");
       this._BngButton.attr("href","http://www.bing.com/maps/?v=2&cp="+center.lat+"~"+center.lng+"&lvl="+map.getZoom()+"&style=h");
+      //this._FanButton.attr("href","https://mapfan.com/map?c="+center.lat+","+center.lng+","+map.getZoom()+"&s=std,pc,ja&p=none");
+      this._amxButton.attr("href","https://amx-project.github.io/a/ipfs.html#"+String(Number(map.getZoom())-1)+"/"+center.lat+"/"+center.lng);
       this._konjakuButton.attr("href","https://ktgis.net/kjmapw/kjmapw.html?lat="+center.lat+"&lng="+center.lng+"&zoom="+map.getZoom()+"&mapOpacity=10&overGSItile=no&altitudeOpacity=2");
       this._hinataButton.attr("href","https://hgis.pref.miyazaki.lg.jp/hinata/hinata.html#"+map.getZoom()+"/"+center.lat+"/"+center.lng+"&l=%5B%5B%7B%22n%22:%22pale%22,%22o%22:1,%22z%22:-2%7D,%7B%22n%22:%22MapWarperStanford%22,%22o%22:1,%22z%22:0%7D%5D,%5B%7B%22n%22:%22pale%22,%22o%22:1,%22z%22:151%7D%5D%5D");
       this._kasahaButton.attr("href","https://disaportal.gsi.go.jp/maps/?ll="+center.lat+","+center.lng+"&z="+map.getZoom()+"&base=pale&vs=c1j0l0u0");
