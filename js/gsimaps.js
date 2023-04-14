@@ -140,6 +140,7 @@ Proj4js.defs["EPSG:6683"] = "+proj=tmerc +lat_0=26 +lon_0=127.5 +k=0.9999 +x_0=0
 Proj4js.defs["EPSG:6684"] = "+proj=tmerc +lat_0=26 +lon_0=124 +k=0.9999 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs";
 Proj4js.defs["EPSG:6685"] = "+proj=tmerc +lat_0=26 +lon_0=131 +k=0.9999 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs";
 Proj4js.defs["EPSG:6686"] = "+proj=tmerc +lat_0=20 +lon_0=136 +k=0.9999 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs";
+Proj4js.defs["EPSG:6687"] = "+proj=tmerc +lat_0=26 +lon_0=154 +k=0.9999 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs"; //★変更箇所(追加)
 
 Proj4js.defs["EPSG:6688"] = "+proj=utm +zone=51 +ellps=GRS80 +datum=WGS80 +units=m +no_defs";
 Proj4js.defs["EPSG:6689"] = "+proj=utm +zone=52 +ellps=GRS80 +datum=WGS80 +units=m +no_defs";
@@ -1837,6 +1838,39 @@ GSI.Utils.world2Japan = function (latLng) {
   var worldP = new Proj4js.Point(latLng.lng, latLng.lat);
   var japanP = Proj4js.transform(worldLonLat, japanLonLat, worldP);
   return { x: japanP.x, y: japanP.y }
+};
+
+//★変更
+var zone2epsg = {
+  "0":"EPSG:3857", //便宜上ここに追加
+  "1":"EPSG:6669",
+  "2":"EPSG:6670",
+  "3":"EPSG:6671",
+  "4":"EPSG:6672",
+  "5":"EPSG:6673",
+  "6":"EPSG:6674",
+  "7":"EPSG:6675",
+  "8":"EPSG:6676",
+  "9":"EPSG:6677",
+  "10":"EPSG:6678",
+  "11":"EPSG:6679",
+  "12":"EPSG:6680",
+  "13":"EPSG:6681",
+  "14":"EPSG:6682",
+  "15":"EPSG:6683",
+  "16":"EPSG:6684",
+  "17":"EPSG:6685",
+  "18":"EPSG:6686",
+  "19":"EPSG:6687"
+};
+
+//★変更（平面直角座標系変換）    
+GSI.Utils.bl2xy = function (latLng,zone) {
+  var bl = new Proj4js.Proj('EPSG:4326');
+  var xy = new Proj4js.Proj(zone2epsg[zone]);
+  var blP = new Proj4js.Point(latLng.lng, latLng.lat);
+  var xyP = Proj4js.transform(bl, xy, blP);
+  return { x: xyP.x, y: xyP.y }
 };
 
 GSI.Utils.latLngToDMS = function (latLng) {
@@ -27086,6 +27120,7 @@ GSI.Footer = L.Evented.extend({
 
     map.on("movestart", L.bind(this._onMapMoveStart, this));
     map.on("move", L.bind(this._onMapMove, this));
+    $(document).on('change', '#zone', L.bind(this._onMapMove, this));    //★変更箇所
     map.on("moveend", L.bind(this._onMapMoveEnd, this));
 
     if (!this._windowResizeHandler) {
@@ -27214,6 +27249,7 @@ GSI.Footer = L.Evented.extend({
     var after = L.bind(function () {
       this._addrContainer.hide();
       this._latlngContainer.hide();
+      this._cdContainer.hide(); //★★変更箇所
       this._utmContainer.hide();
       this._elevationContainer.hide();
       this._lakeDepthContainer.hide();
@@ -27244,6 +27280,7 @@ GSI.Footer = L.Evented.extend({
     var after = L.bind(function () {
       this._addrContainer.show();
       this._latlngContainer.show();
+      this._cdContainer.show();  //★★変更箇所
       this._utmContainer.show();
       this._elevationContainer.show();
       if(this._lakeDepthEnabled) this._lakeDepthContainer.show();
@@ -27287,6 +27324,7 @@ GSI.Footer = L.Evented.extend({
     var after = L.bind(function () {
       this._addrContainer.hide();
       this._latlngContainer.hide();
+      this._cdContainer.hide();  //★★変更箇所
       this._utmContainer.hide();
       this._elevationContainer.show();
       this._lakeDepthContainer.hide();
@@ -27386,6 +27424,9 @@ GSI.Footer = L.Evented.extend({
 
     // 緯度軽度
     this._latlngContainer = this._createLatLngContainer(this._container);
+
+    // 平面直角座標　★★変更箇所
+    this._cdContainer = this._createCdContainer(this._container);
 
     // UTMポイント
     this._utmContainer = this._createUTMPointContainer(this._container);
@@ -27646,12 +27687,99 @@ GSI.Footer = L.Evented.extend({
     this._latlng10View = $("<span>").addClass("latlng10");
     var zoomHeading = $("<span>").addClass("heading").addClass("zoom").html("ズーム:");
     this._zoomView = $("<span>").addClass("zoom");
-    this._latlng10Container.append(this._latlng10View).append(zoomHeading).append(this._zoomView);
+
+    //★★変更箇所　測地系変換
+    this._latlngJgd2tkyButton = $("<a>")
+      .addClass("description-button")
+      .html("変換")
+      .attr({
+        "id": "latlngJgd2tkyButton",
+        "target": "_blank",
+        "href": "アドレス",
+        "title": "国土地理院APIを使用して、経緯度を日本測地系に変換します。"
+      })
+      .css({
+        "background": "#e6b422",
+        "height": "20px",
+        "right": "initial",
+        "bottom": "initial",
+        "padding": "1px 7px 0px 7px",
+        "position": "relative"
+      });
+
+    this._latlng10Container.append(this._latlng10View).append(zoomHeading).append(this._zoomView).append($("<span>").text("　")).append(this._latlngJgd2tkyButton); //★★変更箇所
 
     container.append(this._latlng60Container).append(this._latlng10Container);
     parentContainer.append(container);
     return container;
   },
+
+// 平面直角座標　表示用コンテナ作成
+_createCdContainer: function (parentContainer) {
+  var container = $("<div>").addClass("item-frame");
+
+  this._cdContainer = $("<div>").addClass("inline");
+
+  // ヘッダー
+  var cdHeading = $("<span>").addClass("heading").html("平面直角座標 第");
+
+  // 測地系選択
+  var selectBox = $("<select>").attr({"id": "zone"});
+  var option1 = $("<option>").val("1").text("1").attr("title","長崎 甑島列島 吐噶喇列島 奄美群島");
+  var option2 = $("<option>").val("2").text("2").attr("title","福岡 佐賀 熊本 大分 宮崎 鹿児島");
+  var option3 = $("<option>").val("3").text("3").attr("title","山口 島根 広島");
+  var option4 = $("<option>").val("4").text("4").attr("title","香川 愛媛 徳島 高知");
+  var option5 = $("<option>").val("5").text("5").attr("title","兵庫 鳥取 岡山");
+  var option6 = $("<option>").val("6").text("6").attr("title","京都 大阪 福井 滋賀 三重 奈良 和歌山");
+  var option7 = $("<option>").val("7").text("7").attr("title","石川 富山 岐阜 愛知");
+  var option8 = $("<option>").val("8").text("8").attr("title","新潟 長野 山梨 静岡");
+  var option9 = $("<option>").val("9").text("9").attr("title","東京 福島 栃木 茨城 埼玉 千葉 群馬 神奈川").attr("selected", true);
+  var option10 = $("<option>").val("10").text("10").attr("title","青森 秋田 山形 岩手 宮城");
+  var option11 = $("<option>").val("11").text("11").attr("title","北海道西部");
+  var option12 = $("<option>").val("12").text("12").attr("title","北海道中部");
+  var option13 = $("<option>").val("13").text("13").attr("title","北海道東部");
+  var option14 = $("<option>").val("14").text("14").attr("title","小笠原諸島");
+  var option15 = $("<option>").val("15").text("15").attr("title","沖縄本島");
+  var option16 = $("<option>").val("16").text("16").attr("title","先島諸島");
+  var option17 = $("<option>").val("17").text("17").attr("title","大東諸島");
+  var option18 = $("<option>").val("18").text("18").attr("title","沖ノ鳥島");
+  var option19 = $("<option>").val("19").text("19").attr("title","南鳥島");
+  selectBox.append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17).append(option18).append(option19);
+
+  // ヘッダー
+  var cdHeading2 = $("<span>").addClass("heading").html("系: ");
+
+  // 座標
+  this._cdView = $("<span>").addClass("cd").attr({"id": "cdView"});
+
+    // 測地系変換ボタン
+    this._cdJgd2tkyButton = $("<a>")
+      .addClass("description-button")
+      .html("変換")
+      .attr({
+        "id": "cdJgd2tkyButton",
+        "target": "_blank",
+        "href": "アドレス",
+        "title": "国土地理院APIを使用して、平面直角座標を日本測地系に変換します。"
+      })
+      .css({
+        "background": "#e6b422",
+        "height": "20px",
+        "right": "initial",
+        "bottom": "initial",
+        "padding": "1px 7px 0px 7px",
+        "position": "relative"
+      });
+
+  // スペース（空白）
+  var space = $("<span>").text("　");
+
+  this._cdContainer.append(cdHeading).append(selectBox).append(cdHeading2).append(this._cdView).append(space).append(this._cdJgd2tkyButton);
+
+  container.append(this._cdContainer)
+  parentContainer.append(container);
+  return container;
+},
 
   // UTMポイント　表示用コンテナ作成
   _createUTMPointContainer: function (parentContainer) {
@@ -27750,6 +27878,20 @@ GSI.Footer = L.Evented.extend({
     var japanP = GSI.Utils.world2Japan(center);
     var y = Math.round(japanP.y * 3600 * 1000);
     var x = Math.round(japanP.x * 3600 * 1000);
+
+    //★変更
+    var jgdbl = (Math.round(center.lat * 1000000) / 1000000).toFixed(6) + ','  + (Math.round(center.lng * 1000000) / 1000000).toFixed(6);
+    zone = $("#zone").val();
+    var jgdxyP = GSI.Utils.bl2xy(center,zone);
+    var jgdy = (Math.round(jgdxyP.y * 10) / 10).toFixed(1);
+    var jgdx = (Math.round(jgdxyP.x * 10) / 10).toFixed(1);
+    var cdjgdxy2tkylink = "https://vldb.gsi.go.jp/sokuchi/surveycalc/tky2jgd/tky2jgd.pl?outputType=json&sokuti=2&Place=2&zone=" + zone + "&publicX=" + Math.round(jgdxyP.y * 1000 ) / 1000 + "&publicY=" + Math.round(jgdxyP.x * 1000 ) / 1000 ;
+    var latlngJgd2tkylink = "https://vldb.gsi.go.jp/sokuchi/surveycalc/tky2jgd/tky2jgd.pl?outputType=json&sokuti=2&Place=1&latitude=" + center.lat + "&longitude=" + center.lng ;
+    
+    //★変更
+    $("#cdView").text(' ' + jgdy + ',' + jgdx);
+    $("#cdJgd2tkyButton").attr('href', cdjgdxy2tkylink);
+    $("#latlngJgd2tkyButton").attr('href', latlngJgd2tkylink);
 
     //★変更（）
     if (CONFIG.MOBILE) {
