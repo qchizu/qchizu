@@ -2253,16 +2253,18 @@
         },
         {
           "type": "Layer",
-          "id": "nomaps1",
-          "title": "オリジナル陰影段彩図→iをクリック",
-          "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
-          "url": "https://mapdata.qchizu.xyz/nomaps/{z}/{x}/{-y}.png",
+          "id": "relief_free",
+          "title": "自分で作る色別標高図/等高線",
+          "iconUrl": "",
+          "url": "https://maps.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png",
           "subdomains": "",
           "attribution": "",
           "errorTileUrl": "",
           "cocotile": false,
+          "maxZoom": 19,
+          "maxNativeZoom": 15,
           "legendUrl": "",
-          "html": "<div class=\"gsi_layerinfo_title\">「自分で作る色別標高図」機能を使って、九州Q地図オリジナル陰影段彩図を表示します。</div><br><a href=\"../#5/36.104611/140.084556/&ls=std%7Crelief_free%7Chillshademap%2C0.5%7Cslopemap%2C0.7&blend=111&disp=0111&vs=c1j0h0k0l0u0t0z0r0s0m0f0&reliefdata=20G538794G1G00CCCCGAG80D7FFG1EGBFFFBFG3CG75FF75G8CG49B302G12CGFFFF00G258GFDA420G384GD96D00G44CGA3560AG5DCG946B40G7D0G8F847AG9C4GBBB5AFGBB8GE6E5E3GDACGFFFFFFGGFFFFFF\">標準（全国）</a><br><a href=\"../#5/36.104611/140.084556/&ls=std%7Crelief_free%7Chillshademap%2C0.5%7Cslopemap%2C0.7&blend=111&disp=0111&vs=c1j0h0k0l0u0t0z0r0s0m0f0&reliefdata=20G538794G1G00CCCCG5G80D7FFGFGBFFFBFG1EG75FF75G46G49B302G96GFFFF00G12CGFDA420G1C2GD96D00G258GA3560AG2EEG946B40G3E8G8F847AG4E2GBBB5AFG5DCGE6E5E3GDACGFFFFFFGGFFFFFF\">1/2（標高約1500mまで）</a><br><a href=\"../#5/36.104611/140.084556/&ls=std%7Crelief_free%7Chillshademap%2C0.5%7Cslopemap%2C0.7&blend=111&disp=0111&lcd=seamlessphoto&vs=c1j0h0k0l0u0t0z0r0s0m0f0&d=v&reliefdata=20G538794G1G00CCCCG3G80D7FFG8GBFFFBFGFG75FF75G23G49B302G4BGFFFF00G96GFDA420GE1GD96D00G12CGA3560AG177G946B40G1F4G8F847AG271GBBB5AFG2EEGE6E5E3GDACGFFFFFFGGFFFFFF\">1/4（標高約750mまで）</a>\n"
+          "html": "<div class='layer_text'><p>自由に色分けできる標高地図です。低地の細かい標高の変化もよくわかります。</p></div><div class=\"gsi_layerinfo_kaisetu\">データ作成方法の違いにより水部とその周辺等で不自然な標高差が生じる場合がありますのでご注意ください。</div>"
         }
       ]
     }
