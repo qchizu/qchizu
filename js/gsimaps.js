@@ -8958,7 +8958,36 @@ GSI.MapMouse = L.Evented.extend({
     this.map = map;
     this._rightClicMoveVisible = true;
 
-    map.on('contextmenu', function () { });
+    //★変更箇所
+    map.on('contextmenu', function(event) {
+      let lat = event.latlng.lat.toFixed(6);
+      let lng = event.latlng.lng.toFixed(6);
+      let z = map.getZoom();
+      let m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322; //１タイルの長さ（m）に実際の変換から導き出した定数3.624851322をかけたもの
+      let popup = L.popup(CONFIG.MOBILE ? {} : {offset: [0, -25]}) //PCの場合は、ポップアップを少し上に離し、モバイルの場合は、長押しした部分にポップアップを表示
+        .setLatLng(event.latlng)
+        .setContent(
+          "<div style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
+          + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Yahoo!地図(地図)</a>"
+          + "<br>"
+          + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Yahoo!地図(写真)</a>"  
+          + "<br>"
+          + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>Googleマップ(地図)</a>"
+          + "<br>"
+          + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>Googleマップ(写真)</a>"
+          + "<br>"
+          + "<a href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>Googleストリートビュー</a>"
+          + "</div>"
+          )
+        .openOn(map);
+        //popup.setStyle({
+          //textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
+          //backgroundColor: "rgba(255, 255, 255, 0.3)"
+        //});
+      let popupContent = popup._contentNode.parentNode;
+      popupContent.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
+      //popupContent.style.textShadow = "0px 0px 5px rgba(255, 255, 255, 1)";
+    });
 
     this.setClickMoveVisible(this.clickMoveVisible, true);
 
@@ -17644,6 +17673,89 @@ GSI.ReliefTileLayer.TileDrawer = L.Class.extend({
 
     }
 
+    // ★変更箇所　等高線描画（チェックが入っている場合）
+    if ($("#contourInput").is(":checked")) {
+      let contourInterval = $("#contourInterval").val();
+      //ズームレベルを取得することができないため、自動設定は一旦コメントアウト
+/*       if (contourInterval === "auto") {
+        let map = this._map;
+        let z = map.getZoom();
+        let autoContourInterval
+       ={1:1000,2:1000,3:1000,4:1000,5:1000,6:500,7:500,8:500,9:200,10:200,11:100,12:100,13:50,14:20,15:10,16:10,17:5,18:2}
+        contourInterval = autoContourInterval[z];
+      } */
+      let contourColor = $("#contourColor").val().slice(-6); //#を除くため右から6文字を取得
+      function hexToRgb(hex) {
+        // 16進数表記の文字列をRGBの値に変換
+        let r = parseInt(hex.substring(0, 2), 16);
+        let g = parseInt(hex.substring(2, 4), 16);
+        let b = parseInt(hex.substring(4, 6), 16);
+        return {r: r, g: g, b: b};
+      }
+      let contourColorR = hexToRgb(contourColor).r;
+      let contourColorG = hexToRgb(contourColor).g;
+      let contourColorB = hexToRgb(contourColor).b;
+
+      let contourColorRDark = Math.max(contourColorR - 30, 0);
+      let contourColorGDark = Math.max(contourColorG - 30, 0);
+      let contourColorBDark = Math.max(contourColorB - 30, 0);
+
+      //console.log(contourColorR);
+      var idx = 0, destIdx = 0, hillshadeIdx = 0, color = { r: 0, g: 0, b: 0, a: 0 }, hillshadeColor = { r: 0, g: 0, b: 0, a: 0 };
+      for (var y = 0; y < 256; ++y) {
+        for (var x = 0; x < 256; ++x) {
+          // h1 h2 h3
+          // h8 hC h4
+          // h7 h6 h5
+          let hCenter = demData[idx];
+          let h1 = demData[idx - 257];
+          let h2 = demData[idx - 256];
+          let h3 = demData[idx - 255];
+          let h4 = demData[idx + 1];
+          let h5 = demData[idx + 257];
+          let h6 = demData[idx + 256];
+          let h7 = demData[idx + 255];
+          let h8 = demData[idx - 1];
+          let h26Lower = Math.min(h2,h6);
+          let h84Lower = Math.min(h8,h4);
+          let h15Lower = Math.min(h1,h5);
+          let h37Lower = Math.min(h3,h7);
+          let contourFloor = Math.floor(hCenter / contourInterval);
+
+          if (contourFloor === Math.floor(h26Lower / contourInterval) &&
+              contourFloor === Math.floor(h84Lower / contourInterval) &&
+              contourFloor === Math.floor(h15Lower / contourInterval) &&
+              contourFloor === Math.floor(h37Lower / contourInterval)) {
+            color = { r: 255, g: 255, b: 255, a: 0 };
+          } else {
+            if ((Math.floor(hCenter / contourInterval)) % 5 === 0) { //計曲線
+              color = { r: contourColorRDark, g: contourColorGDark, b: contourColorBDark, a: 255 };
+            } else { //主曲線
+              color = { r: contourColorR, g: contourColorG, b: contourColorB, a: 200 };
+            }
+          }
+
+          if (color) {
+
+              destData.data[destIdx] = color.r;
+              destData.data[destIdx + 1] = color.g;
+              destData.data[destIdx + 2] = color.b;
+              destData.data[destIdx + 3] = color.a;
+            
+          }
+          else {
+            destData.data[destIdx] = 0;
+            destData.data[destIdx + 1] = 0;
+            destData.data[destIdx + 2] = 0;
+            destData.data[destIdx + 3] = 0;
+          }
+
+          destIdx += 4;
+          idx++;
+        }
+      }
+    } else { //以下は自分で作る色別標高図用
+      
     var idx = 0, destIdx = 0, hillshadeIdx = 0, color, hillshadeColor = { r: 0, g: 0, b: 0, a: 0 };
     for (var y = 0; y < 256; ++y) {
       for (var x = 0; x < 256; ++x) {
@@ -17694,6 +17806,8 @@ GSI.ReliefTileLayer.TileDrawer = L.Class.extend({
         idx++;
       }
     }
+    }
+  
 
     destCtx.putImageData(destData, 0, 0);
 
@@ -29463,6 +29577,41 @@ GSI.EditReliefDialog = GSI.Dialog.extend({
       .attr({ "id": id, "type": "checkbox" });
     label = $("<label>").attr({ "for": id }).html("陰影(日本周辺)").css({ "font-size": "9pt" });
     div.append(this._useHillshademapInput).append(label);
+    optionFrame.append(div);
+
+    //★変更箇所
+    this._contourInput = $("<input>").addClass("normalcheck")
+    .attr({ "id": "contourInput", "type": "checkbox" });
+    label = $("<label>").attr({ "for": "contourInput","title": "上記設定は全て無効となります" }).html("等高線(試験公開)").css({ "font-size": "9pt" , "background-color": "rgb(230,180,34)" });
+    div.append(this._contourInput).append(label);
+    // 等高線間隔セレクトボックス
+    let contourIntervalSelectBox = $("<select>").attr({ "id": "contourInterval","title": "等高線間隔" });
+    //let option1 = $("<option>").attr({ "value": "auto" }).html("自動");
+    let contourIntervalOption2 = $("<option>").attr({ "value": "1" }).html("1m");
+    let contourIntervalOption3 = $("<option>").attr({ "value": "2" }).html("2m");
+    let contourIntervalOption4 = $("<option>").attr({ "value": "5" }).html("5m");
+    let contourIntervalOption5 = $("<option>").attr({ "value": "10" }).html("10m").attr("selected", true);
+    let contourIntervalOption6 = $("<option>").attr({ "value": "20" }).html("20m");
+    let contourIntervalOption7 = $("<option>").attr({ "value": "50" }).html("50m");
+    let contourIntervalOption8 = $("<option>").attr({ "value": "100" }).html("100m");
+    let contourIntervalOption9 = $("<option>").attr({ "value": "200" }).html("200m");
+    let contourIntervalOption10 = $("<option>").attr({ "value": "500" }).html("500m");
+    let contourIntervalOption11 = $("<option>").attr({ "value": "1000" }).html("1000m");
+    contourIntervalSelectBox./*append(contourIntervalOption1).*/append(contourIntervalOption2).append(contourIntervalOption3).append(contourIntervalOption4).append(contourIntervalOption5).append(contourIntervalOption6).append(contourIntervalOption7).append(contourIntervalOption8).append(contourIntervalOption9).append(contourIntervalOption10).append(contourIntervalOption11);
+    div.append(contourIntervalSelectBox).append(" ");
+
+    // 等高線色セレクトボックス
+    let contourColorSelectBox = $("<select>").attr({ "id": "contourColor", "title": "等高線の色" });
+    let contourColoroption1 = $("<option>").attr({ "value": "#dc143c" }).html("赤").attr("selected", true);
+    let contourColoroption2 = $("<option>").attr({ "value": "#C8A03C" }).html("茶");
+    let contourColoroption3 = $("<option>").attr({ "value": "#c71585" }).html("紫");
+    let contourColoroption4 = $("<option>").attr({ "value": "#228b22" }).html("緑");
+    let contourColoroption5 = $("<option>").attr({ "value": "#00008b" }).html("青");
+    let contourColoroption6 = $("<option>").attr({ "value": "#000000" }).html("黒");
+    let contourColoroption7 = $("<option>").attr({ "value": "#ffff00" }).html("黄");
+    contourColorSelectBox.append(contourColoroption1).append(contourColoroption2).append(contourColoroption3).append(contourColoroption4).append(contourColoroption5).append(contourColoroption6).append(contourColoroption7);  
+    div.append(contourColorSelectBox);
+  
     optionFrame.append(div);
 
     this.frame.append(optionFrame);
