@@ -8959,6 +8959,7 @@ GSI.MapMouse = L.Evented.extend({
     this._rightClicMoveVisible = true;
 
     //★変更箇所
+    if (!CONFIG.MOBILE) {
     map.on('contextmenu', function(event) {
       let lat = event.latlng.lat.toFixed(6);
       let lng = event.latlng.lng.toFixed(6);
@@ -8988,6 +8989,7 @@ GSI.MapMouse = L.Evented.extend({
       popupContent.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
       //popupContent.style.textShadow = "0px 0px 5px rgba(255, 255, 255, 1)";
     });
+    }
 
     this.setClickMoveVisible(this.clickMoveVisible, true);
 

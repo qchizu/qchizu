@@ -1036,6 +1036,21 @@
           "id": "",
           "entries": [
             {
+              "type": "Layer",
+              "id": "26p_kyoto_f_01",
+              "title": "京都府森林基本図(5千分1)",
+              "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+              "url": "https://mapdata.qchizu.xyz/26p/kyoto_f_01/{z}/{x}/{y}.png",
+              "subdomains": "",
+              "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(この成果品は、京都府が作成した測量成果を京都府知事の承認を得て複製し たものである。(承認番号 令和5年1月23日付け5森第42号)第三者の複製を禁ずる。)",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "maxZoom": 19,
+              "maxNativeZoom": 18,
+              "legendUrl": "",
+              "html": "<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/26p/kyoto_f_01/info.pdf\">この地図の詳細</a>\n<a target=\"_blank\"href=\"https://mapdata.qchizu.xyz/26p/kyoto_f_01/info2.pdf\">作成年</a>"
+            },
+            {
               "type": "LayerGroup",
               "title": "-2010年度 奈良県森林基本図(5千分1)",
               "iconUrl": "https://maps.qchizu.xyz/image/layers_txt/folder-q.png",
@@ -2246,6 +2261,28 @@
                   "cocotile": false,
                   "legendUrl": "",
                   "html": "ドローンやヘリからの空撮映像、ツイッターに投稿された映像などをもとに、土石流が流れた範囲を独自に判読したものです。GISデータは、次のURLからダウンロードできます（CC BY 4.0）。　https://mapdata.qchizu.xyz/vector/disaster20210703/izusan.geojson"
+                }
+              ]
+            },
+            {
+              "type": "LayerGroup",
+              "title": "2023年7月大雨災害関連(久留米市田主丸町竹野地区)",
+              "iconUrl": "",
+              "toggleall": false,
+              "id": "",
+              "entries": [
+                {
+                  "type": "Layer",
+                  "id": "disaster_202307_takeno",
+                  "title": "【独自判読】久留米市田主丸町竹野地区　土石流（おおむねの範囲）",
+                  "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+                  "url": "https://mapdata.qchizu.xyz/vector/disaster/202307/takeno.geojson",
+                  "subdomains": "",
+                  "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://creativecommons.org/licenses/by/4.0/deed.ja\">CC BY 4.0</a>)",
+                  "errorTileUrl": "",
+                  "cocotile": false,
+                  "legendUrl": "",
+                  "html": "NHKのニュース映像などをもとに、土石流が流れた範囲を独自に判読したものです。GISデータは、次のURLからダウンロードできます（CC BY 4.0）。　https://mapdata.qchizu.xyz/vector/disaster/202307/takeno.geojson"
                 }
               ]
             }
