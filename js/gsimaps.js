@@ -8958,29 +8958,36 @@ GSI.MapMouse = L.Evented.extend({
     this.map = map;
     this._rightClicMoveVisible = true;
 
-    //★変更箇所
-    if (!CONFIG.MOBILE) {
+  //★変更箇所（右クリックでポップアップ）
+  if (!CONFIG.MOBILE) {
+    let isRightClick = false;
+    let lat, lng, z, m;
     map.on('contextmenu', function(event) {
-      let lat = event.latlng.lat.toFixed(6);
-      let lng = event.latlng.lng.toFixed(6);
-      let z = map.getZoom();
-      let m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322; //１タイルの長さ（m）に実際の変換から導き出した定数3.624851322をかけたもの
-      let popup = L.popup(CONFIG.MOBILE ? {} : {offset: [0, -25]}) //PCの場合は、ポップアップを少し上に離し、モバイルの場合は、長押しした部分にポップアップを表示
-        .setLatLng(event.latlng)
-        .setContent(
-          "<div style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
-          + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Yahoo!地図(地図)</a>"
-          + "<br>"
-          + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Yahoo!地図(写真)</a>"  
-          + "<br>"
-          + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>Googleマップ(地図)</a>"
-          + "<br>"
-          + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>Googleマップ(写真)</a>"
-          + "<br>"
-          + "<a href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>Googleストリートビュー</a>"
-          + "</div>"
+      isRightClick = true; //右クリックが行われたことを示すフラグを立てる
+      lat = event.latlng.lat.toFixed(6);
+      lng = event.latlng.lng.toFixed(6);
+      z = map.getZoom();
+      m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322; //１タイルの長さ（m）に実際の変換から導き出した定数3.624851322をかけたもの
+    });
+    map.on('moveend', function() {
+      if (isRightClick) { //フラグが立っているときのみポップアップを表示する
+        isRightClick = false; //フラグをリセットする
+        let popup = L.popup({offset: [0, -25]}) //PCの場合は、ポップアップを少し上に離し、モバイルの場合は、長押しした部分にポップアップを表示
+          .setLatLng([lat, lng])
+          .setContent(
+            "<div style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
+            + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Yahoo!マップ(地図)</a>"
+            + "<br>"
+            + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Yahoo!マップ(写真)</a>"  
+            + "<br>"
+            + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>Googleマップ(地図)</a>"
+            + "<br>"
+            + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>Googleマップ(写真)</a>"
+            + "<br>"
+            + "<a href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>Googleストリートビュー</a>"
+            + "</div>"
           )
-        .openOn(map);
+          .openOn(map);
         //popup.setStyle({
           //textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
           //backgroundColor: "rgba(255, 255, 255, 0.3)"
@@ -8988,8 +8995,9 @@ GSI.MapMouse = L.Evented.extend({
       let popupContent = popup._contentNode.parentNode;
       popupContent.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
       //popupContent.style.textShadow = "0px 0px 5px rgba(255, 255, 255, 1)";
+      }
     });
-    }
+  }
 
     this.setClickMoveVisible(this.clickMoveVisible, true);
 
@@ -27560,7 +27568,7 @@ GSI.Footer = L.Evented.extend({
     //★変更　モバイルリンク１
     if (CONFIG.MOBILE) {
       this._MGButton = $("<a>").addClass("description-button").html("G")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Google ストリートビュー" })
+        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Googleストリートビュー" })
         .css("right","135px")
         .css("background","#e6b422")
         .css("width","25px")
@@ -27568,7 +27576,7 @@ GSI.Footer = L.Evented.extend({
   
       //★変更　モバイルリンク２
       this._MYButton = $("<a>").addClass("description-button").html("Y")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Yahoo! 地図" })
+        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Yahoo!マップ" })
         .css("right","90px")
         .css("background","#e6b422")
         .css("width","25px")
@@ -27610,7 +27618,7 @@ GSI.Footer = L.Evented.extend({
   
       //★変更　リンク３
       this._YButton = $("<a>").addClass("description-button").html("Y!")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Yahoo!地図"})
+        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Yahoo!マップ"})
         .css("right","455px")
         .css("background","#e6b422")
         .css("width","40px")
