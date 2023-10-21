@@ -671,7 +671,7 @@
           "maxNativeZoom": 18,
           "html": "<div class='layer_text'>航空レーザ測量の点検用等に2004年以降に撮影された空中写真です。</div>ズームレベル14～18で表示されます。"
         },
-
+        {
            "type": "Layer",
            "id": "rinya",
            "title": "森林（国有林）の空中写真（林野庁）",
