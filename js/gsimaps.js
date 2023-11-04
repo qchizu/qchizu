@@ -168,6 +168,27 @@ Proj4js.defs["EPSG:2459"] = "+proj=tmerc +lat_0=26 +lon_0=131 +k=0.9999 +x_0=0 +
 Proj4js.defs["EPSG:2460"] = "+proj=tmerc +lat_0=20 +lon_0=136 +k=0.9999 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs";
 Proj4js.defs["EPSG:2461"] = "+proj=tmerc +lat_0=26 +lon_0=154 +k=0.9999 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 
+//★変更箇所（https://epsg.io/から）
+Proj4js.defs["EPSG:30161"] = "+proj=tmerc +lat_0=33 +lon_0=129.5 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30162"] = "+proj=tmerc +lat_0=33 +lon_0=131 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30163"] = "+proj=tmerc +lat_0=36 +lon_0=132.166666666667 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30164"] = "+proj=tmerc +lat_0=33 +lon_0=133.5 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30165"] = "+proj=tmerc +lat_0=36 +lon_0=134.333333333333 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30166"] = "+proj=tmerc +lat_0=36 +lon_0=136 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30167"] = "+proj=tmerc +lat_0=36 +lon_0=137.166666666667 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30168"] = "+proj=tmerc +lat_0=36 +lon_0=138.5 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30169"] = "+proj=tmerc +lat_0=36 +lon_0=139.833333333333 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30170"] = "+proj=tmerc +lat_0=40 +lon_0=140.833333333333 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30171"] = "+proj=tmerc +lat_0=44 +lon_0=140.25 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30172"] = "+proj=tmerc +lat_0=44 +lon_0=142.25 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30173"] = "+proj=tmerc +lat_0=44 +lon_0=144.25 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30174"] ="+proj=tmerc +lat_0=26 +lon_0=142 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30175"] = "+proj=tmerc +lat_0=26 +lon_0=127.5 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30176"] = "+proj=tmerc +lat_0=26 +lon_0=124 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30177"] = "+proj=tmerc +lat_0=26 +lon_0=131 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30178"] = "+proj=tmerc +lat_0=20 +lon_0=136 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+Proj4js.defs["EPSG:30179"] = "+proj=tmerc +lat_0=26 +lon_0=154 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +towgs84=-146.414,507.337,680.507,0,0,0,0 +units=m +no_defs +type=crs";
+
 dslorethumbnail_click = function (elements) {
   var x = new GSI.Modal.dsloreDialog(elements);
   x.show();
@@ -1861,7 +1882,26 @@ var zone2epsg = {
   "16":"EPSG:6684",
   "17":"EPSG:6685",
   "18":"EPSG:6686",
-  "19":"EPSG:6687"
+  "19":"EPSG:6687",
+  "101":"EPSG:30161",//以下日本測地系
+  "102":"EPSG:30162",
+  "103":"EPSG:30163",
+  "104":"EPSG:30164",
+  "105":"EPSG:30165",
+  "106":"EPSG:30166",
+  "107":"EPSG:30167",
+  "108":"EPSG:30168",
+  "109":"EPSG:30169",
+  "110":"EPSG:30170",
+  "111":"EPSG:30171",
+  "112":"EPSG:30172",
+  "113":"EPSG:30173",
+  "114":"EPSG:30174",
+  "115":"EPSG:30175",
+  "116":"EPSG:30176",
+  "117":"EPSG:30177",
+  "118":"EPSG:30178",
+  "119":"EPSG:30179",
 };
 
 //★変更（平面直角座標系変換）    
@@ -8958,46 +8998,113 @@ GSI.MapMouse = L.Evented.extend({
     this.map = map;
     this._rightClicMoveVisible = true;
 
-  //★変更箇所（右クリックでポップアップ）
-  if (!CONFIG.MOBILE) {
-    let isRightClick = false;
-    let lat, lng, z, m;
-    map.on('contextmenu', function(event) {
-      isRightClick = true; //右クリックが行われたことを示すフラグを立てる
-      lat = event.latlng.lat.toFixed(6);
-      lng = event.latlng.lng.toFixed(6);
-      z = map.getZoom();
-      m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322; //１タイルの長さ（m）に実際の変換から導き出した定数3.624851322をかけたもの
-    });
-    map.on('moveend', function() {
-      if (isRightClick) { //フラグが立っているときのみポップアップを表示する
-        isRightClick = false; //フラグをリセットする
-        let popup = L.popup({offset: [0, -25]}) //PCの場合は、ポップアップを少し上に離し、モバイルの場合は、長押しした部分にポップアップを表示
-          .setLatLng([lat, lng])
-          .setContent(
-            "<div style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
-            + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Yahoo!マップ(地図)</a>"
-            + "<br>"
-            + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Yahoo!マップ(写真)</a>"  
-            + "<br>"
-            + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>Googleマップ(地図)</a>"
-            + "<br>"
-            + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>Googleマップ(写真)</a>"
-            + "<br>"
-            + "<a href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>Googleストリートビュー</a>"
-            + "</div>"
-          )
-          .openOn(map);
-        //popup.setStyle({
-          //textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
-          //backgroundColor: "rgba(255, 255, 255, 0.3)"
-        //});
-      let popupContent = popup._contentNode.parentNode;
-      popupContent.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
-      //popupContent.style.textShadow = "0px 0px 5px rgba(255, 255, 255, 1)";
+    //★変更箇所（右クリックでポップアップ）
+    /*
+    if (!CONFIG.MOBILE) {
+      let isRightClick = false;
+      let lat, lng, z, m;
+      map.on('contextmenu', function(event) {
+        isRightClick = true; //右クリックが行われたことを示すフラグを立てる
+        lat = event.latlng.lat.toFixed(6);
+        lng = event.latlng.lng.toFixed(6);
+        z = map.getZoom();
+        m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322; //１タイルの長さ（m）に実際の変換から導き出した定数3.624851322をかけたもの
+      });
+      map.on('moveend', function() {
+        if (isRightClick) { //フラグが立っているときのみポップアップを表示する
+          isRightClick = false; //フラグをリセットする
+          let popup = L.popup({offset: [0, -25]}) //PCの場合は、ポップアップを少し上に離し、モバイルの場合は、長押しした部分にポップアップを表示
+            .setLatLng([lat, lng])
+            .setContent(
+              "<div style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
+              + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Yahoo!マップ(地図)</a>"
+              + "<br>"
+              + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Yahoo!マップ(写真)</a>"  
+              + "<br>"
+              + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>Googleマップ(地図)</a>"
+              + "<br>"
+              + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>Googleマップ(写真)</a>"
+              + "<br>"
+              + "<a href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>Googleストリートビュー</a>"
+              + "</div>"
+            )
+            .openOn(map);
+          //popup.setStyle({
+            //textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
+            //backgroundColor: "rgba(255, 255, 255, 0.3)"
+          //});
+        let popupContent = popup._contentNode.parentNode;
+        popupContent.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
+        //popupContent.style.textShadow = "0px 0px 5px rgba(255, 255, 255, 1)";
+        }
+      });
+    }
+    */
+    if (!CONFIG.MOBILE) {
+      let isRightClick = false;
+      let lat, lng, z, m;
+      map.on('contextmenu', function(event) {
+        isRightClick = true;
+        lat = event.latlng.lat.toFixed(6);
+        lng = event.latlng.lng.toFixed(6);
+        z = map.getZoom();
+        m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322;
+      });
+    
+        map.on('moveend', function() {
+          if (isRightClick) {
+            isRightClick = false;
+            let popup = L.popup({offset: [0, -25]})
+              .setLatLng([lat, lng])
+              .setContent(
+                "<table class='map-btn-container' style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
+                + "<tr>"
+                + "<td><a class='map-btn' href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Y!地図</a></td>"
+                + "<td><a class='map-btn' href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Y!写真</a></td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td><a class='map-btn' href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>G地図</a></td>"
+                + "<td><a class='map-btn' href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>G写真</a></td>"
+                + "<td><a class='map-btn' href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>ビュー</a></td>"
+                + "</tr>"
+                + "</table>"
+              )
+              .openOn(map);
+            let popupContent = popup._contentNode.parentNode;
+            popupContent.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
+          }
+        });
+    }
+    
+    // 追加するCSSスタイル
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .map-btn-container {
+        width: 100%;
       }
-    });
-  }
+      .map-btn-container td {
+        padding: 5px;
+      }
+      .map-btn-container td a.map-btn {
+        display: block;
+        width: 100%;
+        padding: 2px 2px;
+        text-align: center;
+        background-color: #e6b422;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 10pt;
+        color: #333;
+        text-shadow:
+            0 -1px 1px #FFF,
+            -1px 0 1px #FFF,
+            1px 0 1px #FFF,
+            0 1px 1px #FFF;
+        }
+    `;
+    document.head.appendChild(style);
+    
 
     this.setClickMoveVisible(this.clickMoveVisible, true);
 
@@ -27245,6 +27352,9 @@ GSI.Footer = L.Evented.extend({
     map.on("movestart", L.bind(this._onMapMoveStart, this));
     map.on("move", L.bind(this._onMapMove, this));
     $(document).on('change', '#zone', L.bind(this._onMapMove, this));    //★変更箇所
+    $(document).on('change', '#link1', L.bind(this._onMapMove, this));    //★変更箇所
+    $(document).on('change', '#link2', L.bind(this._onMapMove, this));    //★変更箇所
+    $(document).on('change', '#link3', L.bind(this._onMapMove, this));    //★変更箇所
     map.on("moveend", L.bind(this._onMapMoveEnd, this));
 
     if (!this._windowResizeHandler) {
@@ -27375,6 +27485,7 @@ GSI.Footer = L.Evented.extend({
       this._latlngContainer.hide();
       this._cdContainer.hide(); //★★変更箇所
       this._utmContainer.hide();
+      this._linkContainer.hide(); //★★変更箇所
       this._elevationContainer.hide();
       this._lakeDepthContainer.hide();
       this._seamlessContainer.hide();
@@ -27406,6 +27517,7 @@ GSI.Footer = L.Evented.extend({
       this._latlngContainer.show();
       this._cdContainer.show();  //★★変更箇所
       this._utmContainer.show();
+      this._linkContainer.show(); //★★変更箇所
       this._elevationContainer.show();
       if(this._lakeDepthEnabled) this._lakeDepthContainer.show();
       if (this._seamlessPhotoVisible) this._seamlessContainer.show();
@@ -27450,6 +27562,7 @@ GSI.Footer = L.Evented.extend({
       this._latlngContainer.hide();
       this._cdContainer.hide();  //★★変更箇所
       this._utmContainer.hide();
+      this._linkContainer.hide(); //★★変更箇所
       this._elevationContainer.show();
       this._lakeDepthContainer.hide();
       if (this._seamlessPhotoVisible) this._seamlessContainer.show();
@@ -27555,6 +27668,9 @@ GSI.Footer = L.Evented.extend({
     // UTMポイント
     this._utmContainer = this._createUTMPointContainer(this._container);
 
+    // リンク　★★変更箇所
+    this._linkContainer = this._createLinkContainer(this._container);
+
     // 標高
     this._elevationContainer = this._createElevationContainer(this._container);
 
@@ -27563,180 +27679,6 @@ GSI.Footer = L.Evented.extend({
 
     // シームレス
     this._seamlessContainer = this._createSeamlessContainer(this._container);
-
-    //★変更　以下モバイルのみ
-    //★変更　モバイルリンク１
-    if (CONFIG.MOBILE) {
-      this._MGButton = $("<a>").addClass("description-button").html("G")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Googleストリートビュー" })
-        .css("right","135px")
-        .css("background","#e6b422")
-        .css("width","25px")
-      this._container.append(this._MGButton);
-  
-      //★変更　モバイルリンク２
-      this._MYButton = $("<a>").addClass("description-button").html("Y")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Yahoo!マップ" })
-        .css("right","90px")
-        .css("background","#e6b422")
-        .css("width","25px")
-      this._container.append(this._MYButton);
-  
-      //★変更　モバイルリンク３
-      this._MSButton = $("<a>").addClass("description-button").html("S")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"スーパー地形" })
-        .css("right","45px")
-        .css("background","#e6b422")
-        .css("width","25px")
-      this._container.append(this._MSButton);
-      }
-  
-  
-      //★変更　以下PCのみ
-      if (!CONFIG.MOBILE) {
-      //★変更　リンク１
-      this._GMButton = $("<a>").addClass("description-button").html("G")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Google マップ"})
-        .css("right","555px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._GMButton);
-  
-      //★変更　リンク２
-      this._GSVButton = $("<a>").addClass("description-button").html("ビュー")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Google ストリートビュー"})
-        .css("right","505px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._GSVButton);
-  
-      //★変更　リンク３
-      this._YButton = $("<a>").addClass("description-button").html("Y!")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"Yahoo!マップ"})
-        .css("right","455px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._YButton);
-  
-      //★変更　リンク４
-      this._itsumoButton = $("<a>").addClass("description-button").html("いつも")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"いつもNAVI"})
-        .css("right","405px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._itsumoButton);
-  
-      /*★変更　リンク５
-      this._gooButton = $("<a>").addClass("description-button").html("goo")
-        .attr({ "target": "_blank", "href": "アドレス" })
-        .css("right","405px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._gooButton);
-      */
-  
-      //★変更　リンク６
-      this._mapiButton = $("<a>").addClass("description-button").html("マピ")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"マピオン"})
-        .css("right","355px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._mapiButton);
-
-      //★変更　リンク７
-/*       this._FanButton = $("<a>").addClass("description-button").html("Fan")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"MapFan"})
-        .css("right","305px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._FanButton); */
-  
-      //★変更　リンク７
-      this._BngButton = $("<a>").addClass("description-button").html("Bing")
-      .attr({ "target": "_blank", "href": "アドレス" ,"title":"Bing Maps"})
-      .css("right","305px")
-      .css("background","#e6b422")
-      .css("width","40px")
-      .css("height","25px")
-      .css("padding","3px 0px 3px 0px")
-      .css("text-align","center")
-      this._container.append(this._BngButton);
-
-      //★変更　リンク８
-      this._amxButton = $("<a>").addClass("description-button").html("地番")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"法務省地図XML(登記所備付地図)"})
-        .css("right","255px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._amxButton);
-  
-      //★変更　リンク9
-      this._konjakuButton = $("<a>").addClass("description-button").html("今昔")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"今昔マップ"})
-        .css("right","205px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._konjakuButton);
-  
-      //★変更　リンク10
-      this._hinataButton = $("<a>").addClass("description-button").html("ひなた")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"ひなたGIS"})
-        .css("right","155px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._hinataButton);
-  
-      //★変更　リンク11
-      this._kasahaButton = $("<a>").addClass("description-button").html("重ハ")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"重ねるハザードマップ"})
-        .css("right","105px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._kasahaButton);
-  
-      //★変更　リンク12
-      this._chikuButton = $("<a>").addClass("description-button").html("地空")
-        .attr({ "target": "_blank", "href": "アドレス" ,"title":"地図・空中写真閲覧サービス"})
-        .css("right","55px")
-        .css("background","#e6b422")
-        .css("width","40px")
-        .css("height","25px")
-        .css("padding","3px 0px 3px 0px")
-        .css("text-align","center")
-      this._container.append(this._chikuButton);
-      }
   
       // 表示値の説明　★変更（次の行「表示値の説明」→「説明」に変更　など）
       this._descriptionButton = $("<a>").addClass("description-button").html("説明")
@@ -27868,6 +27810,26 @@ _createCdContainer: function (parentContainer) {
   var option17 = $("<option>").val("17").text("17").attr("title","大東諸島");
   var option18 = $("<option>").val("18").text("18").attr("title","沖ノ鳥島");
   var option19 = $("<option>").val("19").text("19").attr("title","南鳥島");
+  var option101 = $("<option>").val("101").text("旧1").attr("title","EPSG:30161");
+  var option102 = $("<option>").val("102").text("旧2").attr("title","EPSG:30162");
+  var option103 = $("<option>").val("103").text("旧3").attr("title","EPSG:30163");
+  var option104 = $("<option>").val("104").text("旧4").attr("title","EPSG:30164");
+  var option105 = $("<option>").val("105").text("旧5").attr("title","EPSG:30165");
+  var option106 = $("<option>").val("106").text("旧6").attr("title","EPSG:30166");
+  var option107 = $("<option>").val("107").text("旧7").attr("title","EPSG:30167");
+  var option108 = $("<option>").val("108").text("旧8").attr("title","EPSG:30168");
+  var option109 = $("<option>").val("109").text("旧9").attr("title","EPSG:30169");
+  var option110 = $("<option>").val("110").text("旧10").attr("title","EPSG:30170");
+  var option111 = $("<option>").val("111").text("旧11").attr("title","EPSG:30171");
+  var option112 = $("<option>").val("112").text("旧12").attr("title","EPSG:30172");
+  var option113 = $("<option>").val("113").text("旧13").attr("title","EPSG:30173");
+  var option114 = $("<option>").val("114").text("旧14").attr("title","EPSG:30174");
+  var option115 = $("<option>").val("115").text("旧15").attr("title","EPSG:30175");
+  var option116 = $("<option>").val("116").text("旧16").attr("title","EPSG:30176");
+  var option117 = $("<option>").val("117").text("旧17").attr("title","EPSG:30177");
+  var option118 = $("<option>").val("118").text("旧18").attr("title","EPSG:30178");
+  var option119 = $("<option>").val("119").text("旧19").attr("title","EPSG:30179");
+//  selectBox.append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17).append(option18).append(option19).append(option101).append(option102).append(option103).append(option104).append(option105).append(option106).append(option107).append(option108).append(option109).append(option110).append(option111).append(option112).append(option113).append(option114).append(option115).append(option116).append(option117).append(option118).append(option119);
   selectBox.append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17).append(option18).append(option19);
 
   // ヘッダー
@@ -27916,6 +27878,123 @@ _createCdContainer: function (parentContainer) {
     parentContainer.append(container);
     return container;
   },
+
+// リンク（詳細）　表示用コンテナ作成 ★変更箇所
+_createLinkContainer: function (parentContainer) {
+  var container = $("<div>").addClass("item-frame");
+
+  this._linkContainer = $("<div>").addClass("inline");
+
+  // ヘッダー
+  var linkHeading = $("<span>").addClass("heading").html("リンク:");
+
+  // リンクボタン作成
+  function createButton(text, title) {
+    var button = $("<a>")
+      .addClass("description-button")
+      .html(text)
+      .attr({
+        "target": "_blank",
+        //"href": "アドレス",
+        "title": title
+      })
+      .css({
+        "background": "#e6b422",
+        "height": "24px",
+        "right": "initial",
+        "bottom": "initial",
+        "padding": "2px 0px 0px 0px",
+        "text-align": "center",
+        "position": "relative"
+      });
+    return button;
+  }
+
+  //幅を指定
+  var selectBoxWidth = CONFIG.MOBILE ? "70px" : "100px";
+  var linkButtonWidth = CONFIG.MOBILE ? "30px" : "40px";
+
+  // リンク選択
+  var selectBox1 = $("<select>").attr({"id": "link1" ,style:"width: " + selectBoxWidth + ";"});
+  var initialOption = $("<option>").text("=公的=").prop("disabled", true).prop("selected", true);
+  var option1 = $("<option>").text("地理院地図").attr("title","【地理院】地理院地図");
+  var option2 = $("<option>").text("vector").attr("title","【地理院】地理院地図vector");
+  var option3 = $("<option>").text("地図・写真").attr("title","【地理院】地図・空中写真閲覧サービス");
+  var option4 = $("<option>").text("ﾊｻﾞｰﾄﾞﾏｯﾌﾟ").attr("title","【地理院】重ねるハザードマップ");
+  var option5 = $("<option>").text("基準点").attr("title","【地理院】基準点成果等閲覧サービス");
+  var option6 = $("<option>").text("ひなたGIS").attr("title","【宮崎県】ひなたGIS");
+  var option7 = $("<option>").text("地質図Navi").attr("title","【産総研】地質図Navi");
+  var option8 = $("<option>").text("ｼｰﾑﾚｽ地質図").attr("title","【産総研】日本シームレス地質図V2");
+  var option9 = $("<option>").text("J-SHIS").attr("title","【防災科研】J-SHIS Map");
+  var option10 = $("<option>").text("文化財総覧").attr("title","【奈文研】文化財総覧WebGIS");
+  selectBox1.append(initialOption).append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10);
+  this._goLink1Button = createButton("GO", "選択したリンク先を開く").attr({"id": "goLink1Button"}).css("width",linkButtonWidth);
+
+  var selectBox2 = $("<select>").attr({"id": "link2" ,style:"width: " + selectBoxWidth + ";"});
+  var initialOption = $("<option>").text("=民間=").prop("disabled", true).prop("selected", true);
+  var option1 = $("<option>").text("Google地図").attr("title","Googleマップ(地図)");
+  var option2 = $("<option>").text("Google写真").attr("title","Googleマップ(写真)");
+  var option3 = $("<option>").text("ｽﾄﾘｰﾄﾋﾞｭｰ").attr("title","Googleストリートビュー");
+  var option4 = $("<option>").text("Yahoo!地図").attr("title","Yahoo!マップ(地図)");
+  var option5 = $("<option>").text("Yahoo!写真").attr("title","Yahoo!マップ(写真)");
+  var option6 = $("<option>").text("Mapion").attr("title","Mapion");
+  var option7 = $("<option>").text("MapFan").attr("title","MapFan");
+  var option8 = $("<option>").text("いつもNAVI").attr("title","いつもNAVI");
+  var option9 = $("<option>").text("Bing Maps").attr("title","Bing Maps");
+  var option10 = $("<option>").text("MAPPLEﾍﾞｸ").attr("title","【マップル】MAPPLEのベクトルタイル");
+  var option11 = $("<option>").text("MAPPLE×GS").attr("title","【マップル】MAPPLE×GEOSPACE");
+  var option12 = $("<option>").text("MAPPLE法").attr("title","【マップル】MAPPLE法務局地図ビューア");
+  var option13 = $("<option>").text("MAPPLEﾙｰﾄ").attr("title","【マップル】MAPPLEのルート探索");
+  var option14 = $("<option>").text("今昔マップ").attr("title","今昔マップ");
+  var option15 = $("<option>").text("地価マップ").attr("title","【評価センター】全国地価マップ");
+  var option16 = $("<option>").text("ヤマタイム").attr("title","【ヤマケイ】ヤマタイム");
+  var option17 = $("<option>").text("at home賃貸").attr("title","at home 賃貸");
+  selectBox2.append(initialOption).append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17);
+  this._goLink2Button = createButton("GO", "選択したリンク先を開く").attr({"id": "goLink2Button"}).css("width",linkButtonWidth);
+
+  var selectBox3 = $("<select>").attr({"id": "link3" ,style:"width: " + selectBoxWidth + ";"});
+  var initialOption = $("<option>").text("=個人=").prop("disabled", true).prop("selected", true);
+  var option1 = $("<option>").text("o-hinata").attr("title","【kenzkenz】open-hinata");
+  var option2 = $("<option>").text("shi法務局").attr("title","【【shi-works】法務局地図XML(PMTiles)");
+  var option3 = $("<option>").text("shiハザード").attr("title","【shi-works】ハザードマップ(PMTiles)");
+  var option4 = $("<option>").text("昔の境界").attr("title","【地図地理Sandbox】むかしの市町村境界マップ");
+  var option5 = $("<option>").text("スーパー地形").attr("title","【地理院】スーパー地形");
+  selectBox3.append(initialOption).append(option1).append(option2).append(option3).append(option4);
+  if (CONFIG.MOBILE) {selectBox3.append(option5)};
+  this._goLink3Button = createButton("GO", "選択したリンク先を開く").attr({"id": "goLink3Button"}).css("width",linkButtonWidth);
+
+  this._googleMapLinkButton = createButton("G", "Googleマップ(地図)").attr({"id": "googleLinkButton"}).css("width",linkButtonWidth);
+  this._streetViewLinkButton = createButton("ビュー", "Googleストリートビュー").attr({"id": "streetViewLinkButton"}).css("width",linkButtonWidth);
+  this._yahooMapLinkButton = createButton("Y!", "Yahoo!マップ(地図)").attr({"id": "yahooMapLinkButton"}).css("width",linkButtonWidth);
+
+  this._linkContainer
+  .append(linkHeading)
+  .append(selectBox1)
+  .append("　")
+  .append(this._goLink1Button)
+  .append("　")
+  .append(selectBox2)
+  .append("　")
+  .append(this._goLink2Button)
+  .append("　")
+  .append(selectBox3)
+  .append("　")
+  .append(this._goLink3Button);
+
+  if (!CONFIG.MOBILE) {
+    this._linkContainer
+      .append("　　")
+      .append(this._googleMapLinkButton)
+      .append("　")
+      .append(this._streetViewLinkButton)
+      .append("　")
+      .append(this._yahooMapLinkButton);
+  }
+
+  container.append(this._linkContainer)
+  parentContainer.append(container);
+  return container;
+},
 
   // 標高　表示用コンテナ作成
   _createElevationContainer: function (parentContainer) {
@@ -28005,40 +28084,104 @@ _createCdContainer: function (parentContainer) {
 
     //★変更
     var jgdbl = (Math.round(center.lat * 1000000) / 1000000).toFixed(6) + ','  + (Math.round(center.lng * 1000000) / 1000000).toFixed(6);
-    zone = $("#zone").val();
+    var zone = $("#zone").val();
     var jgdxyP = GSI.Utils.bl2xy(center,zone);
     var jgdy = (Math.round(jgdxyP.y * 10) / 10).toFixed(1);
     var jgdx = (Math.round(jgdxyP.x * 10) / 10).toFixed(1);
     var cdjgdxy2tkylink = "https://vldb.gsi.go.jp/sokuchi/surveycalc/tky2jgd/tky2jgd.pl?outputType=json&sokuti=2&Place=2&zone=" + zone + "&publicX=" + Math.round(jgdxyP.y * 1000 ) / 1000 + "&publicY=" + Math.round(jgdxyP.x * 1000 ) / 1000 ;
     var latlngJgd2tkylink = "https://vldb.gsi.go.jp/sokuchi/surveycalc/tky2jgd/tky2jgd.pl?outputType=json&sokuti=2&Place=1&latitude=" + center.lat + "&longitude=" + center.lng ;
+
+    //★変更
+    let z = parseInt(map.getZoom());
+    let lat = center.lat.toFixed(6);
+    let lng = center.lng.toFixed(6);
+    let wmlatlng = GSI.Utils.bl2xy(center,0); //Web Mercator座標計算
+    let arcX = parseInt(wmlatlng.x - 40075017); //arcgis用 40075017 は、6378137(EPSG3857の半径) *2 *円周率 で算出
+    let arcY = parseInt(wmlatlng.y);
+    let m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322; //１タイルの長さ（m）に実際の変換から導き出した定数3.624851322をかけたもの
+    let pascoZl = {
+      "8" :"1000000",
+      "9" :"1000000",
+      "10": "500000",
+      "11": "200000",
+      "12": "100000",
+      "13":  "50000",
+      "14":  "25000",
+      "15":  "25000",
+      "16":  "10000",
+      "17":   "5000",
+      "18":   "2500",
+      "19":   "1000",
+      "20":    "500",
+      "21":    "500",
+      "22":    "500",
+      "23":    "500",
+      "24":    "500",
+    };
+    let kkcZl = Math.floor(491520000 / (2 ** z) );
+    let ajikoZl = Math.floor(589824000 / (2 ** z) );
     
     //★変更
     $("#cdView").text(' ' + jgdy + ',' + jgdx);
     $("#cdJgd2tkyButton").attr('href', cdjgdxy2tkylink);
     $("#latlngJgd2tkyButton").attr('href', latlngJgd2tkylink);
 
-    //★変更（）
-    if (CONFIG.MOBILE) {
-      this._MGButton.attr("href","https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint="+center.lat+","+center.lng);
-      this._MYButton.attr("href","https://map.yahoo.co.jp/?lat="+center.lat+"&lon="+center.lng+"&zoom="+String(Number(map.getZoom())-1)+"&maptype=basic");
-      this._MSButton.attr("href","https://www.kashmir3d.com/superdemapp/jump?latlon="+center.lat+","+center.lng);
-    }
+    //★変更
+    var selectedLink1 = $("#link1 option:selected").text();
+    var link1Url = {
+      "地理院地図": "https://maps.gsi.go.jp/#" + z + "/" + lat + "/" + lng,
+      "vector": "https://maps.gsi.go.jp/vector/#" + (z-1) + "/" + lat + "/" + lng + "/&ls=vstd&disp=1&d=l",
+      "地図・写真": "https://mapps.gsi.go.jp/maplibSearch.do?centerLat=" + lat + "&centerLon=" + lng + "&zoomLevel=" + z + "&did=pale",
+      "ﾊｻﾞｰﾄﾞﾏｯﾌﾟ": "https://disaportal.gsi.go.jp/maps/?ll=" + lat + "," + lng + "&z=" + z + "&base=pale&vs=c1j0l0u0",
+      "基準点": "https://sokuseikagis1.gsi.go.jp/index.aspx#" + z + "/" + lat + "/" + lng + "/&base=std&ls=std&disp=1&vs=c1z0f0",
+      "ひなたGIS": "https://hgis.pref.miyazaki.lg.jp/hinata/hinata.html#" + z + "/" + lat + "/" + lng + "&l=%5B%5B%7B%22n%22:%22pale%22,%22o%22:1,%22z%22:-2%7D,%7B%22n%22:%22MapWarperStanford%22,%22o%22:1,%22z%22:0%7D%5D,%5B%7B%22n%22:%22pale%22,%22o%22:1,%22z%22:151%7D%5D%5D",
+      "地質図Navi": "https://gbank.gsj.jp/geonavi/geonavi.php#" + z + "," + lat + "," + lng,
+      "ｼｰﾑﾚｽ地質図": "https://gbank.gsj.jp/seamless/v2/viewer/?center=" + lat + "%2C" + lng + "&z=" + Math.min(z,13),
+      "J-SHIS": "https://www.j-shis.bosai.go.jp/map/?center=" + lng + "," + lat + "&zoom=" + Math.min(z,15) + "&flt=0,0,0,0&transparent=0.2&layer=P-Y2020-MAP-AVR-TTL_MTTL-T30_I55_PD2&epoch=Y2020&ls=0&lang=jp",
+      "文化財総覧": "https://heritagemap.nabunken.go.jp/main?lat=" + lat + "&lng=" + lng + "&zoom=" +  (z-1),
+      };
+    $("#goLink1Button").attr('href', link1Url[selectedLink1]);
 
+    //★変更
+    var selectedLink2 = $("#link2 option:selected").text();
+    var link2Url = {
+      "Google地図": "https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z",
+      "Google写真": "https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3",
+      "ｽﾄﾘｰﾄﾋﾞｭｰ": "https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng,
+      "Yahoo!地図": "https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic",
+      "Yahoo!写真": "https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite",
+      "Mapion": "https://www.mapion.co.jp/m2/"+lat+","+lng+","+z,
+      "MapFan": "https://mapfan.com/map?c="+lat+","+lng+","+z+"&s=std,pc,ja&p=none",
+      "いつもNAVI": "https://www.its-mo.com/maps/?lat=" + y + "&lon=" + x + "&zoom=" + (z-5) + "&share=true",
+      "Bing Maps": "http://www.bing.com/maps/?v=2&cp="+lat+"~"+lng+"&lvl="+z+"&style=h",
+      "MAPPLEﾍﾞｸ": "https://labs.mapple.com/mapplevt.html#" + (z-1) + "/" + lat + "/" + lng,
+      "MAPPLE×GS": "https://labs.mapple.com/mapplegeospace.html#" + (z-1) + "/" + lat + "/" + lng,
+      "MAPPLE法": "https://labs.mapple.com/mapplexml.html#" + (z-1) + "/" + lat + "/" + lng,
+      "MAPPLEﾙｰﾄ": "https://labs.mapple.com/mappleroute.html#" + (z-1) + "/" + lat + "/" + lng,
+      "今昔マップ": "https://ktgis.net/kjmapw/kjmapw.html?lat="+lat+"&lng="+lng+"&zoom="+z+"&mapOpacity=10&overGSItile=no&altitudeOpacity=2",
+      "地価マップ": "https://www.chikamap.jp/chikamap/Map?mid=222&bsw=1903&bsh=977" + "&mpx=" + japanP.x + "&mpy=" + japanP.y + "&mps=" + pascoZl[z],
+      "ヤマタイム": "https://www.yamakei-online.com/yk_map/?latlon=" + lat + "," + lng + "&zoom=" + Math.min(z,17),
+      "docomoエリア": "https://www.docomo.ne.jp/area/servicearea/?rgcd=03&cmcd=5G&scale=2048000&lat=35.690767&lot=139.756853&icid=CRP_IPH_area-5g_to_CRP_AREA_servicearea",
+      "at home賃貸": "https://www.athome.co.jp/chintai/fukuoka/map/list/?LAT=" + lat + "&LON=" + lng,
+    };
+    $("#goLink2Button").attr('href', link2Url[selectedLink2]);
+
+    //★変更
+    var selectedLink3 = $("#link3 option:selected").text(); 
+    var link3Url = {
+      "o-hinata": "https://kenzkenz.xsrv.jp/open-hinata/#" + z + "/" + lng + "/" + lat + "%3FS%3D1%26L%3D%5B%5B%7B%22id%22%3A%22mw5%22%2C%22ck%22%3Atrue%2C%22o%22%3A1%7D%2C%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%5D",
+      "shi法務局": "https://shi-works.github.io/MojMap/#" +(z-1) + "/" + lat + "/" + lng,
+      "shiハザード": "https://shi-works.github.io/hazard-map/#" +(z-1) + "/" + lat + "/" + lng,
+      "昔の境界": "https://hanishina.github.io/maps/historymap.html?y=" + lat + "&x=" + lng + "&z=" + z,
+      "スーパー地形": "https://www.kashmir3d.com/superdemapp/jump?latlon=" + lat + "," + lng,
+    };
+    $("#goLink3Button").attr('href', link3Url[selectedLink3]);
+
+    //★変更
     if (!CONFIG.MOBILE) {
-      this._GMButton.attr("href","https://www.google.com/maps/@?api=1&map_action=map&center="+center.lat+","+center.lng+"&zoom="+map.getZoom()+"&basemap=satellite");
-      this._GSVButton.attr("href","https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint="+center.lat+","+center.lng);
-      this._YButton.attr("href","https://map.yahoo.co.jp/?lat="+center.lat+"&lon="+center.lng+"&zoom="+String(Number(map.getZoom())-1)+"&maptype=basic");
-      this._itsumoButton.attr("href","https://www.its-mo.com/maps/?lat=" + y + "&lon=" + x + "&zoom=" + String(Number(map.getZoom())-5) + "&share=true");
-      //this._gooButton.attr("href","https://map.goo.ne.jp/map/latlon/E"+dms.lng.d+"."+dms.lng.m+"."+(Math.round(dms.lng.s * 100) / 100).toFixed(3)+"N"+dms.lat.d+"."+dms.lat.m+"."+(Math.round(dms.lat.s * 100) / 100).toFixed(3)+"/zoom/"+String(Number(map.getZoom())-9)+"/");
-      this._mapiButton.attr("href","https://www.mapion.co.jp/m2/"+center.lat+","+center.lng+","+map.getZoom());
-      this._BngButton.attr("href","http://www.bing.com/maps/?v=2&cp="+center.lat+"~"+center.lng+"&lvl="+map.getZoom()+"&style=h");
-      //this._FanButton.attr("href","https://mapfan.com/map?c="+center.lat+","+center.lng+","+map.getZoom()+"&s=std,pc,ja&p=none");
-      //this._amxButton.attr("href","https://amx-project.github.io/a/ipfs.html#"+String(Number(map.getZoom())-1)+"/"+center.lat+"/"+center.lng);
-      this._amxButton.attr("href","https://shi-works.github.io/MojMap/#"+String(Number(map.getZoom())-1)+"/"+center.lat+"/"+center.lng);
-      this._konjakuButton.attr("href","https://ktgis.net/kjmapw/kjmapw.html?lat="+center.lat+"&lng="+center.lng+"&zoom="+map.getZoom()+"&mapOpacity=10&overGSItile=no&altitudeOpacity=2");
-      this._hinataButton.attr("href","https://hgis.pref.miyazaki.lg.jp/hinata/hinata.html#"+map.getZoom()+"/"+center.lat+"/"+center.lng+"&l=%5B%5B%7B%22n%22:%22pale%22,%22o%22:1,%22z%22:-2%7D,%7B%22n%22:%22MapWarperStanford%22,%22o%22:1,%22z%22:0%7D%5D,%5B%7B%22n%22:%22pale%22,%22o%22:1,%22z%22:151%7D%5D%5D");
-      this._kasahaButton.attr("href","https://disaportal.gsi.go.jp/maps/?ll="+center.lat+","+center.lng+"&z="+map.getZoom()+"&base=pale&vs=c1j0l0u0");
-      this._chikuButton.attr("href","https://mapps.gsi.go.jp/maplibSearch.do?centerLat="+center.lat+"&centerLon="+center.lng+"&zoomLevel="+map.getZoom()+"&did=pale");
+    $("#googleLinkButton").attr('href', "https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z");
+    $("#streetViewLinkButton").attr('href', "https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng);
+    $("#yahooMapLinkButton").attr('href', "https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic");
     }
 
     var utmPoint = GSI.UTM.Utils.latlng2PointName(center.lat, center.lng);
