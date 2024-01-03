@@ -27914,9 +27914,11 @@ _createLinkContainer: function (parentContainer) {
   var selectBoxWidth = CONFIG.MOBILE ? "70px" : "100px";
   var linkButtonWidth = CONFIG.MOBILE ? "30px" : "40px";
 
+  var equal = config.mobile ? "" : "=";
+
   // リンク選択
   var selectBox1 = $("<select>").attr({"id": "link1" ,style:"width: " + selectBoxWidth + ";"});
-  var initialOption = $("<option>").text("=公的=").prop("disabled", true).prop("selected", true);
+  var initialOption = $("<option>").text(equal & "公的" & equal).prop("disabled", true).prop("selected", true);
   var option1 = $("<option>").text("地理院地図").attr("title","【地理院】地理院地図");
   var option2 = $("<option>").text("vector").attr("title","【地理院】地理院地図vector");
   var option3 = $("<option>").text("地図・写真").attr("title","【地理院】地図・空中写真閲覧サービス");
