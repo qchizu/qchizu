@@ -2,6 +2,53 @@
   "layers": [
     {
       "type": "LayerGroup",
+      "title": " 令和6年(2024年)能登半島地震",
+      "iconUrl": "../image/layers_txt/folder-q.png",
+      "toggleall": false,
+      "id": "",
+      "entries": [
+        {
+          "type": "LayerGroup",
+          "title": "国土地理院の情報",
+          "iconUrl": "",
+          "toggleall": false,
+          "id": "",
+          "src": "https://maps.gsi.go.jp/layers_txt/layers_20240102noto.txt"
+        },
+        {
+          "type": "Layer",
+          "id": "95disaster_202401noto_01",
+          "title": "AxelGlobe画像 北側(2024/01/02 10:04撮影)",
+          "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+          "url": "https://mapdata.qchizu.xyz/95disaster/202401noto_01/{z}/{x}/{y}.png",
+          "subdomains": "",
+          "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://www.axelglobe.com/ja/the-noto-hanto-earthquake-in-2024\">©Axelspace</a>)",
+          "errorTileUrl": "",
+          "cocotile": false,
+          "maxZoom": 17,
+          "maxNativeZoom": 16,
+          "legendUrl": "",
+          "html": ""
+        },
+        {
+          "type": "Layer",
+          "id": "95disaster_202401noto_02",
+          "title": "AxelGlobe画像 南側(2024/01/02 10:04撮影)",
+          "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+          "url": "https://mapdata.qchizu.xyz/95disaster/202401noto_02/{z}/{x}/{y}.png",
+          "subdomains": "",
+          "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://www.axelglobe.com/ja/the-noto-hanto-earthquake-in-2024\">©Axelspace</a>)",
+          "errorTileUrl": "",
+          "cocotile": false,
+          "maxZoom": 17,
+          "maxNativeZoom": 16,
+          "legendUrl": "",
+          "html": ""
+        }
+      ]
+    },
+    {
+      "type": "LayerGroup",
       "title": "全国Ｑ地図",
       "iconUrl": "https://maps.qchizu.xyz/image/layers_txt/folder-q.png",
       "toggleall": false,
