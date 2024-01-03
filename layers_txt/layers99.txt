@@ -28,7 +28,7 @@
           "maxZoom": 17,
           "maxNativeZoom": 16,
           "legendUrl": "",
-          "html": ""
+          "html": "この画像は、<a target=\"_blank\"href=\"https://www.axelglobe.com/ja/the-noto-hanto-earthquake-in-2024\">㈱アクセルスペースが災害対応、災害報道及び災害研究のために無償公開した画像</a>を同社の許可を得て公開するものです。"
         },
         {
           "type": "Layer",
@@ -43,7 +43,7 @@
           "maxZoom": 17,
           "maxNativeZoom": 16,
           "legendUrl": "",
-          "html": ""
+          "html": "この画像は、<a target=\"_blank\"href=\"https://www.axelglobe.com/ja/the-noto-hanto-earthquake-in-2024\">㈱アクセルスペースが災害対応、災害報道及び災害研究のために無償公開した画像</a>を同社の許可を得て公開するものです。"
         }
       ]
     },
