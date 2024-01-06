@@ -27914,11 +27914,9 @@ _createLinkContainer: function (parentContainer) {
   var selectBoxWidth = CONFIG.MOBILE ? "70px" : "100px";
   var linkButtonWidth = CONFIG.MOBILE ? "30px" : "40px";
 
-  var equal = config.mobile ? "" : "=";
-
   // リンク選択
   var selectBox1 = $("<select>").attr({"id": "link1" ,style:"width: " + selectBoxWidth + ";"});
-  var initialOption = $("<option>").text(equal & "公的" & equal).prop("disabled", true).prop("selected", true);
+  var initialOption = $("<option>").text("=公的=").prop("disabled", true).prop("selected", true);
   var option1 = $("<option>").text("地理院地図").attr("title","【地理院】地理院地図");
   var option2 = $("<option>").text("vector").attr("title","【地理院】地理院地図vector");
   var option3 = $("<option>").text("地図・写真").attr("title","【地理院】地図・空中写真閲覧サービス");
@@ -27947,11 +27945,13 @@ _createLinkContainer: function (parentContainer) {
   var option11 = $("<option>").text("MAPPLE×GS").attr("title","【マップル】MAPPLE×GEOSPACE");
   var option12 = $("<option>").text("MAPPLE法").attr("title","【マップル】MAPPLE法務局地図ビューア");
   var option13 = $("<option>").text("MAPPLEﾙｰﾄ").attr("title","【マップル】MAPPLEのルート探索");
-  var option14 = $("<option>").text("今昔マップ").attr("title","今昔マップ");
-  var option15 = $("<option>").text("地価マップ").attr("title","【評価センター】全国地価マップ");
-  var option16 = $("<option>").text("ヤマタイム").attr("title","【ヤマケイ】ヤマタイム");
-  var option17 = $("<option>").text("at home賃貸").attr("title","at home 賃貸");
-  selectBox2.append(initialOption).append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17);
+  var option14 = $("<option>").text("OSM").attr("title","OpenStreetMap");
+  var option15 = $("<option>").text("F4map").attr("title","F4map");
+  var option16 = $("<option>").text("今昔マップ").attr("title","今昔マップ");
+  var option17 = $("<option>").text("地価マップ").attr("title","【評価センター】全国地価マップ");
+  var option18 = $("<option>").text("ヤマタイム").attr("title","【ヤマケイ】ヤマタイム");
+  var option19 = $("<option>").text("at home賃貸").attr("title","at home 賃貸");
+  selectBox2.append(initialOption).append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17).append(option18).append(option19);
   this._goLink2Button = createButton("GO", "選択したリンク先を開く").attr({"id": "goLink2Button"}).css("width",linkButtonWidth);
 
   var selectBox3 = $("<select>").attr({"id": "link3" ,style:"width: " + selectBoxWidth + ";"});
@@ -28160,6 +28160,8 @@ _createLinkContainer: function (parentContainer) {
       "MAPPLE×GS": "https://labs.mapple.com/mapplegeospace.html#" + (z-1) + "/" + lat + "/" + lng,
       "MAPPLE法": "https://labs.mapple.com/mapplexml.html#" + (z-1) + "/" + lat + "/" + lng,
       "MAPPLEﾙｰﾄ": "https://labs.mapple.com/mappleroute.html#" + (z-1) + "/" + lat + "/" + lng,
+      "OSM": "https://www.openstreetmap.org/#map=" + z + "/" + lat + "/" + lng,
+      "F4map": "https://demo.f4map.com/#lat=" + lat + "&lon=" + lng + "&zoom=" + z,
       "今昔マップ": "https://ktgis.net/kjmapw/kjmapw.html?lat="+lat+"&lng="+lng+"&zoom="+z+"&mapOpacity=10&overGSItile=no&altitudeOpacity=2",
       "地価マップ": "https://www.chikamap.jp/chikamap/Map?mid=222&bsw=1903&bsh=977" + "&mpx=" + japanP.x + "&mpy=" + japanP.y + "&mps=" + pascoZl[z],
       "ヤマタイム": "https://www.yamakei-online.com/yk_map/?latlon=" + lat + "," + lng + "&zoom=" + Math.min(z,17),
