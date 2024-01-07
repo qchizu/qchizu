@@ -9061,6 +9061,7 @@ GSI.MapMouse = L.Evented.extend({
                 + "<tr>"
                 + "<td><a class='map-btn' href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Y!地図</a></td>"
                 + "<td><a class='map-btn' href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Y!写真</a></td>"
+                + "<td><a class='map-btn' href='https://maps.qchizu.xyz/maplibre/#" + (z-1) + "/" + lat + "/" + lng + "' target='_blank'>ML版</a></td>"
                 + "</tr>"
                 + "<tr>"
                 + "<td><a class='map-btn' href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>G地図</a></td>"
@@ -27956,18 +27957,19 @@ _createLinkContainer: function (parentContainer) {
 
   var selectBox3 = $("<select>").attr({"id": "link3" ,style:"width: " + selectBoxWidth + ";"});
   var initialOption = $("<option>").text("=個人=").prop("disabled", true).prop("selected", true);
-  var option1 = $("<option>").text("o-hinata").attr("title","【kenzkenz】open-hinata");
-  var option2 = $("<option>").text("shi法務局").attr("title","【【shi-works】法務局地図XML(PMTiles)");
-  var option3 = $("<option>").text("shiハザード").attr("title","【shi-works】ハザードマップ(PMTiles)");
-  var option4 = $("<option>").text("昔の境界").attr("title","【地図地理Sandbox】むかしの市町村境界マップ");
-  var option5 = $("<option>").text("スーパー地形").attr("title","【地理院】スーパー地形");
-  selectBox3.append(initialOption).append(option1).append(option2).append(option3).append(option4);
-  if (CONFIG.MOBILE) {selectBox3.append(option5)};
+  var option1 = $("<option>").text("MapLibre版").attr("title","全国Ｑ地図MapLibre版");
+  var option2 = $("<option>").text("o-hinata").attr("title","【kenzkenz】open-hinata");
+  var option3 = $("<option>").text("shi法務局").attr("title","【【shi-works】法務局地図XML(PMTiles)");
+  var option4 = $("<option>").text("shiハザード").attr("title","【shi-works】ハザードマップ(PMTiles)");
+  var option5 = $("<option>").text("昔の境界").attr("title","【地図地理Sandbox】むかしの市町村境界マップ");
+  var option6 = $("<option>").text("スーパー地形").attr("title","【地理院】スーパー地形");
+  selectBox3.append(initialOption).append(option1).append(option2).append(option3).append(option4).append(option5);
+  if (CONFIG.MOBILE) {selectBox3.append(option6)};
   this._goLink3Button = createButton("GO", "選択したリンク先を開く").attr({"id": "goLink3Button"}).css("width",linkButtonWidth);
 
   this._googleMapLinkButton = createButton("G", "Googleマップ(地図)").attr({"id": "googleLinkButton"}).css("width",linkButtonWidth);
   this._streetViewLinkButton = createButton("ビュー", "Googleストリートビュー").attr({"id": "streetViewLinkButton"}).css("width",linkButtonWidth);
-  this._yahooMapLinkButton = createButton("Y!", "Yahoo!マップ(地図)").attr({"id": "yahooMapLinkButton"}).css("width",linkButtonWidth);
+  this._mapLibreLinkButton = createButton("ML版", "全国Ｑ地図MapLibre版").attr({"id": "mapLibreLinkButton"}).css("width",linkButtonWidth);
 
   this._linkContainer
   .append(linkHeading)
@@ -27990,7 +27992,7 @@ _createLinkContainer: function (parentContainer) {
       .append("　")
       .append(this._streetViewLinkButton)
       .append("　")
-      .append(this._yahooMapLinkButton);
+      .append(this._mapLibreLinkButton);
   }
 
   container.append(this._linkContainer)
@@ -28173,6 +28175,7 @@ _createLinkContainer: function (parentContainer) {
     //★変更
     var selectedLink3 = $("#link3 option:selected").text(); 
     var link3Url = {
+      "MapLibre版": "https://maps.qchizu.xyz/maplibre/#" + (z-1) + "/" + lat + "/" + lng,
       "o-hinata": "https://kenzkenz.xsrv.jp/open-hinata/#" + z + "/" + lng + "/" + lat + "%3FS%3D1%26L%3D%5B%5B%7B%22id%22%3A%22mw5%22%2C%22ck%22%3Atrue%2C%22o%22%3A1%7D%2C%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%5D",
       "shi法務局": "https://shi-works.github.io/MojMap/#" +(z-1) + "/" + lat + "/" + lng,
       "shiハザード": "https://shi-works.github.io/hazard-map/#" +(z-1) + "/" + lat + "/" + lng,
@@ -28185,7 +28188,7 @@ _createLinkContainer: function (parentContainer) {
     if (!CONFIG.MOBILE) {
     $("#googleLinkButton").attr('href', "https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z");
     $("#streetViewLinkButton").attr('href', "https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng);
-    $("#yahooMapLinkButton").attr('href', "https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic");
+    $("#mapLibreLinkButton").attr('href', "https://maps.qchizu.xyz/maplibre/#" + (z-1) + "/" + lat + "/" + lng);
     }
 
     var utmPoint = GSI.UTM.Utils.latlng2PointName(center.lat, center.lng);
