@@ -15,7 +15,7 @@
           "id": "",
           "src": "https://maps.gsi.go.jp/layers_txt/layers_20240102noto.txt"
         },
-        {
+                {
           "type": "Layer",
           "id": "17p_ishikawa_f_01",
           "title": "2020、2022年 石川県能登(簡易オルソ)",
@@ -368,6 +368,21 @@
           "toggleall": false,
           "id": "",
           "entries": [
+            {
+              "type": "Layer",
+              "id": "99gsi_std_04",
+              "title": "2023年9月 地理院タイル(標準地図)",
+              "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+              "url": "https://mapdata.qchizu2.xyz/99gsi/std_04/{z}/{x}/{y}.png",
+              "subdomains": "",
+              "attribution": "<font color=\"red\">2023年9月時点の地理院タイル(標準地図)</font><a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(<a target=\"_blank\"href=\"https://www.gsi.go.jp/LAW/2930-index.html\">測量法に基づく国土地理院長承認(複製)</a>R5JHf245 本製品を複製する場合には、国土地理院の長の承認を得なければならない。)",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "maxZoom": 17,
+              "maxNativeZoom": 16,
+              "legendUrl": "",
+              "html": "2023年9月30日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://mapdata.qchizu2.xyz/99gsi/std_04/info.pdf\">この地図の詳細</a>"
+            },
             {
               "type": "Layer",
               "id": "99gsi_std_03",
