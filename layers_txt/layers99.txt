@@ -15,7 +15,7 @@
           "id": "",
           "src": "https://maps.gsi.go.jp/layers_txt/layers_20240102noto.txt"
         },
-                {
+        {
           "type": "Layer",
           "id": "17p_ishikawa_f_01",
           "title": "2020、2022年 石川県能登(簡易オルソ)",
@@ -28,7 +28,7 @@
           "maxZoom": 20,
           "maxNativeZoom": 19,
           "legendUrl": "",
-          "html": "測量期間：<br>\n2020/7/22～2021/2/26（穴水町,志賀町,七尾市,中能登町,輪島市）<br>\n2022/7/13～2023/2/28（穴水町,七尾市,珠洲市,能登町）"
+          "html": "測量期間：<br>\n2020/7/22～2021/2/26（穴水町,志賀町,七尾市,中能登町,輪島市）<br>\n2022/7/13～2023/2/28（穴水町,七尾市,珠洲市,能登町）<br>\n<a target=\"_blank\" href=\"https://www.geospatial.jp/ckan/dataset/qchizu_17p_ishikawa_f_01\">この地図の詳細</a>"
         },
         {
           "type": "Layer",
@@ -381,7 +381,7 @@
               "maxZoom": 17,
               "maxNativeZoom": 16,
               "legendUrl": "",
-              "html": "2023年9月30日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://mapdata.qchizu2.xyz/99gsi/std_04/info.pdf\">この地図の詳細</a>"
+              "html": "2023年9月30日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://www.geospatial.jp/ckan/dataset/qchizu_99gsi_std\">この地図の詳細</a>"
             },
             {
               "type": "Layer",
@@ -396,7 +396,7 @@
               "maxZoom": 17,
               "maxNativeZoom": 16,
               "legendUrl": "",
-              "html": "2022年9月30日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://mapdata.qchizu2.xyz/99gsi/std_03/info.pdf\">この地図の詳細</a>"
+              "html": "2022年9月30日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://www.geospatial.jp/ckan/dataset/qchizu_99gsi_std\">この地図の詳細</a>"
             },
             {
               "type": "Layer",
@@ -411,7 +411,7 @@
               "maxZoom": 17,
               "maxNativeZoom": 16,
               "legendUrl": "",
-              "html": "2021年9月29日～10月7日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://mapdata.qchizu2.xyz/99gsi/std_02/info.pdf\">この地図の詳細</a>"
+              "html": "2021年9月29日～10月7日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://www.geospatial.jp/ckan/dataset/qchizu_99gsi_std\">この地図の詳細</a>"
             },
             {
               "type": "Layer",
@@ -427,7 +427,7 @@
               "maxZoom": 17,
               "maxNativeZoom": 16,
               "legendUrl": "",
-              "html": "2020年9月27日～10月7日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://mapdata.qchizu2.xyz/99gsi/std_01/info.pdf\">この地図の詳細</a>"
+              "html": "2020年9月27日～10月7日時点の地理院タイルです。\n<a target=\"_blank\" href=\"https://www.geospatial.jp/ckan/dataset/qchizu_99gsi_std\">この地図の詳細</a>"
             },
             {
               "type": "Layer",
@@ -1998,6 +1998,34 @@
               "maxNativeZoom": 17,
               "legendUrl": "",
               "html": ""
+            },
+            {
+              "type": "Layer",
+              "id": "40c_yame_01",
+              "title": "2022年 八女市(5千分1、2.5千分1)",
+              "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+              "url": "https://mapdata.qchizu.xyz/40c/yame_01/{z}/{x}/{y}.png",
+              "subdomains": "",
+              "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(この地図は、八女市長の承認を得て、八女市都市計画基本図(1/2,500)、八女市基本図(1/5,000)を複製したものである。(承認番号5八建都第426-1号)この地図を第三者が更に複製する場合は、八女市長の承認を得なければならない。))",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "maxZoom": 19,
+              "legendUrl": "https://mapdata.qchizu.xyz/40c/yame_01/legend.pdf",
+              "html": "<a target=\"_blank\"href=\"https://www.geospatial.jp/ckan/dataset/qchizu_40c_yame_01\">この地図の詳細</a>"
+            },
+            {
+              "type": "Layer",
+              "id": "40c_kotake_01",
+              "title": "2021年 小竹町(1万分1、2.5千分1)",
+              "iconUrl": "https://maps.qchizu.xyz/favicon.ico",
+              "url": "https://mapdata.qchizu.xyz/40c/kotake_01/{z}/{x}/{y}.png",
+              "subdomains": "",
+              "attribution": "<a target=\"_blank\"href=\"https://info.qchizu.xyz\">Q地図タイル</a>(測量法に基づく小竹町長承認(複製))",
+              "errorTileUrl": "",
+              "cocotile": false,
+              "maxZoom": 19,
+              "legendUrl": "https://mapdata.qchizu.xyz/40c/kotake_01/legend.pdf",
+              "html": "<a target=\"_blank\"href=\"https://www.geospatial.jp/ckan/dataset/qchizu_40c_kotake_01\">この地図の詳細</a>"
             }
           ]
         },
