@@ -373,8 +373,7 @@
                   "cocotile": false,
                   "minZoom": 2,
                   "maxZoom": 13,
-                  "maxZoom": 19,
-                  "maxNativeZoom": 18
+                  "maxNativeZoom": 2
                 }
               ]
             },
