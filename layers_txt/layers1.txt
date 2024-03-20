@@ -674,7 +674,8 @@
           "url": "https://maps.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg",
           "cocotile": true,
           "minZoom": 14,
-          "maxZoom": 18,
+          "maxZoom": 19,
+          "maxNativeZoom": 18,
           "html": "<div class='layer_text'><p><a target=\"_blank\" href=\"https://www.gsi.go.jp/gazochosa/gazochosa40001.html\">電子国土基本図（オルソ画像）</a>として整備されている2007年以降に撮影された空中写真です。</p></div><br>撮影年月日等、写真の詳細な情報については、<a target=\"_blank\" href=\"https://github.com/gsi-cyberjapan/gsimaps/issues/68\">こちら</a>を御覧ください。"
         },
         {

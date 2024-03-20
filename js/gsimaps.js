@@ -8998,112 +8998,107 @@ GSI.MapMouse = L.Evented.extend({
     this.map = map;
     this._rightClicMoveVisible = true;
 
-    //★変更箇所（右クリックでポップアップ）
-    /*
-    if (!CONFIG.MOBILE) {
-      let isRightClick = false;
-      let lat, lng, z, m;
-      map.on('contextmenu', function(event) {
-        isRightClick = true; //右クリックが行われたことを示すフラグを立てる
-        lat = event.latlng.lat.toFixed(6);
-        lng = event.latlng.lng.toFixed(6);
-        z = map.getZoom();
-        m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322; //１タイルの長さ（m）に実際の変換から導き出した定数3.624851322をかけたもの
-      });
-      map.on('moveend', function() {
-        if (isRightClick) { //フラグが立っているときのみポップアップを表示する
-          isRightClick = false; //フラグをリセットする
-          let popup = L.popup({offset: [0, -25]}) //PCの場合は、ポップアップを少し上に離し、モバイルの場合は、長押しした部分にポップアップを表示
-            .setLatLng([lat, lng])
-            .setContent(
-              "<div style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
-              + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Yahoo!マップ(地図)</a>"
-              + "<br>"
-              + "<a href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Yahoo!マップ(写真)</a>"  
-              + "<br>"
-              + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>Googleマップ(地図)</a>"
-              + "<br>"
-              + "<a href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>Googleマップ(写真)</a>"
-              + "<br>"
-              + "<a href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>Googleストリートビュー</a>"
-              + "</div>"
-            )
-            .openOn(map);
-          //popup.setStyle({
-            //textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
-            //backgroundColor: "rgba(255, 255, 255, 0.3)"
-          //});
+    //★変更箇所
+    let isRightClick = false;
+    let lat, lng, z, m;
+    map.on('contextmenu', function(event) {
+      isRightClick = true;
+      if (CONFIG.MOBILE) {
+          // モバイルの場合、地図の中心の緯度経度を使用
+          lat = map.getCenter().lat.toFixed(6);
+          lng = map.getCenter().lng.toFixed(6);
+      } else {
+          // デスクトップの場合、クリック位置の緯度経度を使用
+          lat = event.latlng.lat.toFixed(6);
+          lng = event.latlng.lng.toFixed(6);
+      }
+      z = map.getZoom();
+      m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322;
+    });
+  
+    map.on('moveend', function() {
+      if (isRightClick) {
+        isRightClick = false;
+        let popup = L.popup({offset: [0, -25]})
+          .setLatLng([lat, lng])
+          .setContent(
+            "<table class='map-btn-container' style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
+            + "<tr>"
+            + "<td><a class='map-btn' href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Y!地図</a></td>"
+            + "<td><a class='map-btn' href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Y!写真</a></td>"
+            + "<td><a class='map-btn' href='https://maps.qchizu.xyz/maplibre/#" + (z-1) + "/" + lat + "/" + lng + "' target='_blank'>ML版</a></td>"
+            + "</tr>"
+            + "<tr>"
+            + "<td><a class='map-btn' href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>G地図</a></td>"
+            + "<td><a class='map-btn' href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>G写真</a></td>"
+            + "<td><a class='map-btn' href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>ビュー</a></td>"
+            + "</tr>"
+            + "</table>"
+          )
+          .openOn(map);
         let popupContent = popup._contentNode.parentNode;
         popupContent.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
-        //popupContent.style.textShadow = "0px 0px 5px rgba(255, 255, 255, 1)";
-        }
-      });
-    }
-    */
-    if (!CONFIG.MOBILE) {
-      let isRightClick = false;
-      let lat, lng, z, m;
-      map.on('contextmenu', function(event) {
-        isRightClick = true;
-        lat = event.latlng.lat.toFixed(6);
-        lng = event.latlng.lng.toFixed(6);
-        z = map.getZoom();
-        m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322;
-      });
-    
-        map.on('moveend', function() {
-          if (isRightClick) {
-            isRightClick = false;
-            let popup = L.popup({offset: [0, -25]})
-              .setLatLng([lat, lng])
-              .setContent(
-                "<table class='map-btn-container' style='font-weight:bold; line-height:" + (CONFIG.MOBILE ? 3 : 1.7) + "'>"
-                + "<tr>"
-                + "<td><a class='map-btn' href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=basic' target='_blank'>Y!地図</a></td>"
-                + "<td><a class='map-btn' href='https://map.yahoo.co.jp/place?lat=" + lat + "&lon=" + lng + "&zoom=" + (z-1) + "&maptype=satellite' target='_blank'>Y!写真</a></td>"
-                + "<td><a class='map-btn' href='https://maps.qchizu.xyz/maplibre/#" + (z-1) + "/" + lat + "/" + lng + "' target='_blank'>ML版</a></td>"
-                + "</tr>"
-                + "<tr>"
-                + "<td><a class='map-btn' href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + z + "z' target='_blank'>G地図</a></td>"
-                + "<td><a class='map-btn' href='https://www.google.com/maps/place/" + lat + "," + lng + "/@" + lat + "," + lng + "," + m + "m/data=!3m1!1e3' target='_blank'>G写真</a></td>"
-                + "<td><a class='map-btn' href='https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=" + lat + "," + lng + "' target='_blank'>ビュー</a></td>"
-                + "</tr>"
-                + "</table>"
-              )
-              .openOn(map);
-            let popupContent = popup._contentNode.parentNode;
-            popupContent.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
-          }
-        });
-    }
+      }
+    });
     
     // 追加するCSSスタイル
     const style = document.createElement('style');
-    style.innerHTML = `
-      .map-btn-container {
-        width: 100%;
-      }
-      .map-btn-container td {
-        padding: 5px;
-      }
-      .map-btn-container td a.map-btn {
-        display: block;
-        width: 100%;
-        padding: 2px 2px;
-        text-align: center;
-        background-color: #e6b422;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-        font-size: 10pt;
-        color: #333;
-        text-shadow:
-            0 -1px 1px #FFF,
-            -1px 0 1px #FFF,
-            1px 0 1px #FFF,
-            0 1px 1px #FFF;
-        }
-    `;
+    if (CONFIG.MOBILE) {
+      // モバイルの場合のスタイル
+      style.innerHTML = `
+          .map-btn-container {
+              width: 100%;
+          }
+          .map-btn-container td {
+              padding: 10px 25px;
+          }
+          .map-btn-container td a.map-btn {
+              display: block;
+              width: 100%;
+              padding: 2px 10px;
+              text-align: center;
+              background-color: #e6b422;
+              border: none;
+              border-radius: 4px;
+              text-decoration: none;
+              font-size: 10pt;
+              color: #333;
+              text-shadow:
+                  0 -1px 1px #FFF,
+                  -1px 0 1px #FFF,
+                  1px 0 1px #FFF,
+                  0 1px 1px #FFF;
+          }
+      `;
+    } else {
+      // デスクトップの場合のスタイル
+      style.innerHTML = `
+          .map-btn-container {
+              width: 100%;
+          }
+          .map-btn-container td {
+              padding: 5px;
+          }
+          .map-btn-container td a.map-btn {
+              display: block;
+              width: 100%;
+              padding: 2px 2px;
+              text-align: center;
+              background-color: #e6b422;
+              border: none;
+              border-radius: 4px;
+              text-decoration: none;
+              font-size: 10pt;
+              color: #333;
+              text-shadow:
+                  0 -1px 1px #FFF,
+                  -1px 0 1px #FFF,
+                  1px 0 1px #FFF,
+                  0 1px 1px #FFF;
+          }
+      `;
+    }
+  
     document.head.appendChild(style);
     
 
