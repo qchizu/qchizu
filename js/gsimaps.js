@@ -27759,32 +27759,21 @@ L.Map.include({
     this._addrChangeReading = $("<span>").addClass("addr-ToActive").html("あ");
     this._addrView = $("<span>").addClass("address").html("---");
     this._pref = $("<span>").addClass("pref").html("---");//★変更箇所
-    this._prefLink1 = $("<a>").addClass("pref-link").html("---").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
-                    .css("background","#e6b422"); //★変更箇所
-    this._prefLink2 = $("<a>").addClass("pref-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
-                    .css("background","#e6b422"); //★変更箇所
-    this._prefLink3 = $("<a>").addClass("pref-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
-                    .css("background","#e6b422"); //★変更箇所
-    this._prefLink4 = $("<a>").addClass("pref-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
-                    .css("background","#e6b422"); //★変更箇所
+    this._prefLinks = $("<span>").addClass("pref-links");//★変更箇所
     this._city = $("<span>").addClass("city").html("---");//★変更箇所
-    this._cityLink1 = $("<a>").addClass("city-link").html("---").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
-                    .css("background","#e6b422"); //★変更箇所
-    this._cityLink2 = $("<a>").addClass("city-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
-                    .css("background","#e6b422"); //★変更箇所
-    this._cityLink3 = $("<a>").addClass("city-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
-                    .css("background","#e6b422"); //★変更箇所
-    this._cityLink4 = $("<a>").addClass("city-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
-                    .css("background","#e6b422"); //★変更箇所
+    this._cityLinks = $("<span>").addClass("city-links");//★変更箇所
     var nbsp2 = $("<span>").html("&nbsp;&nbsp;");
     var comment = $("<span>").addClass("mini-comment").html("(注)").attr({ "title":"付近の住所。正確な所属を示すとは限らない。"});
     var qchizuLinkComment = $("<span>").addClass("qchizu-link").html(" 自治体等の地図: ").attr({ "title":"都道府県、市町村等の地図サイトへのリンク"}).css("color","#ccc");
     this._addrView.on('click', L.bind(this._onLargeModeAddrChangeClick, this));
     this._addrChangeReading.on('click', L.bind(this._onLargeModeAddrChangeClick, this));
 
-    container.append(this._addrChangeReading).append(nbsp2).append(this._addrView).append(comment).append(qchizuLinkComment). //★変更箇所
-    append(this._pref).append(this._prefLink1).append(" ").append(this._prefLink2).append(" ").append(this._prefLink3).append(" ").append(this._prefLink4). //★変更箇所
-    append(this._city).append(this._cityLink1).append(" ").append(this._cityLink2).append(" ").append(this._cityLink3).append(" ").append(this._cityLink4); //★変更箇所
+    // ★変更部分
+    container.append(this._addrChangeReading).append(nbsp2).append(this._addrView)
+    .append(comment).append(qchizuLinkComment)
+    .append(this._pref).append(this._prefLinks)
+    .append(this._city).append(this._cityLinks);
+    
     parentContainer.append(container);
     return container;
   },
@@ -28301,23 +28290,9 @@ _createLinkContainer: function (parentContainer) {
 
     this._addrView.html(strNoData);
     this._pref.html(strNoData); //★変更箇所
-    this._prefLink1.html(strNoData); //★変更箇所
-    this._prefLink1.attr("href",""); //★変更箇所
-    this._prefLink2.html(""); //★変更箇所
-    this._prefLink2.attr("href",""); //★変更箇所
-    this._prefLink3.html(""); //★変更箇所
-    this._prefLink3.attr("href",""); //★変更箇所
-    this._prefLink4.html(""); //★変更箇所
-    this._prefLink4.attr("href",""); //★変更箇所
+    this._prefLinks.html(strNoData); //★変更箇所
     this._city.html(strNoData); //★変更箇所
-    this._cityLink1.html(strNoData); //★変更箇所
-    this._cityLink1.attr("href",""); //★変更箇所
-    this._cityLink2.html(""); //★変更箇所
-    this._cityLink2.attr("href",""); //★変更箇所
-    this._cityLink3.html(""); //★変更箇所
-    this._cityLink3.attr("href",""); //★変更箇所
-    this._cityLink4.html(""); //★変更箇所
-    this._cityLink4.attr("href",""); //★変更箇所
+    this._cityLinks.html(strNoData); //★変更箇所
     this._elevationView.html(strNoData);
     this._elevationComment.html("");
     this._seamlessView.html(strNoData);
@@ -28571,6 +28546,16 @@ _createLinkContainer: function (parentContainer) {
   _setPrefResult: function(muniCode, latlng, z) {
     console.log('=== Debug: _setPrefResult function start ===');
     console.log('Input params:', { muniCode, latlng, z });
+
+    // muniCodeが未定義またはGSI.MUNI_ARRAYにmuniCodeが存在しない場合の処理
+    if (!muniCode || muniCode === "" || !GSI.MUNI_ARRAY[muniCode] || GSI.MUNI_ARRAY[muniCode] === "") {
+      this._pref.html("---");
+      this._city.html("");
+      this._prefLinks.html("---");
+      this._cityLinks.html("");
+      this._contentSizeChange();
+      return;
+    }
   
     // 市区町村コードから都道府県コードと市区町村コードを抽出
     let muniArray = GSI.MUNI_ARRAY[muniCode].split(",");
@@ -28619,7 +28604,10 @@ _createLinkContainer: function (parentContainer) {
     let ajikoZl = Math.floor(589824000 / (2 ** z));
   
     // 都道府県名を表示
-    this._pref.html(pref);
+    this._pref.html(pref ? pref : "---");
+
+    // 市区町村名を表示
+    this._city.html(city ? city : "---");
 
     // CSVファイルの処理を保持データを使用するように変更
     if (this._linksData) {
@@ -28664,65 +28652,107 @@ _createLinkContainer: function (parentContainer) {
     }
 
     this._contentSizeChange();
-  
-    // 市区町村名を表示
-    this._city.html(city ? city + " " : "---");
   },
   
   // 都道府県リンクの設定
   _setPrefLinks: function(links) {
-    for (let i = 0; i < Math.min(links.length, 4); i++) {
-        const linkNum = i + 1;
-        const linkElement = this[`_prefLink${linkNum}`];
-        
-        if (linkElement) {
-            linkElement.html(links[i].html);  // theme_nameを表示
-            linkElement.attr({
-                "href": links[i].url,
-                "title": links[i].title  // site_name + " " + layer_name
+    this._prefLinks.empty();
+    
+    links.forEach((link, i) => {
+        const linkButton = $("<a>")
+            .addClass("description-button")
+            .html(link.html)
+            .attr({
+                "target": "_blank",
+                "href": link.url,
+                "title": link.title
+            })
+            .css({
+                "background": "#e6b422",
+                "height": "20px",
+                "right": "initial",
+                "bottom": "initial",
+                "padding": "1px 7px 0px 7px",
+                "position": "relative",
+                "margin-left": "4px"
             });
-            linkElement.css("color", "");
-        }
-    }
+        this._prefLinks.append(linkButton);
+    });
   },
 
-  // 市区町村リンクの設定も同様に修正
+  // _setCityLinks メソッドを同様に修正
   _setCityLinks: function(links) {
-    for (let i = 0; i < Math.min(links.length, 4); i++) {
-        const linkNum = i + 1;
-        const linkElement = this[`_cityLink${linkNum}`];
-        
-        if (linkElement) {
-            linkElement.html(links[i].html);  // theme_nameを表示
-            linkElement.attr({
-                "href": links[i].url,
-                "title": links[i].title  // site_name + " " + layer_name
+    this._cityLinks.empty();
+    
+    links.forEach((link, i) => {
+        const linkButton = $("<a>")
+            .addClass("description-button")
+            .html(link.html)
+            .attr({
+                "target": "_blank",
+                "href": link.url,
+                "title": link.title
+            })
+            .css({
+                "background": "#e6b422",
+                "height": "20px",
+                "right": "initial",
+                "bottom": "initial",
+                "padding": "1px 7px 0px 7px",
+                "position": "relative",
+                "margin-left": "4px"
             });
-            linkElement.css("color", "");
-        }
-    }
+        this._cityLinks.append(linkButton);
+    });
   },
   
   // デフォルトの都道府県リンク設定
   _setDefaultPrefLink: function() {
     console.log('Setting default prefecture link');
-    this._prefLink1.html("リンク未整備");
-    this._prefLink1.attr({
-      "href": "https://info.qchizu.xyz/qchizu/improve/",
-      "title": "リンク整備に御協力いただける方はこちら"
-    });
-    this._prefLink1.css("color", "");
+    this._prefLinks.empty();
+    const defaultLink = $("<a>")
+        .addClass("description-button")
+        .html("リンクなし")
+        .attr({
+            "target": "_blank",
+            "href": "https://qchizu-link.vercel.app/",
+            "title": "Q地図リンク登録フォームへ"
+        })
+        .css({
+            "background": "333",
+            "height": "20px",
+            "right": "initial",
+            "bottom": "initial",
+            "padding": "1px 7px 0px 7px",
+            "position": "relative",
+            "margin-left": "4px"
+        });
+    this._prefLinks.append(defaultLink);
   },
+
   
   // デフォルトの市区町村リンク設定
   _setDefaultCityLink: function() {
     console.log('Setting default city link');
-    this._cityLink1.html("リンク未整備");
-    this._cityLink1.attr({
-      "href": "https://info.qchizu.xyz/qchizu/improve/",
-      "title": "リンク整備に御協力いただける方は、クリックしてください。"
-    });
-    this._cityLink1.css("color", "");
+    this._cityLinks.empty();
+    const defaultLink = $("<a>")
+        .addClass("description-button")
+        .html("リンクなし")
+        .attr({
+            "target": "_blank",
+            "href": "https://qchizu-link.vercel.app/",
+            "title": "Q地図リンク登録フォームへ"
+        })
+        .css({
+            "background": "333",
+            "height": "20px",
+            "right": "initial",
+            "bottom": "initial",
+            "padding": "1px 7px 0px 7px",
+            "position": "relative",
+            "margin-left": "4px"
+        });
+    this._cityLinks.append(defaultLink);
   },
 
   updateLakeDepthVisible: function(enabled){
