@@ -44,7 +44,7 @@ X: https://x.com/hashtag/gsimaps
 利用上の留意点は次の通りです。[LICENSE](LICENSE) 及び[LICENSE_LIBRARIES.md](LICENSE_LIBRARIES.md)もあわせてご参照ください。
 
 - 本レポジトリで提供しているのは、国土地理院が運営する「地理院地図」https://maps.gsi.go.jp/ のソースです。
-- Leaflet, jQuery 等の既存ソフトウェアについては既存ソフトウェアのライセンスが適用されます。
+- Leaflet, jQuery 等の既存ソフトウェアについては、既存ソフトウェアのライセンスが適用されます。
 - 国土地理院により作成された部分については、政府オープンデータ戦略に基づく政府標準利用規約（第2.0版）に準拠した「<a href='https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html'>国土地理院コンテンツ利用規約</a>」により、Leaflet と同様2項BSDライセンスを適用しています。
 - 本レポジトリにプルリクエストを頂く場合、当該変更を当レポジトリに取り込んだ時点で、上記の国土地理院クレジットによる2項BSDライセンスの適用とさせていただくことを予めご承知おきください。
 - 検索機能の一部に「<a href='https://geocode.csis.u-tokyo.ac.jp/home/simple-geocoding/'>東京大学CSIS様のサービス</a>」を利用しておりますことをご承知おきください。

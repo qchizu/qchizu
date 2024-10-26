@@ -102,14 +102,6 @@ CONFIG.HANREILIST = {
       "maxZoom": 16
     }
   },
-  "vlcd_akitakoma": {
-    "url": "https://maps.gsi.go.jp/xyz/vlcd_akitakoma/vlcd_akitakoma.csv",
-    "layer": {
-      "url": "https://maps.gsi.go.jp/xyz/vlcd_akitakoma/{z}/{x}/{y}.png",
-      "minZoom": 10,
-      "maxZoom": 16
-    }
-  },
   "vlcd_chokai": {
     "url": "https://maps.gsi.go.jp/xyz/vlcd_chokai/vlcd_chokai.csv",
     "layer": {
@@ -118,10 +110,10 @@ CONFIG.HANREILIST = {
       "maxZoom": 16
     }
   },
-  "vlcd_kurikoma": {
-    "url": "https://maps.gsi.go.jp/xyz/vlcd_kurikoma/vlcd_kurikoma.csv",
+  "vlcd_zao": {
+    "url": "https://maps.gsi.go.jp/xyz/vlcd_zao/vlcd_zao.csv",
     "layer": {
-      "url": "https://maps.gsi.go.jp/xyz/vlcd_kurikoma/{z}/{x}/{y}.png",
+      "url": "https://maps.gsi.go.jp/xyz/vlcd_zao/{z}/{x}/{y}.png",
       "minZoom": 10,
       "maxZoom": 16
     }
@@ -158,10 +150,10 @@ CONFIG.HANREILIST = {
       "maxZoom": 16
     }
   },
-  "vlcd_niigatayake": {
-    "url": "https://maps.gsi.go.jp/xyz/vlcd_niigatayake/vlcd_niigatayake.csv",
+    "vlcd_yakedake": {
+    "url": "https://maps.gsi.go.jp/xyz/vlcd_yakedake/vlcd_yakedake.csv",
     "layer": {
-      "url": "https://maps.gsi.go.jp/xyz/vlcd_niigatayake/{z}/{x}/{y}.png",
+      "url": "https://maps.gsi.go.jp/xyz/vlcd_yakedake/{z}/{x}/{y}.png",
       "minZoom": 10,
       "maxZoom": 16
     }
@@ -278,14 +270,6 @@ CONFIG.HANREILIST = {
       "maxZoom": 16
     }
   },
-  "vlcd_akitayake": {
-    "url": "https://maps.gsi.go.jp/xyz/vlcd_akitayake/vlcd_akitayake.csv",
-    "layer": {
-      "url": "https://maps.gsi.go.jp/xyz/vlcd_akitayake/{z}/{x}/{y}.png",
-      "minZoom": 10,
-      "maxZoom": 16
-    }
-  },
   "swale": {
     "url": "https://maps.gsi.go.jp/xyz/swale/swale.csv",
     "layer": {
@@ -307,7 +291,7 @@ CONFIG.DisasterLoreFolderSYS = "GSI.MAP.DISASTER.LORE";
 CONFIG.DisasterLoreHeader = "disaster_lore";
 CONFIG.DisasterLoreAll = "disaster_lore_all";
 
-CONFIG.VolcanoTerrainFolder = "火山地形分類データ";
+CONFIG.VolcanoTerrainFolder = "火山土地条件図";
 CONFIG.VolcanoTerrainFolderSYS = "GSI.MAP.VOLCANO.TERRAIN";
 CONFIG.VolcanoTerrainHeader = "volcano_terrain";
 
@@ -317,7 +301,7 @@ CONFIG.CONFIRM_LAYERS = {
     "title": "留意事項", // 確認ダイアログに表示するタイトル
 
     // 表示するメッセージ
-    "message": "航空法第132条の85で規定する無人航空機の飛行禁止空域のうち、航空法施行規則第236条の12第１項第1号から第３号までに掲げる空域（空港等の周辺空域）を表示します。緑色の面は、上空での飛行が禁止される制限表面を表します。紫色の面は、上空及びその下の空域での飛行が禁止される進入表面及び転移表面並びに上空の空域で飛行が禁止される空港等の敷地を表します。<br>" +
+    "message": "航空法第132条の85で規定する無人航空機の飛行禁止空域のうち、航空法施行規則第236条の71第１項第1号から第３号までに掲げる空域（空港等の周辺空域）を表示します。緑色の面は、上空での飛行が禁止される制限表面を表します。紫色の面は、上空及びその下の空域での飛行が禁止される進入表面及び転移表面並びに上空の空域で飛行が禁止される空港等の敷地を表します。<br>" +
       "なお、この情報には誤差が含まれている場合があります。また空港等の敷地については工事等により変更がある場合がありますので、境界付近等正確な空域については空港等の管理者に確認願います。<br>" +
       "詳細については、<a target='_blank' href='http://www.mlit.go.jp/koku/koku_tk10_000003.html'>国土交通省ホームページ</a>で確認してください。",
     "withBlend": false, // 合成するかどうか
@@ -366,13 +350,17 @@ CONFIG.CONFIRM_LAYERS = {
 };
 
 
-// 初期状態で合成をOnにするレイヤーID ★変更点
-// 火山地形分類データは排他選択(50431行目付近)と同じ箇所で処理
+
+// 初期状態で合成をOnにするレイヤーID
+// 火山土地条件図　数値データ（火山地形分類）は排他選択(50431行目付近)と同じ箇所で処理
 CONFIG.BLENDLAYERS = {
   "relief": true,
   "relief_free": true,
   "swale": true,
   "gsjGeomap_seamless200k_v2": true,
+  "landform1_mono": true,
+  "landform2_mono": true,
+  // ★以下、追加部分
   "maff-pond20200925-1": true,
   "daikiboumoritsuzouseichi": true,
   "01_flood_l2_shinsuishin_data": true,
@@ -388,7 +376,7 @@ CONFIG.BLENDLAYERS = {
   "biodic_vg_vg5": true,
   "biodic_vg_vgn": true,
   "biodic_vg67_vg67": true,
-  "biodic_vg67_vg67c": true
+  "biodic_vg67_vg67c": true,
 };
 
 

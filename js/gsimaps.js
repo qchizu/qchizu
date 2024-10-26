@@ -1597,7 +1597,7 @@ GSI.Links.getURL = function (pageStateManager, id, center, z, bounds) {
   }
 
   else if (id == 'ucodehref') {
-    return 'http://ucopendb.gsi.go.jp/ucode_app/logical_code/ucode_disp.php?lat=' + center.lat + '&lng=' + center.lng + '&zoom=' + z;
+    return 'https://www.gsi.go.jp/sokuchikijun/uPlace.html';
   }
 
   else if (id == 'gsivector') {
@@ -8375,7 +8375,7 @@ GSI.LayersJSON = L.Evented.extend({
         } else if (entries[i].title == "自然災害伝承碑") {
           entries[i]["title_evac"] = CONFIG.DisasterLoreFolder;
           entries[i]["title_disasterlore"] = CONFIG.DisasterLoreFolderSYS;
-        } else if (entries[i].title == "火山地形分類データ") {
+        } else if (entries[i].title == "火山土地条件図　数値データ（火山地形分類）") {
           entries[i]["title_evac"] = CONFIG.VolcanoTerrainFolderSYS;
         } else {
           func( entries[i].entries, func );
@@ -8395,7 +8395,7 @@ GSI.LayersJSON = L.Evented.extend({
           json_dh.entries = json.layers[ll].entries.concat();
           hybridjson.layers.push(json_dh);
         }
-        else if (json.layers[ll].title == "火山地形分類データ") {
+        else if (json.layers[ll].title == "火山土地条件図　数値データ（火山地形分類）") {
           var json_dh = JSON.parse("{ \"type\": \"LayerGroup\", \"title\": \"" + CONFIG.VolcanoTerrainFolder + "\", \"title_volcano_terrain\": \"" + CONFIG.VolcanoTerrainFolderSYS + "\", \"iconUrl\": \"\", \"open\": false, \"toggleall\": false, \"entries\": [] }");
           json_dh.entries = json.layers[ll].entries.concat();
           hybridjson.layers.push(json_dh);
@@ -39918,6 +39918,7 @@ GSI.SakuzuListItem = L.Evented.extend({
         break;
 
       case GSI.SakuzuListItem.LINESTRING:
+      case GSI.SakuzuListItem.MULTILINESTRING:
       case GSI.SakuzuListItem.FREEHAND:
         result = L.polyline(this._cloneLatLngs(layer.getLatLngs()), layer.options);
         result.feature = layer.feature;
@@ -39937,7 +39938,6 @@ GSI.SakuzuListItem = L.Evented.extend({
         result = L.circle(latlng, radius, layer.options);
         break;
 
-      case GSI.SakuzuListItem.MULTILINESTRING:
       case GSI.SakuzuListItem.MULTIPOINT:
         result = L.featureGroup();
         result.feature = layer.feature;
@@ -40014,6 +40014,9 @@ GSI.SakuzuListItem = L.Evented.extend({
             break;
           case "LineString":
             itemType = GSI.SakuzuListItem.LINESTRING;
+            break;
+          case "MultiLineString":
+            itemType = GSI.SakuzuListItem.MULTILINESTRING;
             break;
         }
       }
@@ -41649,7 +41652,6 @@ GSI.SakuzuListItem = L.Evented.extend({
         break;
 
       case GSI.SakuzuListItem.MULTIPOINT:
-      case GSI.SakuzuListItem.MULTILINESTRING:
         var layers = targetLayer.getLayers();
         if (clearPathList) this._editingPathList = [];
         for (var i = 0; i < layers.length; i++) {
@@ -42879,7 +42881,7 @@ GSI.SakuzuListItem = L.Evented.extend({
     result.properties = this._layerInfo2Properties(this._getLayerInfo(layer));
 
     var options = layer.options;
-    if (!options && layer.getLayers) {
+    if ((!options || Object.keys(options).length === 0) && layer.getLayers) {
       var layers = layer.getLayers();
       if (layers.length > 0) {
         options = layers[0].options;
@@ -42996,6 +42998,10 @@ GSI.SakuzuListItem.typeToTitle = function(drawType) {
       result = "マーカー（アイコン）";
       break;
 
+    case GSI.SakuzuListItem.MULTIPOINT:
+      result = "マーカー（アイコン）（マルチパート）";
+      break;
+
     case GSI.SakuzuListItem.POINT_CIRCLE:
         result = "マーカー（円）";
         break;
@@ -43006,6 +43012,10 @@ GSI.SakuzuListItem.typeToTitle = function(drawType) {
 
     case GSI.SakuzuListItem.LINESTRING:
         result = "線";
+        break;
+
+    case GSI.SakuzuListItem.MULTILINESTRING:
+        result = "線（マルチパート）";
         break;
 
     case GSI.SakuzuListItem.POLYGON:
@@ -43021,7 +43031,7 @@ GSI.SakuzuListItem.typeToTitle = function(drawType) {
         break;
 
     case GSI.SakuzuListItem.MULTIPOLYGON:
-      result = "マルチポリゴン";
+      result = "ポリゴン（マルチパート）";
       break;
 
     default:
@@ -44746,8 +44756,11 @@ GSI.SakuzuInfoEditDialog = GSI.Dialog.extend({
     this._container = $("<div>");
 
     // マーカー編集
-    if (this._drawType == GSI.SakuzuListItem.POINT ||
-      this._drawType == GSI.SakuzuListItem.POINT_TEXT) {
+    if (
+      this._drawType == GSI.SakuzuListItem.POINT ||
+      this._drawType == GSI.SakuzuListItem.POINT_TEXT ||
+      this._drawType == GSI.SakuzuListItem.MULTIPOINT
+    ) {
       this._markerEditPanel = this._createMarkerEditPanel();
       this._container.append( this._markerEditPanel);
     }
@@ -44764,7 +44777,10 @@ GSI.SakuzuInfoEditDialog = GSI.Dialog.extend({
     }
 
     // ライン編集
-    if ( this._drawType == GSI.SakuzuListItem.LINESTRING) {
+    if (
+      this._drawType == GSI.SakuzuListItem.LINESTRING ||
+      this._drawType == GSI.SakuzuListItem.MULTILINESTRING
+    ) {
       this._lineEditPanel = this._createLineEditPanel();
       this._container.append( this._lineEditPanel);
     }
@@ -44798,8 +44814,19 @@ GSI.SakuzuInfoEditDialog = GSI.Dialog.extend({
   // 値リセット
   _resetView : function() {
     // マーカー編集部
-    if(this._drawType == GSI.SakuzuListItem.POINT || this._drawType == GSI.SakuzuListItem.POINT_TEXT) {
+    if(
+      this._drawType == GSI.SakuzuListItem.POINT ||
+      this._drawType == GSI.SakuzuListItem.POINT_TEXT
+    ) {
       this._refreshMarkerEditPanel(this._layer.options);
+    }
+    // MultiPointはマーカー編集部だが、FeatureGroupに格納されているので、最初のMarkerから
+    // optionsを読み込む必要がある。
+    if (
+      this._drawType == GSI.SakuzuListItem.MULTIPOINT
+    ) {
+      var options = this._layer.getLayers()[0].options;
+      this._refreshMarkerEditPanel(options);
     }
     // 円編集部
     if ( this._drawType == GSI.SakuzuListItem.POINT_CIRCLE ||
@@ -44809,7 +44836,10 @@ GSI.SakuzuInfoEditDialog = GSI.Dialog.extend({
       this._refreshCircleEditPanel( this._layer.options);
     }
     // ライン編集部
-    if ( this._drawType == GSI.SakuzuListItem.LINESTRING ) {
+    if (
+      this._drawType == GSI.SakuzuListItem.LINESTRING ||
+      this._drawType == GSI.SakuzuListItem.MULTILINESTRING
+    ) {
       this._refreshLineEditPanel( this._layer.options);
     }
     // ポリゴン編集部
@@ -52634,13 +52664,13 @@ GSI.GSIMaps = L.Evented.extend({
       case "placecode":
         var a = $("<a>");
         $("body").append(a);
-        a.attr({ "href": "http://ucopendb.gsi.go.jp/ucode_app/logical_code/ucode_disp.php", "target": "_blank" })
-          .on('click',L.bind(function (a) {
-            var map = this._mainMap.getMap();
-            var center = map.getCenter();
-            var z = map.getZoom();
+        a.attr({ "href": "https://www.gsi.go.jp/sokuchikijun/uPlace.html", "target": "_blank" })
+           .on('click',L.bind(function (a) {
+          //   var map = this._mainMap.getMap();
+          //   var center = map.getCenter();
+          //   var z = map.getZoom();
 
-            var url = 'http://ucopendb.gsi.go.jp/ucode_app/logical_code/ucode_disp.php?lat=' + center.lat + '&lng=' + center.lng + '&zoom=' + z;
+            var url = 'https://www.gsi.go.jp/sokuchikijun/uPlace.html';
             a.attr({ "href": url });
           }, this, a));
 

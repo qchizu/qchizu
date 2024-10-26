@@ -232,5 +232,14 @@ CONFIG.COMPAREPHOTO_PHOTOLIST = [
     "year": {
       "from": 2022
     }
+  },
+  {
+    "id": "nendophoto2023",
+    "url": "https://maps.gsi.go.jp/xyz/nendophoto2023/{z}/{x}/{y}.png",
+    "minZoom": 14,
+    "maxZoom": 18,
+    "year": {
+      "from": 2023
+    }
   }
 ];
