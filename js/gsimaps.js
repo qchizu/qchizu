@@ -19599,6 +19599,7 @@ GSI.AddrLoader = L.Evented.extend({
     }
 
     var title = "";
+    var muniCode = ""; //★変更箇所
     var titleYomi = null;
     var titleEng = null;
     if (hitFeature) {
@@ -19606,14 +19607,16 @@ GSI.AddrLoader = L.Evented.extend({
       var properties = hitFeature.properties;
       try {
         title = properties["pref"] + properties["muni"];
+        muniCode = parseInt(properties["行政コード"], 10); //★変更箇所　１桁目が0の場合があるため
         if (properties["LV01"]){
           title += properties["LV01"];
         }
+        console.log(properties);
 
         //読み
-        titleYomi = properties["pref_kana"] + properties["muni_kana"];
+        titleYomi = properties["pref_kana"] + " " + properties["muni_kana"];//★変更箇所
         if (properties["Lv01_kana"]){
-          titleYomi += properties["Lv01_kana"];
+          titleYomi += " " + properties["Lv01_kana"];//★変更箇所
         }
 
       } catch (ex) {
@@ -19621,7 +19624,7 @@ GSI.AddrLoader = L.Evented.extend({
       }
 
     }
-    this.fire("load", { "feature": hitFeature, "title": title, "titleYomi": titleYomi, "titleEng": titleEng });
+    this.fire("load", { "feature": hitFeature, "title": title, "titleYomi": titleYomi, "titleEng": titleEng ,"muniCode": muniCode}); //★変更箇所
   },
 
   _isPointInPolygon: function (point, polygon) {
@@ -27283,6 +27286,7 @@ GSI.Footer = L.Evented.extend({
     }
     this._mapManager = mapManager;
     this._mapMenu = this._mapManager._mapMenu;
+    this._linksData = null; // ★追加部分　CSVデータを保持する変数を追加
 
     this._mapMenu.on("panelshow", L.bind(this._onMapMenuShow, this));
     this._mapMenu.on("panelresize", L.bind(this._onMepMenuResize, this));
@@ -27292,6 +27296,45 @@ GSI.Footer = L.Evented.extend({
     this._parentContainer = parentContainer;
 
     this._dispAddrMode = GSI.Footer.DISP_ADDR_KANJI;
+
+    this._loadLinksCSV(); // ★追加部分 CSV の初回読み込み
+  },
+
+  // ★追加部分　CSV読み込み用の新しいメソッドを追加
+  _loadLinksCSV: function() {
+    fetch('qchizu-link.csv')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(csv => {
+            csv = csv.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const lines = csv.split('\n');
+            const headers = lines[0].split(',').map(header => header.trim());
+            this._linksData = {};
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const values = line.split(',').map(value => value.trim());
+                const code = values[0].padStart(6, '0').slice(0, 5);
+                
+                if (!this._linksData[code]) this._linksData[code] = [];
+                
+                this._linksData[code].push({
+                    html: values[1],
+                    title: values[3],
+                    urlTemplate: values[4]
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error loading CSV:', error);
+            this._linksData = {};
+        });
   },
 
   setLeft: function () {
@@ -27701,13 +27744,33 @@ GSI.Footer = L.Evented.extend({
     var container = $("<div>").addClass("item-frame");
     this._addrChangeReading = $("<span>").addClass("addr-ToActive").html("あ");
     this._addrView = $("<span>").addClass("address").html("---");
+    this._pref = $("<span>").addClass("pref").html("---");//★変更箇所
+    this._prefLink1 = $("<a>").addClass("pref-link").html("---").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
+                    .css("background","#e6b422"); //★変更箇所
+    this._prefLink2 = $("<a>").addClass("pref-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
+                    .css("background","#e6b422"); //★変更箇所
+    this._prefLink3 = $("<a>").addClass("pref-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
+                    .css("background","#e6b422"); //★変更箇所
+    this._prefLink4 = $("<a>").addClass("pref-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
+                    .css("background","#e6b422"); //★変更箇所
+    this._city = $("<span>").addClass("city").html("---");//★変更箇所
+    this._cityLink1 = $("<a>").addClass("city-link").html("---").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
+                    .css("background","#e6b422"); //★変更箇所
+    this._cityLink2 = $("<a>").addClass("city-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
+                    .css("background","#e6b422"); //★変更箇所
+    this._cityLink3 = $("<a>").addClass("city-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
+                    .css("background","#e6b422"); //★変更箇所
+    this._cityLink4 = $("<a>").addClass("city-link").html("").attr({ "target": "_blank", "href": "アドレス" ,"title":"タイトル"})
+                    .css("background","#e6b422"); //★変更箇所
     var nbsp2 = $("<span>").html("&nbsp;&nbsp;");
-    var comment = $("<span>").addClass("mini-comment").html("（付近の住所。正確な所属を示すとは限らない。）");
-
+    var comment = $("<span>").addClass("mini-comment").html("(注)").attr({ "title":"付近の住所。正確な所属を示すとは限らない。"});
+    var qchizuLinkComment = $("<span>").addClass("qchizu-link").html(" 自治体等の地図: ").attr({ "title":"都道府県、市町村等の地図サイトへのリンク"}).css("color","#ccc");
     this._addrView.on('click', L.bind(this._onLargeModeAddrChangeClick, this));
     this._addrChangeReading.on('click', L.bind(this._onLargeModeAddrChangeClick, this));
 
-    container.append(this._addrChangeReading).append(nbsp2).append(this._addrView).append(comment);
+    container.append(this._addrChangeReading).append(nbsp2).append(this._addrView).append(comment).append(qchizuLinkComment). //★変更箇所
+    append(this._pref).append(this._prefLink1).append(" ").append(this._prefLink2).append(" ").append(this._prefLink3).append(" ").append(this._prefLink4). //★変更箇所
+    append(this._city).append(this._cityLink1).append(" ").append(this._cityLink2).append(" ").append(this._cityLink3).append(" ").append(this._cityLink4); //★変更箇所
     parentContainer.append(container);
     return container;
   },
@@ -27754,92 +27817,92 @@ GSI.Footer = L.Evented.extend({
     return container;
   },
 
-// 平面直角座標　表示用コンテナ作成
-_createCdContainer: function (parentContainer) {
-  var container = $("<div>").addClass("item-frame");
+  // 平面直角座標　表示用コンテナ作成
+  _createCdContainer: function (parentContainer) {
+    var container = $("<div>").addClass("item-frame");
 
-  this._cdContainer = $("<div>").addClass("inline");
+    this._cdContainer = $("<div>").addClass("inline");
 
-  // ヘッダー
-  var cdHeading = $("<span>").addClass("heading").html("平面直角座標 第");
+    // ヘッダー
+    var cdHeading = $("<span>").addClass("heading").html("平面直角座標 第");
 
-  // 測地系選択
-  var selectBox = $("<select>").attr({"id": "zone"});
-  var option1 = $("<option>").val("1").text("1").attr("title","長崎 甑島列島 吐噶喇列島 奄美群島");
-  var option2 = $("<option>").val("2").text("2").attr("title","福岡 佐賀 熊本 大分 宮崎 鹿児島");
-  var option3 = $("<option>").val("3").text("3").attr("title","山口 島根 広島");
-  var option4 = $("<option>").val("4").text("4").attr("title","香川 愛媛 徳島 高知");
-  var option5 = $("<option>").val("5").text("5").attr("title","兵庫 鳥取 岡山");
-  var option6 = $("<option>").val("6").text("6").attr("title","京都 大阪 福井 滋賀 三重 奈良 和歌山");
-  var option7 = $("<option>").val("7").text("7").attr("title","石川 富山 岐阜 愛知");
-  var option8 = $("<option>").val("8").text("8").attr("title","新潟 長野 山梨 静岡");
-  var option9 = $("<option>").val("9").text("9").attr("title","東京 福島 栃木 茨城 埼玉 千葉 群馬 神奈川").attr("selected", true);
-  var option10 = $("<option>").val("10").text("10").attr("title","青森 秋田 山形 岩手 宮城");
-  var option11 = $("<option>").val("11").text("11").attr("title","北海道西部");
-  var option12 = $("<option>").val("12").text("12").attr("title","北海道中部");
-  var option13 = $("<option>").val("13").text("13").attr("title","北海道東部");
-  var option14 = $("<option>").val("14").text("14").attr("title","小笠原諸島");
-  var option15 = $("<option>").val("15").text("15").attr("title","沖縄本島");
-  var option16 = $("<option>").val("16").text("16").attr("title","先島諸島");
-  var option17 = $("<option>").val("17").text("17").attr("title","大東諸島");
-  var option18 = $("<option>").val("18").text("18").attr("title","沖ノ鳥島");
-  var option19 = $("<option>").val("19").text("19").attr("title","南鳥島");
-  var option101 = $("<option>").val("101").text("旧1").attr("title","EPSG:30161");
-  var option102 = $("<option>").val("102").text("旧2").attr("title","EPSG:30162");
-  var option103 = $("<option>").val("103").text("旧3").attr("title","EPSG:30163");
-  var option104 = $("<option>").val("104").text("旧4").attr("title","EPSG:30164");
-  var option105 = $("<option>").val("105").text("旧5").attr("title","EPSG:30165");
-  var option106 = $("<option>").val("106").text("旧6").attr("title","EPSG:30166");
-  var option107 = $("<option>").val("107").text("旧7").attr("title","EPSG:30167");
-  var option108 = $("<option>").val("108").text("旧8").attr("title","EPSG:30168");
-  var option109 = $("<option>").val("109").text("旧9").attr("title","EPSG:30169");
-  var option110 = $("<option>").val("110").text("旧10").attr("title","EPSG:30170");
-  var option111 = $("<option>").val("111").text("旧11").attr("title","EPSG:30171");
-  var option112 = $("<option>").val("112").text("旧12").attr("title","EPSG:30172");
-  var option113 = $("<option>").val("113").text("旧13").attr("title","EPSG:30173");
-  var option114 = $("<option>").val("114").text("旧14").attr("title","EPSG:30174");
-  var option115 = $("<option>").val("115").text("旧15").attr("title","EPSG:30175");
-  var option116 = $("<option>").val("116").text("旧16").attr("title","EPSG:30176");
-  var option117 = $("<option>").val("117").text("旧17").attr("title","EPSG:30177");
-  var option118 = $("<option>").val("118").text("旧18").attr("title","EPSG:30178");
-  var option119 = $("<option>").val("119").text("旧19").attr("title","EPSG:30179");
-//  selectBox.append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17).append(option18).append(option19).append(option101).append(option102).append(option103).append(option104).append(option105).append(option106).append(option107).append(option108).append(option109).append(option110).append(option111).append(option112).append(option113).append(option114).append(option115).append(option116).append(option117).append(option118).append(option119);
-  selectBox.append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17).append(option18).append(option19);
+    // 測地系選択
+    var selectBox = $("<select>").attr({"id": "zone"});
+    var option1 = $("<option>").val("1").text("1").attr("title","長崎 甑島列島 吐噶喇列島 奄美群島");
+    var option2 = $("<option>").val("2").text("2").attr("title","福岡 佐賀 熊本 大分 宮崎 鹿児島");
+    var option3 = $("<option>").val("3").text("3").attr("title","山口 島根 広島");
+    var option4 = $("<option>").val("4").text("4").attr("title","香川 愛媛 徳島 高知");
+    var option5 = $("<option>").val("5").text("5").attr("title","兵庫 鳥取 岡山");
+    var option6 = $("<option>").val("6").text("6").attr("title","京都 大阪 福井 滋賀 三重 奈良 和歌山");
+    var option7 = $("<option>").val("7").text("7").attr("title","石川 富山 岐阜 愛知");
+    var option8 = $("<option>").val("8").text("8").attr("title","新潟 長野 山梨 静岡");
+    var option9 = $("<option>").val("9").text("9").attr("title","東京 福島 栃木 茨城 埼玉 千葉 群馬 神奈川").attr("selected", true);
+    var option10 = $("<option>").val("10").text("10").attr("title","青森 秋田 山形 岩手 宮城");
+    var option11 = $("<option>").val("11").text("11").attr("title","北海道西部");
+    var option12 = $("<option>").val("12").text("12").attr("title","北海道中部");
+    var option13 = $("<option>").val("13").text("13").attr("title","北海道東部");
+    var option14 = $("<option>").val("14").text("14").attr("title","小笠原諸島");
+    var option15 = $("<option>").val("15").text("15").attr("title","沖縄本島");
+    var option16 = $("<option>").val("16").text("16").attr("title","先島諸島");
+    var option17 = $("<option>").val("17").text("17").attr("title","大東諸島");
+    var option18 = $("<option>").val("18").text("18").attr("title","沖ノ鳥島");
+    var option19 = $("<option>").val("19").text("19").attr("title","南鳥島");
+    var option101 = $("<option>").val("101").text("旧1").attr("title","EPSG:30161");
+    var option102 = $("<option>").val("102").text("旧2").attr("title","EPSG:30162");
+    var option103 = $("<option>").val("103").text("旧3").attr("title","EPSG:30163");
+    var option104 = $("<option>").val("104").text("旧4").attr("title","EPSG:30164");
+    var option105 = $("<option>").val("105").text("旧5").attr("title","EPSG:30165");
+    var option106 = $("<option>").val("106").text("旧6").attr("title","EPSG:30166");
+    var option107 = $("<option>").val("107").text("旧7").attr("title","EPSG:30167");
+    var option108 = $("<option>").val("108").text("旧8").attr("title","EPSG:30168");
+    var option109 = $("<option>").val("109").text("旧9").attr("title","EPSG:30169");
+    var option110 = $("<option>").val("110").text("旧10").attr("title","EPSG:30170");
+    var option111 = $("<option>").val("111").text("旧11").attr("title","EPSG:30171");
+    var option112 = $("<option>").val("112").text("旧12").attr("title","EPSG:30172");
+    var option113 = $("<option>").val("113").text("旧13").attr("title","EPSG:30173");
+    var option114 = $("<option>").val("114").text("旧14").attr("title","EPSG:30174");
+    var option115 = $("<option>").val("115").text("旧15").attr("title","EPSG:30175");
+    var option116 = $("<option>").val("116").text("旧16").attr("title","EPSG:30176");
+    var option117 = $("<option>").val("117").text("旧17").attr("title","EPSG:30177");
+    var option118 = $("<option>").val("118").text("旧18").attr("title","EPSG:30178");
+    var option119 = $("<option>").val("119").text("旧19").attr("title","EPSG:30179");
+    //  selectBox.append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17).append(option18).append(option19).append(option101).append(option102).append(option103).append(option104).append(option105).append(option106).append(option107).append(option108).append(option109).append(option110).append(option111).append(option112).append(option113).append(option114).append(option115).append(option116).append(option117).append(option118).append(option119);
+    selectBox.append(option1).append(option2).append(option3).append(option4).append(option5).append(option6).append(option7).append(option8).append(option9).append(option10).append(option11).append(option12).append(option13).append(option14).append(option15).append(option16).append(option17).append(option18).append(option19);
 
-  // ヘッダー
-  var cdHeading2 = $("<span>").addClass("heading").html("系: ");
+    // ヘッダー
+    var cdHeading2 = $("<span>").addClass("heading").html("系: ");
 
-  // 座標
-  this._cdView = $("<span>").addClass("cd").attr({"id": "cdView"});
+    // 座標
+    this._cdView = $("<span>").addClass("cd").attr({"id": "cdView"});
 
-    // 測地系変換ボタン
-    this._cdJgd2tkyButton = $("<a>")
-      .addClass("description-button")
-      .html("変換")
-      .attr({
-        "id": "cdJgd2tkyButton",
-        "target": "_blank",
-        "href": "アドレス",
-        "title": "国土地理院APIを使用して、平面直角座標を日本測地系に変換します。"
-      })
-      .css({
-        "background": "#e6b422",
-        "height": "20px",
-        "right": "initial",
-        "bottom": "initial",
-        "padding": "1px 7px 0px 7px",
-        "position": "relative"
-      });
+      // 測地系変換ボタン
+      this._cdJgd2tkyButton = $("<a>")
+        .addClass("description-button")
+        .html("変換")
+        .attr({
+          "id": "cdJgd2tkyButton",
+          "target": "_blank",
+          "href": "アドレス",
+          "title": "国土地理院APIを使用して、平面直角座標を日本測地系に変換します。"
+        })
+        .css({
+          "background": "#e6b422",
+          "height": "20px",
+          "right": "initial",
+          "bottom": "initial",
+          "padding": "1px 7px 0px 7px",
+          "position": "relative"
+        });
 
-  // スペース（空白）
-  var space = $("<span>").text("　");
+    // スペース（空白）
+    var space = $("<span>").text("　");
 
-  this._cdContainer.append(cdHeading).append(selectBox).append(cdHeading2).append(this._cdView).append(space).append(this._cdJgd2tkyButton);
+    this._cdContainer.append(cdHeading).append(selectBox).append(cdHeading2).append(this._cdView).append(space).append(this._cdJgd2tkyButton);
 
-  container.append(this._cdContainer)
-  parentContainer.append(container);
-  return container;
-},
+    container.append(this._cdContainer)
+    parentContainer.append(container);
+    return container;
+  },
 
   // UTMポイント　表示用コンテナ作成
   _createUTMPointContainer: function (parentContainer) {
@@ -27971,7 +28034,7 @@ _createLinkContainer: function (parentContainer) {
   container.append(this._linkContainer)
   parentContainer.append(container);
   return container;
-},
+  },
 
   // 標高　表示用コンテナ作成
   _createElevationContainer: function (parentContainer) {
@@ -28223,6 +28286,24 @@ _createLinkContainer: function (parentContainer) {
     const strNoData = "---";
 
     this._addrView.html(strNoData);
+    this._pref.html(strNoData); //★変更箇所
+    this._prefLink1.html(strNoData); //★変更箇所
+    this._prefLink1.attr("href",""); //★変更箇所
+    this._prefLink2.html(""); //★変更箇所
+    this._prefLink2.attr("href",""); //★変更箇所
+    this._prefLink3.html(""); //★変更箇所
+    this._prefLink3.attr("href",""); //★変更箇所
+    this._prefLink4.html(""); //★変更箇所
+    this._prefLink4.attr("href",""); //★変更箇所
+    this._city.html(strNoData); //★変更箇所
+    this._cityLink1.html(strNoData); //★変更箇所
+    this._cityLink1.attr("href",""); //★変更箇所
+    this._cityLink2.html(""); //★変更箇所
+    this._cityLink2.attr("href",""); //★変更箇所
+    this._cityLink3.html(""); //★変更箇所
+    this._cityLink3.attr("href",""); //★変更箇所
+    this._cityLink4.html(""); //★変更箇所
+    this._cityLink4.attr("href",""); //★変更箇所
     this._elevationView.html(strNoData);
     this._elevationComment.html("");
     this._seamlessView.html(strNoData);
@@ -28255,6 +28336,8 @@ _createLinkContainer: function (parentContainer) {
   },
 
   _loadAddr: function(center, z){
+    linkZ = z; //★変更箇所（varを付けるとスクロールしてもzoomlevalが変わらなかったため、グローバル変数に変更）
+    linkLatLng = center; //★変更箇所
     if (!this._addrLoader) {
       this._addrLoader = new GSI.AddrLoader();
       this._addrLoader.on("load", L.bind(function (e) {
@@ -28266,6 +28349,7 @@ _createLinkContainer: function (parentContainer) {
         else{
         this._setAddressResult(e.title);
         }
+        this._setPrefResult(e.muniCode,linkLatLng,linkZ); //★変更箇所
       }, this));
     } else {
       this._addrLoader.cancel();
@@ -28466,9 +28550,173 @@ _createLinkContainer: function (parentContainer) {
   },
 
   _setAddressResult: function (address) {
-
     this._addrView.html(address ? address : "---");
     this._contentSizeChange();
+  },
+
+  _setPrefResult: function(muniCode, latlng, z) {
+    console.log('=== Debug: _setPrefResult function start ===');
+    console.log('Input params:', { muniCode, latlng, z });
+  
+    // 市区町村コードから都道府県コードと市区町村コードを抽出
+    let muniArray = GSI.MUNI_ARRAY[muniCode].split(",");
+    console.log('Muni array:', muniArray);
+    let pref = muniArray[1];
+    let city = muniArray[3];
+    let prefCode = muniArray[0] + '000';
+    let cityCode = muniArray[2];
+  
+    console.log('Normalized codes:', { 
+      pref, city, 
+      prefCode: prefCode,
+      cityCode: cityCode 
+    });
+  
+    // 政令市の処理
+    if (city.indexOf('　') !== -1) {
+      cityCode = String(cityCode).substr(0, 4) + "0";
+      city = city.substr(0, city.indexOf('　'));
+      console.log('Designated city processing:', { 
+        modifiedCityCode: cityCode, 
+        modifiedCity: city 
+      });
+    }
+  
+    // 座標変換の計算
+    let wmlatlng = GSI.Utils.bl2xy(latlng, 0);
+    let arcX = parseInt(wmlatlng.x - 40075017);
+    let arcY = parseInt(wmlatlng.y);
+    let extent1 = parseInt(wmlatlng.x) - parseInt(15000000 / Math.pow(2, parseInt(z)-1));
+    let extent2 = parseInt(wmlatlng.y) - parseInt(30000000 / Math.pow(2, parseInt(z)-1));
+    let extent3 = parseInt(wmlatlng.x) + parseInt(15000000 / Math.pow(2, parseInt(z)-1));
+    let extent4 = parseInt(wmlatlng.y) + parseInt(30000000 / Math.pow(2, parseInt(z)-1));
+  
+    // ズームレベル変換テーブル
+    let pascoZl = {
+      "8":"1000000", "9":"1000000", "10":"500000",
+      "11":"200000", "12":"100000", "13":"50000",
+      "14":"25000", "15":"25000", "16":"10000",
+      "17":"5000", "18":"2500", "19":"1000",
+      "20":"500", "21":"500", "22":"500",
+      "23":"500", "24":"500"
+    };
+  
+    let kkcZl = Math.floor(491520000 / (2 ** z));
+    let ajikoZl = Math.floor(589824000 / (2 ** z));
+  
+    // 都道府県名を表示
+    this._pref.html(pref);
+
+    // CSVファイルの処理を保持データを使用するように変更
+    if (this._linksData) {
+      console.log('Using cached links data');
+      
+      // 都道府県のリンク設定
+      if (this._linksData[prefCode]) {
+          const prefLinks = this._linksData[prefCode].map(link => ({
+              html: link.html,
+              title: link.title,
+              url: link.urlTemplate
+                  .replace(/{z}/g, z)
+                  .replace(/{lat}/g, latlng.lat)
+                  .replace(/{lng}/g, latlng.lng)
+                  .replace(/{arcX}/g, arcX)
+                  .replace(/{arcY}/g, arcY)
+          }));
+          this._setPrefLinks(prefLinks);
+      } else {
+          this._setDefaultPrefLink();
+      }
+
+      // 市区町村のリンク設定
+      if (this._linksData[cityCode]) {
+          const cityLinks = this._linksData[cityCode].map(link => ({
+              html: link.html,
+              title: link.title,
+              url: link.urlTemplate
+                  .replace(/{z}/g, z)
+                  .replace(/{lat}/g, latlng.lat)
+                  .replace(/{lng}/g, latlng.lng)
+                  .replace(/{arcX}/g, arcX)
+                  .replace(/{arcY}/g, arcY)
+          }));
+          this._setCityLinks(cityLinks);
+      } else {
+          this._setDefaultCityLink();
+      }
+    } else {
+        this._setDefaultPrefLink();
+        this._setDefaultCityLink();
+    }
+
+    this._contentSizeChange();
+  
+    // 市区町村名を表示
+    this._city.html(city ? city + " " : "---");
+  },
+  
+  // 都道府県リンクの設定
+  _setPrefLinks: function(links) {
+    console.log('Setting prefecture links:', links);
+    for (let i = 0; i < Math.min(links.length, 4); i++) {
+      const linkNum = i + 1;
+      const linkElement = this[`_prefLink${linkNum}`];
+      
+      if (linkElement) {
+        console.log(`Setting prefecture link ${linkNum}:`, links[i]);
+        linkElement.html(links[i].html);
+        linkElement.attr({
+          "href": links[i].url,
+          "title": links[i].title
+        });
+        linkElement.css("color", "");
+      } else {
+        console.warn(`Prefecture link element ${linkNum} not found`);
+      }
+    }
+  },
+  
+  // 市区町村リンクの設定
+  _setCityLinks: function(links) {
+    console.log('Setting city links:', links);
+    for (let i = 0; i < Math.min(links.length, 4); i++) {
+      const linkNum = i + 1;
+      const linkElement = this[`_cityLink${linkNum}`];
+      
+      if (linkElement) {
+        console.log(`Setting city link ${linkNum}:`, links[i]);
+        linkElement.html(links[i].html);
+        linkElement.attr({
+          "href": links[i].url,
+          "title": links[i].title
+        });
+        linkElement.css("color", "");
+      } else {
+        console.warn(`City link element ${linkNum} not found`);
+      }
+    }
+  },
+  
+  // デフォルトの都道府県リンク設定
+  _setDefaultPrefLink: function() {
+    console.log('Setting default prefecture link');
+    this._prefLink1.html("リンク未整備");
+    this._prefLink1.attr({
+      "href": "https://info.qchizu.xyz/qchizu/improve/",
+      "title": "リンク整備に御協力いただける方はこちら"
+    });
+    this._prefLink1.css("color", "");
+  },
+  
+  // デフォルトの市区町村リンク設定
+  _setDefaultCityLink: function() {
+    console.log('Setting default city link');
+    this._cityLink1.html("リンク未整備");
+    this._cityLink1.attr({
+      "href": "https://info.qchizu.xyz/qchizu/improve/",
+      "title": "リンク整備に御協力いただける方は、クリックしてください。"
+    });
+    this._cityLink1.css("color", "");
   },
 
   updateLakeDepthVisible: function(enabled){
