@@ -48,6 +48,18 @@
             const headers = lines[0].split(',').map(header => header.trim());
             this._linksData = {};
 
+            // theme_codeとtheme_nameの変換テーブルを追加
+            const themeNames = {
+                "1": "地形図",
+                "2": "オルソ画像", 
+                "3": "都市計画",
+                "4": "道路",
+                "5": "下水道",
+                "6": "地番",
+                "7": "土砂災害",
+                "8": "森林"
+            };
+
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
@@ -58,8 +70,10 @@
                 if (!this._linksData[code]) this._linksData[code] = [];
                 
                 this._linksData[code].push({
-                    html: values[1],
-                    title: values[3],
+                    html: themeNames[values[2]] || values[2], // theme_codeをtheme_nameに変換
+                    siteName: values[1],
+                    layerName: values[3],
+                    title: `${values[1]} - ${values[3]}`, // site_nameとlayer_nameを組み合わせる
                     urlTemplate: values[4]
                 });
             }
@@ -68,7 +82,7 @@
             console.error('Error loading CSV:', error);
             this._linksData = {};
         });
-  },
+},
 
   setLeft: function () {
 
@@ -1390,43 +1404,35 @@ _createLinkContainer: function (parentContainer) {
   
   // 都道府県リンクの設定
   _setPrefLinks: function(links) {
-    console.log('Setting prefecture links:', links);
     for (let i = 0; i < Math.min(links.length, 4); i++) {
-      const linkNum = i + 1;
-      const linkElement = this[`_prefLink${linkNum}`];
-      
-      if (linkElement) {
-        console.log(`Setting prefecture link ${linkNum}:`, links[i]);
-        linkElement.html(links[i].html);
-        linkElement.attr({
-          "href": links[i].url,
-          "title": links[i].title
-        });
-        linkElement.css("color", "");
-      } else {
-        console.warn(`Prefecture link element ${linkNum} not found`);
-      }
+        const linkNum = i + 1;
+        const linkElement = this[`_prefLink${linkNum}`];
+        
+        if (linkElement) {
+            linkElement.html(links[i].html);  // theme_nameを表示
+            linkElement.attr({
+                "href": links[i].url,
+                "title": links[i].title  // site_name + " " + layer_name
+            });
+            linkElement.css("color", "");
+        }
     }
   },
-  
-  // 市区町村リンクの設定
+
+  // 市区町村リンクの設定も同様に修正
   _setCityLinks: function(links) {
-    console.log('Setting city links:', links);
     for (let i = 0; i < Math.min(links.length, 4); i++) {
-      const linkNum = i + 1;
-      const linkElement = this[`_cityLink${linkNum}`];
-      
-      if (linkElement) {
-        console.log(`Setting city link ${linkNum}:`, links[i]);
-        linkElement.html(links[i].html);
-        linkElement.attr({
-          "href": links[i].url,
-          "title": links[i].title
-        });
-        linkElement.css("color", "");
-      } else {
-        console.warn(`City link element ${linkNum} not found`);
-      }
+        const linkNum = i + 1;
+        const linkElement = this[`_cityLink${linkNum}`];
+        
+        if (linkElement) {
+            linkElement.html(links[i].html);  // theme_nameを表示
+            linkElement.attr({
+                "href": links[i].url,
+                "title": links[i].title  // site_name + " " + layer_name
+            });
+            linkElement.css("color", "");
+        }
     }
   },
   
