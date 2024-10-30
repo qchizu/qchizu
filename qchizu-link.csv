@@ -1,5 +1,0 @@
-municipality_code,site_name,theme_code,layer_name,url_template
-372013,高松市スマートマップ,1,都市計画基本図,https://maps.takamatsu-fact.com/?baseMap=gsi-base#layers=ObF&map={z}/{lat}/{lng}
-372013,高松市スマートマップ,3,都市計画図,https://maps.takamatsu-fact.com/?baseMap=gsi-base#layers=7rinFFmcVp9iEJemArGKGv2NyvqLye8BqnSo&map={z}/{lat}/{lng}
-400009,ふくおか森林オープンデータ,8,森林計画図,https://www.arcgis.com/apps/webappviewer/index.html?id=49d2cf9c5fa74321ac40857fa6e5f0bb&center={arcX}%2C{arcY}%2C102100&level={z}
-402052,飯塚市都市計画マップ,3,都市計画図,https://www.google.com/maps/d/u/0/viewer?mid=19kliK_TlX8GMpO30KO20pmelue0KSzA&ll={lat}%2C{lng}&z={z}

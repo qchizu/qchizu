@@ -1904,7 +1904,7 @@ var zone2epsg = {
   "119":"EPSG:30179",
 };
 
-//★変更（平面直角座標系変換）    
+//★追加（平面直角座標系変換）    
 GSI.Utils.bl2xy = function (latLng,zone) {
   var bl = new Proj4js.Proj('EPSG:4326');
   var xy = new Proj4js.Proj(zone2epsg[zone]);
@@ -1912,6 +1912,9 @@ GSI.Utils.bl2xy = function (latLng,zone) {
   var xyP = Proj4js.transform(bl, xy, blP);
   return { x: xyP.x, y: xyP.y }
 };
+
+//★追加（各種地図サイトの座標変換）
+
 
 GSI.Utils.latLngToDMS = function (latLng) {
 
@@ -27302,7 +27305,7 @@ L.Map.include({
 
   // ★追加部分　CSV読み込み用の新しいメソッドを追加
   _loadLinksCSV: function() {
-    fetch('qchizu-link.csv')
+    fetch('https://raw.githubusercontent.com/qchizu/qchizu_link_csv/refs/heads/main/data/qchizu_link.csv')    
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -27764,14 +27767,14 @@ L.Map.include({
     this._cityLinks = $("<span>").addClass("city-links");//★変更箇所
     var nbsp2 = $("<span>").html("&nbsp;&nbsp;");
     var comment = $("<span>").addClass("mini-comment").html("(注)").attr({ "title":"付近の住所。正確な所属を示すとは限らない。"});
-    var qchizuLinkComment = $("<span>").addClass("qchizu-link").html(" 自治体等の地図: ").attr({ "title":"都道府県、市町村等の地図サイトへのリンク"}).css("color","#ccc");
+    var qchizuLinkComment = $("<span>").addClass("qchizu-link").html(" 自治体の地図: ").attr({ "title":"都道府県、市町村の地図サイトへのリンク"}).css("color","#ccc");
     this._addrView.on('click', L.bind(this._onLargeModeAddrChangeClick, this));
     this._addrChangeReading.on('click', L.bind(this._onLargeModeAddrChangeClick, this));
 
     // ★変更部分
     container.append(this._addrChangeReading).append(nbsp2).append(this._addrView)
     .append(comment).append(qchizuLinkComment)
-    .append(this._pref).append(this._prefLinks)
+    .append(this._pref).append(this._prefLinks).append(nbsp2)
     .append(this._city).append(this._cityLinks);
     
     parentContainer.append(container);
@@ -28138,11 +28141,11 @@ _createLinkContainer: function (parentContainer) {
     let z = parseInt(map.getZoom());
     let lat = center.lat.toFixed(6);
     let lng = center.lng.toFixed(6);
-    let wmlatlng = GSI.Utils.bl2xy(center,0); //Web Mercator座標計算
-    let arcX = parseInt(wmlatlng.x - 40075017); //arcgis用 40075017 は、6378137(EPSG3857の半径) *2 *円周率 で算出
-    let arcY = parseInt(wmlatlng.y);
+    let webMercatorXY = GSI.Utils.bl2xy(center,0); //Web Mercator座標計算
+    let arcgisX = parseInt(webMercatorXY.x - 40075017); //arcgis用 40075017 は、6378137(EPSG3857の半径) *2 *円周率 で算出
+    let arcgisY = parseInt(webMercatorXY.y);
     let m = (156543.03392 * Math.cos(lat * (Math.PI / 180)) / Math.pow(2,z)) * 256 * 3.624851322; //１タイルの長さ（m）に実際の変換から導き出した定数3.624851322をかけたもの
-    let pascoZl = {
+    let wagmapZL = {
       "8" :"1000000",
       "9" :"1000000",
       "10": "500000",
@@ -28161,7 +28164,7 @@ _createLinkContainer: function (parentContainer) {
       "23":    "500",
       "24":    "500",
     };
-    let kkcZl = Math.floor(491520000 / (2 ** z) );
+    let sonicwebZl = Math.floor(491520000 / (2 ** z) );
     let ajikoZl = Math.floor(589824000 / (2 ** z) );
     
     //★変更
@@ -28204,7 +28207,7 @@ _createLinkContainer: function (parentContainer) {
       "OSM": "https://www.openstreetmap.org/#map=" + z + "/" + lat + "/" + lng,
       "F4map": "https://demo.f4map.com/#lat=" + lat + "&lon=" + lng + "&zoom=" + z,
       "今昔マップ": "https://ktgis.net/kjmapw/kjmapw.html?lat="+lat+"&lng="+lng+"&zoom="+z+"&mapOpacity=10&overGSItile=no&altitudeOpacity=2",
-      "地価マップ": "https://www.chikamap.jp/chikamap/Map?mid=222&bsw=1903&bsh=977" + "&mpx=" + japanP.x + "&mpy=" + japanP.y + "&mps=" + pascoZl[z],
+      "地価マップ": "https://www.chikamap.jp/chikamap/Map?mid=222&bsw=1903&bsh=977" + "&mpx=" + japanP.x + "&mpy=" + japanP.y + "&mps=" + wagmapZL[z],
       "ヤマタイム": "https://www.yamakei-online.com/yk_map/?latlon=" + lat + "," + lng + "&zoom=" + Math.min(z,17),
       "docomoエリア": "https://www.docomo.ne.jp/area/servicearea/?rgcd=03&cmcd=5G&scale=2048000&lat=35.690767&lot=139.756853&icid=CRP_IPH_area-5g_to_CRP_AREA_servicearea",
       "at home賃貸": "https://www.athome.co.jp/chintai/fukuoka/map/list/?LAT=" + lat + "&LON=" + lng,
@@ -28582,26 +28585,64 @@ _createLinkContainer: function (parentContainer) {
     }
   
     // 座標変換の計算
-    let wmlatlng = GSI.Utils.bl2xy(latlng, 0);
-    let arcX = parseInt(wmlatlng.x - 40075017);
-    let arcY = parseInt(wmlatlng.y);
-    let extent1 = parseInt(wmlatlng.x) - parseInt(15000000 / Math.pow(2, parseInt(z)-1));
-    let extent2 = parseInt(wmlatlng.y) - parseInt(30000000 / Math.pow(2, parseInt(z)-1));
-    let extent3 = parseInt(wmlatlng.x) + parseInt(15000000 / Math.pow(2, parseInt(z)-1));
-    let extent4 = parseInt(wmlatlng.y) + parseInt(30000000 / Math.pow(2, parseInt(z)-1));
-  
-    // ズームレベル変換テーブル
-    let pascoZl = {
-      "8":"1000000", "9":"1000000", "10":"500000",
-      "11":"200000", "12":"100000", "13":"50000",
-      "14":"25000", "15":"25000", "16":"10000",
-      "17":"5000", "18":"2500", "19":"1000",
-      "20":"500", "21":"500", "22":"500",
-      "23":"500", "24":"500"
+    // maplibreのズームレベル
+    let mapLibreZ = z - 1;
+    // ウェブメルカトル座標系
+    let webMercatorXY = GSI.Utils.bl2xy(latlng, 0);
+    let webMercatorX = webMercatorXY.x;
+    let webMercatorY = webMercatorXY.y;
+    // arcgis用
+    let arcgisX = parseInt(webMercatorXY.x - 40075017);
+    let arcgisY = parseInt(webMercatorXY.y);
+    // wagmap用
+    let wagmapZ = {
+      "8" :"1000000",
+      "9" :"1000000",
+      "10": "500000",
+      "11": "200000",
+      "12": "100000",
+      "13":  "50000",
+      "14":  "25000",
+      "15":  "25000",
+      "16":  "10000",
+      "17":   "5000",
+      "18":   "2500",
+      "19":   "1000",
+      "20":    "500",
+      "21":    "500",
+      "22":    "500",
+      "23":    "500",
+      "24":    "500",
     };
+    // sonicweb用
+    let sonicwebZ = Math.floor(491520000 / (2 ** z));
+    // alandis用
+    let alandisZ = Math.floor(589824000 / (2 ** z));
+    // sabomap用
+    let sabomapExtent1 = parseInt(webMercatorXY.x) - parseInt(15000000 / Math.pow(2, parseInt(z)-1));
+    let sabomapExtent2 = parseInt(webMercatorXY.y) - parseInt(30000000 / Math.pow(2, parseInt(z)-1));
+    let sabomapExtent3 = parseInt(webMercatorXY.x) + parseInt(15000000 / Math.pow(2, parseInt(z)-1));
+    let sabomapExtent4 = parseInt(webMercatorXY.y) + parseInt(30000000 / Math.pow(2, parseInt(z)-1));
   
-    let kkcZl = Math.floor(491520000 / (2 ** z));
-    let ajikoZl = Math.floor(589824000 / (2 ** z));
+    // 共通のURLテンプレート置換関数
+    function replaceUrlTemplate(urlTemplate, z, mapLibreZ, latlng, arcgisX, arcgisY, wagmapZ, sonicwebZ, alandisZ, sabomapExtent1, sabomapExtent2, sabomapExtent3, sabomapExtent4) {
+      return urlTemplate
+          .replace(/{z}/g, z)
+          .replace(/{mapLibreZ}/g, mapLibreZ)
+          .replace(/{webMercatorX}/g, webMercatorX)
+          .replace(/{webMercatorY}/g, webMercatorY)
+          .replace(/{lat}/g, latlng.lat)
+          .replace(/{lng}/g, latlng.lng)
+          .replace(/{arcgisX}/g, arcgisX)
+          .replace(/{arcgisY}/g, arcgisY)
+          .replace(/{wagmapZ}/g, wagmapZ[z])
+          .replace(/{sonicwebZ}/g, sonicwebZ)
+          .replace(/{alandisZ}/g, alandisZ)
+          .replace(/{sabomapExtent1}/g, sabomapExtent1)
+          .replace(/{sabomapExtent2}/g, sabomapExtent2)
+          .replace(/{sabomapExtent3}/g, sabomapExtent3)
+          .replace(/{sabomapExtent4}/g, sabomapExtent4);
+    }
   
     // 都道府県名を表示
     this._pref.html(pref ? pref : "---");
@@ -28618,29 +28659,19 @@ _createLinkContainer: function (parentContainer) {
           const prefLinks = this._linksData[prefCode].map(link => ({
               html: link.html,
               title: link.title,
-              url: link.urlTemplate
-                  .replace(/{z}/g, z)
-                  .replace(/{lat}/g, latlng.lat)
-                  .replace(/{lng}/g, latlng.lng)
-                  .replace(/{arcX}/g, arcX)
-                  .replace(/{arcY}/g, arcY)
+              url: replaceUrlTemplate(link.urlTemplate, z, mapLibreZ, latlng, arcgisX, arcgisY, wagmapZ, sonicwebZ, alandisZ, sabomapExtent1, sabomapExtent2, sabomapExtent3, sabomapExtent4)
           }));
           this._setPrefLinks(prefLinks);
       } else {
           this._setDefaultPrefLink();
       }
-
+      
       // 市区町村のリンク設定
       if (this._linksData[cityCode]) {
           const cityLinks = this._linksData[cityCode].map(link => ({
               html: link.html,
               title: link.title,
-              url: link.urlTemplate
-                  .replace(/{z}/g, z)
-                  .replace(/{lat}/g, latlng.lat)
-                  .replace(/{lng}/g, latlng.lng)
-                  .replace(/{arcX}/g, arcX)
-                  .replace(/{arcY}/g, arcY)
+              url: replaceUrlTemplate(link.urlTemplate, z, mapLibreZ, latlng, arcgisX, arcgisY, wagmapZ, sonicwebZ, alandisZ, sabomapExtent1, sabomapExtent2, sabomapExtent3, sabomapExtent4)
           }));
           this._setCityLinks(cityLinks);
       } else {
