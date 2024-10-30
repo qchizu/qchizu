@@ -19614,7 +19614,7 @@ GSI.AddrLoader = L.Evented.extend({
         if (properties["LV01"]){
           title += properties["LV01"];
         }
-        console.log(properties);
+        // console.log(properties);
 
         //読み
         titleYomi = properties["pref_kana"] + " " + properties["muni_kana"];//★変更箇所
@@ -28547,8 +28547,8 @@ _createLinkContainer: function (parentContainer) {
   },
 
   _setPrefResult: function(muniCode, latlng, z) {
-    console.log('=== Debug: _setPrefResult function start ===');
-    console.log('Input params:', { muniCode, latlng, z });
+    // console.log('=== Debug: _setPrefResult function start ===');
+    // console.log('Input params:', { muniCode, latlng, z });
 
     // muniCodeが未定義またはGSI.MUNI_ARRAYにmuniCodeが存在しない場合の処理
     if (!muniCode || muniCode === "" || !GSI.MUNI_ARRAY[muniCode] || GSI.MUNI_ARRAY[muniCode] === "") {
@@ -28562,26 +28562,26 @@ _createLinkContainer: function (parentContainer) {
   
     // 市区町村コードから都道府県コードと市区町村コードを抽出
     let muniArray = GSI.MUNI_ARRAY[muniCode].split(",");
-    console.log('Muni array:', muniArray);
+    // console.log('Muni array:', muniArray);
     let pref = muniArray[1];
     let city = muniArray[3];
     let prefCode = muniArray[0] + '000';
     let cityCode = muniArray[2];
   
-    console.log('Normalized codes:', { 
+/*     console.log('Normalized codes:', { 
       pref, city, 
       prefCode: prefCode,
       cityCode: cityCode 
-    });
+    }); */
   
     // 政令市の処理
     if (city.indexOf('　') !== -1) {
       cityCode = String(cityCode).substr(0, 4) + "0";
       city = city.substr(0, city.indexOf('　'));
-      console.log('Designated city processing:', { 
+/*       console.log('Designated city processing:', { 
         modifiedCityCode: cityCode, 
         modifiedCity: city 
-      });
+      }); */
     }
   
     // 座標変換の計算
@@ -28652,7 +28652,7 @@ _createLinkContainer: function (parentContainer) {
 
     // CSVファイルの処理を保持データを使用するように変更
     if (this._linksData) {
-      console.log('Using cached links data');
+      // console.log('Using cached links data');
       
       // 都道府県のリンク設定
       if (this._linksData[prefCode]) {
@@ -28739,7 +28739,7 @@ _createLinkContainer: function (parentContainer) {
   
   // デフォルトの都道府県リンク設定
   _setDefaultPrefLink: function() {
-    console.log('Setting default prefecture link');
+    // console.log('Setting default prefecture link');
     this._prefLinks.empty();
     const defaultLink = $("<a>")
         .addClass("description-button")
@@ -28764,7 +28764,7 @@ _createLinkContainer: function (parentContainer) {
   
   // デフォルトの市区町村リンク設定
   _setDefaultCityLink: function() {
-    console.log('Setting default city link');
+    // console.log('Setting default city link');
     this._cityLinks.empty();
     const defaultLink = $("<a>")
         .addClass("description-button")
