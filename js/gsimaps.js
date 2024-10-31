@@ -19614,7 +19614,7 @@ GSI.AddrLoader = L.Evented.extend({
         if (properties["LV01"]){
           title += properties["LV01"];
         }
-        // console.log(properties);
+        console.log(properties);
 
         //読み
         titleYomi = properties["pref_kana"] + " " + properties["muni_kana"];//★変更箇所
@@ -27336,6 +27336,7 @@ L.Map.include({
                 
                 const values = line.split(',').map(value => value.trim());
                 const code = values[0].padStart(6, '0').slice(0, 5);
+                console.log('code:', code);
                 
                 if (!this._linksData[code]) this._linksData[code] = [];
                 
@@ -28565,14 +28566,16 @@ _createLinkContainer: function (parentContainer) {
     // console.log('Muni array:', muniArray);
     let pref = muniArray[1];
     let city = muniArray[3];
-    let prefCode = muniArray[0] + '000';
+    let prefCode = muniArray[0].padStart(2, '0') + '000'; // 先頭に0を補完して5桁にする
     let cityCode = muniArray[2];
+    
+    //console.log(`都道府県コード: ${prefCode}, 市区町村コード: ${cityCode}`);
   
 /*     console.log('Normalized codes:', { 
       pref, city, 
       prefCode: prefCode,
       cityCode: cityCode 
-    }); */
+    }); */ 
   
     // 政令市の処理
     if (city.indexOf('　') !== -1) {
