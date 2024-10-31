@@ -28565,7 +28565,7 @@ _createLinkContainer: function (parentContainer) {
     // console.log('Muni array:', muniArray);
     let pref = muniArray[1];
     let city = muniArray[3];
-    let prefCode = muniArray[0] + '000';
+    let prefCode = muniArray[0].padStart(2, '0') + '000'; // 先頭に0を補完して5桁にする
     let cityCode = muniArray[2];
   
 /*     console.log('Normalized codes:', { 
