@@ -1,0 +1,22 @@
+{
+  "layers": [
+    {
+      "type": "LayerGroup",
+      "title": "みんなで作るQ地図",
+      "iconUrl": "../image/layers_txt/folder-q.png",
+      "toggleall": false,
+      "html" : "<div class='layer_text'>全国Q地図では、皆様に地図を使った情報発信の場を提供しています。あなたが作成した地図をQ地図に掲載して、多くの方に発信しませんか？<a target=\"_blank\" href=\"https://info.qchizu.xyz/Minna\">詳細</a></div>",
+      "id": "",
+      "entries": [
+        {
+          "type": "LayerGroup",
+          "title": "サンプル；福岡の歴史と地図（地図サークルQ）",
+          "iconUrl": "",
+          "toggleall": false,
+          "id": "",
+          "src": "https://raw.githubusercontent.com/qchizu/fukuoka-coastline/refs/heads/main/layers/layer1.txt"
+        }
+      ]
+    }
+  ]
+}
