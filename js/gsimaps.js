@@ -54411,101 +54411,101 @@ function getFileeData(url, key) {
  L.MaplibreGL
   - GSI.PMTileLayer (PMTiles対応レイヤー)
  ************************************************************************/
-GSI.PMTileLayer = L.MaplibreGL.extend({
-  options:{
-    opacity: 1,
-  },
-  initialize: function (url, options) {
-    let protocol = new pmtiles.Protocol();
-    maplibregl.addProtocol("pmtiles",protocol.tile);
-    this.maplibreGLLayer = L.MaplibreGL.prototype.initialize.call(this, {
-      ...options,
-      style: url,
-      maxzoom: options.maxZoom,
-      minzoom: options.minZoom
-    });
-  },
-  onAdd: function (map) {
-    L.MaplibreGL.prototype.onAdd.call(this, map);
-    this.setGrayscale();
-    this.setOpacity(this.options.opacity);
-    this._map.setMinZoom(this.options.minZoom+1);
-  },
-  onRemove: function (map) {
-    L.MaplibreGL.prototype.onRemove.call(this, map);
-    this._map.setMinZoom(0);
-  },
-  setOpacity:function (opacity) {
-    if(this._glMap){
-      var mapContainer = this._glMap.getContainer();
-      mapContainer.style.opacity = opacity;
-    }
-  },
-  getEvents: function () {
-    return {
-      move: this._fastupdate,
-      zoomanim: this._animateZoom, // applys the zoom animation to the <canvas>
-      zoom: this._pinchZoom, // animate every zoom event for smoother pinch-zooming
-      zoomstart: this._zoomStart, // flag starting a zoom to disable panning
-      zoomend: this._zoomEnd,
-      resize: this._resize
-    };
-  },
-  _fastupdate: function (e) {
-    // update the offset so we can correct for it later when we zoom
-    this._offset = this._map.containerPointToLayerPoint([0, 0]);
-    
-    if (this._zooming) { return; }
-    
-    var size = this.getSize(),
-    container = this._container,
-    gl = this._glMap,
-    offset = this._map.getSize().multiplyBy(this.options.padding),
-    topLeft = this._map.containerPointToLayerPoint([0, 0]).subtract(offset);
-    this._transformGL(gl);
-    L.DomUtil.setPosition(container, this._roundPoint(topLeft));
-    L.Util.requestAnimFrame(function () {
-        if (gl.transform.width !== size.x || gl.transform.height !== size.y) {
-            container.style.width  = size.x + 'px';
-            container.style.height = size.y + 'px';
-            if (gl._resize !== null && gl._resize !== undefined){
-                gl._resize();
-            } else {
-                gl.resize();
-            }
-        } else {
-            // older versions of mapbox-gl surfaced update publicly
-            if (gl._update !== null && gl._update !== undefined){
-                gl._update();
-            } else {
-                gl.update();
-            }
-        }
-    }, this);
-  },
-  _setView:function (coordinate) {
-    this._glMap.setCenter([coordinate.lng, coordinate.lat]);
-  },
-  _resetView:function () {
-    this._setView(this._map.getCenter());
-  },
-  setGrayscale:function () {
-    let mapContainer = this._glMap.getContainer();
-    if(this.isGrayScale){
-      mapContainer.style.filter = 'grayscale(1)';
-    } else {
-      mapContainer.style.filter = '';
-    }
-  },
-  redraw:function () {
-    if(this._glMap){
-      if (!this._baseStyles ){this._baseStyles = this._glMap.getStyle();}
+  GSI.PMTileLayer = L.MaplibreGL.extend({
+    options:{
+      opacity: 1,
+    },
+    initialize: function (url, options) {
+      let protocol = new pmtiles.Protocol();
+      maplibregl.addProtocol("pmtiles",protocol.tile);
+      this.maplibreGLLayer = L.MaplibreGL.prototype.initialize.call(this, {
+        ...options,
+        style: url,
+        maxzoom: options.maxZoom,
+        minzoom: options.minZoom
+      });
+    },
+    onAdd: function (map) {
+      L.MaplibreGL.prototype.onAdd.call(this, map);
       this.setGrayscale();
       this.setOpacity(this.options.opacity);
+      this._map.setMinZoom(this.options.minZoom+1);
+    },
+    onRemove: function (map) {
+      L.MaplibreGL.prototype.onRemove.call(this, map);
+      this._map.setMinZoom(0);
+    },
+    setOpacity:function (opacity) {
+      if(this._glMap){
+        var mapContainer = this._glMap.getContainer();
+        mapContainer.style.opacity = opacity;
+      }
+    },
+    getEvents: function () {
+      return {
+        move: this._fastupdate,
+        zoomanim: this._animateZoom, // applys the zoom animation to the <canvas>
+        zoom: this._pinchZoom, // animate every zoom event for smoother pinch-zooming
+        zoomstart: this._zoomStart, // flag starting a zoom to disable panning
+        zoomend: this._zoomEnd,
+        resize: this._resize
+      };
+    },
+    _fastupdate: function (e) {
+      // update the offset so we can correct for it later when we zoom
+      this._offset = this._map.containerPointToLayerPoint([0, 0]);
+      
+      if (this._zooming) { return; }
+      
+      var size = this.getSize(),
+      container = this._container,
+      gl = this._glMap,
+      offset = this._map.getSize().multiplyBy(this.options.padding),
+      topLeft = this._map.containerPointToLayerPoint([0, 0]).subtract(offset);
+      this._transformGL(gl);
+      L.DomUtil.setPosition(container, this._roundPoint(topLeft));
+      L.Util.requestAnimFrame(function () {
+          if (gl.transform.width !== size.x || gl.transform.height !== size.y) {
+              container.style.width  = size.x + 'px';
+              container.style.height = size.y + 'px';
+              if (gl._resize !== null && gl._resize !== undefined){
+                  gl._resize();
+              } else {
+                  gl.resize();
+              }
+          } else {
+              // older versions of mapbox-gl surfaced update publicly
+              if (gl._update !== null && gl._update !== undefined){
+                  gl._update();
+              } else {
+                  gl.update();
+              }
+          }
+      }, this);
+    },
+    _setView:function (coordinate) {
+      this._glMap.setCenter([coordinate.lng, coordinate.lat]);
+    },
+    _resetView:function () {
+      this._setView(this._map.getCenter());
+    },
+    setGrayscale:function () {
+      let mapContainer = this._glMap.getContainer();
+      if(this.isGrayScale){
+        mapContainer.style.filter = 'grayscale(1)';
+      } else {
+        mapContainer.style.filter = '';
+      }
+    },
+    redraw:function () {
+      if(this._glMap){
+        if (!this._baseStyles ){this._baseStyles = this._glMap.getStyle();}
+        this.setGrayscale();
+        this.setOpacity(this.options.opacity);
+      }
     }
-  }
-});
-
-GSI.pmTileLayer = function (url, options) {
-  return new GSI.PMTileLayer(url, options);
-};
+  });
+  
+  GSI.pmTileLayer = function (url, options) {
+    return new GSI.PMTileLayer(url, options);
+  };
