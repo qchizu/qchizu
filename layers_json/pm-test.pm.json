@@ -1,24 +1,62 @@
 {
-"version": 8,
-"name": "pmtiles-test",
-"sources": {
-  "std-pmtile": {
-    "type": "vector",
-    "url": "pmtiles://https://habs.rad.naro.go.jp/spatial_data/amx/a.pmtiles",
-    "attribution": "テスト用PMTilesデータ"
-  }
-},
-"layers": [{
-  "id": "amx-a-fude",
-  "source": "std-pmtile",
-  "source-layer": "fude",
-  "type": "fill",
-  "paint": {
-    "fill-color": "#ff0000",
-    "fill-opacity": 0.5
+  "version": 8,
+  "name": "pmtiles-test",
+  "glyphs": "https://example.com/glyphs/{fontstack}/{range}.pbf",
+  "sources": {
+    "std-pmtile": {
+      "type": "vector",
+      "url": "pmtiles://https://habs.rad.naro.go.jp/spatial_data/amx/a.pmtiles",
+      "attribution": "テスト用PMTilesデータ"
+    }
   },
-  "layout": {
-    "visibility": "visible"
-  }
-}]
+  "layers": [
+    {
+      "id": "amx-a-fude",
+      "source": "std-pmtile",
+      "source-layer": "fude",
+      "type": "fill",
+      "paint": {
+        "fill-color": "#ff0000",
+        "fill-opacity": 0.2
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 10,
+      "maxzoom": 20
+    },
+    {
+      "id": "amx-a-fude-outline",
+      "source": "std-pmtile",
+      "source-layer": "fude",
+      "type": "line",
+      "paint": {
+        "line-color": "#ff0000",
+        "line-width": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 12,
+      "maxzoom": 20
+    },
+    {
+      "id": "amx-a-ooaza",
+      "source": "std-pmtile",
+      "source-layer": "fude",
+      "type": "symbol",
+      "layout": {
+        "text-field": "{大字名}",
+        "text-size": 12,
+        "text-anchor": "center"
+      },
+      "paint": {
+        "text-color": "#000000",
+        "text-halo-color": "rgba(255, 255, 255, 0.5)",
+        "text-halo-width": 1
+      },
+      "minzoom": 17,
+      "maxzoom": 20
+    }
+  ]
 }

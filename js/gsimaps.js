@@ -1,7 +1,7 @@
 /************************************************************************
  設定
  ************************************************************************/
-var GSI = {
+ var GSI = {
   ClientMode: {}
   , Modal: {}
   , Draw: {}
@@ -54414,6 +54414,7 @@ function getFileeData(url, key) {
   GSI.PMTileLayer = L.MaplibreGL.extend({
     options:{
       opacity: 1,
+      zIndex: 1  // Add zIndex option like VectorTileLayer
     },
     initialize: function (url, options) {
       let protocol = new pmtiles.Protocol();
@@ -54427,13 +54428,43 @@ function getFileeData(url, key) {
     },
     onAdd: function (map) {
       L.MaplibreGL.prototype.onAdd.call(this, map);
-      this.setGrayscale();
-      this.setOpacity(this.options.opacity);
-      this._map.setMinZoom(this.options.minZoom+1);
+      // Move container to overlayPane instead of default pane
+      if (this._container && this._container.parentNode) {
+        this._container.parentNode.removeChild(this._container);
+      }
+      map._panes.overlayPane.appendChild(this._container);
+        this._updateZIndex();  // Set initial z-index
+        this.setGrayscale();
+        this.setOpacity(this.options.opacity);
+        this._map.setMinZoom(this.options.minZoom+1);
     },
     onRemove: function (map) {
-      L.MaplibreGL.prototype.onRemove.call(this, map);
+      // コンテナがoverlayPaneにある場合はそこから削除
+      if (this._container && this._container.parentNode === map._panes.overlayPane) {
+        map._panes.overlayPane.removeChild(this._container);
+      }
+  
       this._map.setMinZoom(0);
+      
+      // GLMapの後処理
+      if (this._glMap) {
+        this._glMap.remove();
+        this._glMap = null;
+      }
+  
+      this._container = null;
+      this._map = null;
+    },
+    // Add methods for z-index management
+    setZIndex: function (zIndex) {
+      this.options.zIndex = zIndex;
+      this._updateZIndex();
+      return this;
+    },
+    _updateZIndex: function () {
+      if (this._container && this.options.zIndex !== undefined) {
+        this._container.style.zIndex = this.options.zIndex;
+      }
     },
     setOpacity:function (opacity) {
       if(this._glMap){
