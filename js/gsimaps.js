@@ -1,7 +1,7 @@
 /************************************************************************
  設定
  ************************************************************************/
-var GSI = {
+ var GSI = {
   ClientMode: {}
   , Modal: {}
   , Draw: {}
@@ -8759,6 +8759,11 @@ GSI.LayersJSON.url2LayerType = function (url) {
   if (url.match(/\.webm$/) || url.match(/\.mp4$/)) {
     return "videooverlay";
   }
+
+  if (url.match(/\.pm\.json$/)) {
+    return "pmtiles";
+  }
+
   var ext = "";
   var layerType = "";
   var matchResult = url.match(/.*\.([^.]+$)/);
@@ -8977,6 +8982,19 @@ GSI.Utils.infoToLayer = function (info, noFinishMove) {
         this.getElement().play();
       }, this))
     }, layer));
+    layer._noFinishMove = noFinishMove;
+  }
+
+  else if (info.layerType == "pmtiles") {
+    // PMTiles
+    var options = {};
+
+    if ((info.minZoom == 0 || info.minZoom) && info.minZoom != "") options.minZoom = info.minZoom;
+    if ((info.maxZoom == 0 || info.maxZoom) && info.maxZoom != "") options.maxZoom = info.maxZoom;
+    if (info.attribution) options.attribution = info.attribution;
+    if (info.bounds && info.bounds != "") options.bounds = info.bounds;
+
+    layer = new GSI.PMTileLayer(info.url, options);
     layer._noFinishMove = noFinishMove;
   }
 
@@ -12872,6 +12890,10 @@ GSI.MultiLayer = L.LayerGroup.extend({
       }
       else if (info.layerType == "videooverlay") {
         // VideoOverlay
+        this.addLayer(layer, true);
+      }
+      else if (info.layerType == "pmtiles") {
+        // PMTiles
         this.addLayer(layer, true);
       }
     }
@@ -20073,6 +20095,16 @@ GSI.MapLayerList = L.Evented.extend({
         this.list.unshift(info);
         this._initZIndexOffset(this.list, 10000);
         this.onLayerLoad(info._visibleInfo.layer);
+      }
+      else if (info.layerType == "pmtiles") {
+        // PMTiles
+        info._visibleInfo.layer.on("loadstart", L.bind(this.onLayerLoadStart, this, info._visibleInfo.layer, "PMTiles"));
+        info._visibleInfo.layer.on("load", L.bind(function (e) { this.onLayerLoad(e.src) }, this));
+
+        if (!info._visibleInfo._isHidden) this.map.addLayer(info._visibleInfo.layer);
+
+        this.list.unshift(info);
+        this._initZIndexOffset(this.list, 10000);
       }
     }
 
@@ -28219,8 +28251,6 @@ _createLinkContainer: function (parentContainer) {
     var link3Url = {
       "MapLibre版": "https://maps.qchizu.xyz/maplibre/#" + (z-1) + "/" + lat + "/" + lng,
       "o-hinata": "https://kenzkenz.xsrv.jp/open-hinata/#" + z + "/" + lng + "/" + lat + "%3FS%3D1%26L%3D%5B%5B%7B%22id%22%3A%22mw5%22%2C%22ck%22%3Atrue%2C%22o%22%3A1%7D%2C%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%2C%5B%7B%22id%22%3A2%2C%22ck%22%3Atrue%2C%22o%22%3A1%2C%22c%22%3A%22%22%7D%5D%5D",
-      "shi法務局": "https://shi-works.github.io/MojMap/#" +(z-1) + "/" + lat + "/" + lng,
-      "shiハザード": "https://shi-works.github.io/hazard-map/#" +(z-1) + "/" + lat + "/" + lng,
       "昔の境界": "https://hanishina.github.io/maps/historymap.html?y=" + lat + "&x=" + lng + "&z=" + z,
       "スーパー地形": "https://www.kashmir3d.com/superdemapp/jump?latlon=" + lat + "," + lng,
     };
@@ -28709,6 +28739,26 @@ _createLinkContainer: function (parentContainer) {
             });
         this._prefLinks.append(linkButton);
     });
+    
+    // リンク追加ボタンを追加
+    const addLinkButton = $("<a>")
+        .addClass("description-button")
+        .html("＋")
+        .attr({
+            "target": "_blank",
+            "href": "https://qchizu-link.vercel.app/",
+            "title": "Q地図リンク登録フォームへ"
+        })
+        .css({
+          "background": "#e6b422",
+          "height": "20px",
+          "right": "initial",
+          "bottom": "initial",
+          "padding": "1px 7px 0px 7px",
+          "position": "relative",
+          "margin-left": "4px"
+        });
+    this._prefLinks.append(addLinkButton);
   },
 
   // _setCityLinks メソッドを同様に修正
@@ -28735,55 +28785,77 @@ _createLinkContainer: function (parentContainer) {
             });
         this._cityLinks.append(linkButton);
     });
-  },
-  
-  // デフォルトの都道府県リンク設定
-  _setDefaultPrefLink: function() {
-    // console.log('Setting default prefecture link');
-    this._prefLinks.empty();
-    const defaultLink = $("<a>")
+    
+    // リンク追加ボタンを追加
+    const addLinkButton = $("<a>")
         .addClass("description-button")
-        .html("リンクなし")
+        .html("＋")
         .attr({
             "target": "_blank",
             "href": "https://qchizu-link.vercel.app/",
             "title": "Q地図リンク登録フォームへ"
         })
         .css({
-            "background": "333",
-            "height": "20px",
-            "right": "initial",
-            "bottom": "initial",
-            "padding": "1px 7px 0px 7px",
-            "position": "relative",
-            "margin-left": "4px"
+          "background": "#e6b422",
+          "height": "20px",
+          "right": "initial",
+          "bottom": "initial",
+          "padding": "1px 7px 0px 7px",
+          "position": "relative",
+          "margin-left": "4px"
         });
-    this._prefLinks.append(defaultLink);
+    this._cityLinks.append(addLinkButton);
+  },
+  
+  // デフォルトの都道府県リンク設定
+  _setDefaultPrefLink: function() {
+    this._prefLinks.empty();
+    
+    // リンク追加ボタンを追加
+    const addLinkButton = $("<a>")
+        .addClass("description-button")
+        .html("リンクを追加しよう！")
+        .attr({
+            "target": "_blank",
+            "href": "https://qchizu-link.vercel.app/",
+            "title": "Q地図リンク登録フォームへ"
+        })
+        .css({
+          "background": "#e6b422",
+          "height": "20px",
+          "right": "initial",
+          "bottom": "initial",
+          "padding": "1px 7px 0px 7px",
+          "position": "relative",
+          "margin-left": "4px"
+        });
+    this._prefLinks.append(addLinkButton);
   },
 
   
   // デフォルトの市区町村リンク設定
   _setDefaultCityLink: function() {
-    // console.log('Setting default city link');
     this._cityLinks.empty();
-    const defaultLink = $("<a>")
+    
+    // リンク追加ボタンを追加
+    const addLinkButton = $("<a>")
         .addClass("description-button")
-        .html("リンクなし")
+        .html("リンクを追加しよう！")
         .attr({
             "target": "_blank",
             "href": "https://qchizu-link.vercel.app/",
             "title": "Q地図リンク登録フォームへ"
         })
         .css({
-            "background": "333",
-            "height": "20px",
-            "right": "initial",
-            "bottom": "initial",
-            "padding": "1px 7px 0px 7px",
-            "position": "relative",
-            "margin-left": "4px"
+          "background": "#e6b422",
+          "height": "20px",
+          "right": "initial",
+          "bottom": "initial",
+          "padding": "1px 7px 0px 7px",
+          "position": "relative",
+          "margin-left": "4px"
         });
-    this._cityLinks.append(defaultLink);
+    this._cityLinks.append(addLinkButton);
   },
 
   updateLakeDepthVisible: function(enabled){
@@ -54373,4 +54445,539 @@ function getFileeData(url, key) {
       console.log(data);
     });
   }
+};
+
+// ★追加部分
+// keichan34の以下のコードをベースに追加
+// https://github.com/keichan34/gsimaps/tree/003-pmtiles-support-with-layerstxt
+/************************************************************************
+ L.MaplibreGL
+  - GSI.PMTileLayer
+    PMTiles
+ ************************************************************************/
+// PMTileLayerクラスを定義し、MapLibreGLの機能を拡張する
+GSI.PMTileLayer = L.MaplibreGL.extend({
+  // レイヤーの基本設定を定義
+  options: {
+    opacity: 1,    // 透明度を設定（1は完全に不透明）
+    zIndex: 1,     // レイヤーの重なり順を設定（数字が大きいほど上に表示）
+  },
+
+  // レイヤーの初期設定を行う関数
+  initialize: function (url, options) {
+    // PMTilesプロトコルを設定して、タイル読み込みを可能にする
+    let protocol = new pmtiles.Protocol();
+    maplibregl.addProtocol("pmtiles", protocol.tile);
+    
+    // 地図の表示オプションを設定
+    const mapOptions = {
+      ...options,
+      style: url,
+      maxzoom: options.maxZoom,  // 最大ズームレベル
+      minzoom: options.minZoom,  // 最小ズームレベル
+      interactive: true,         // マウス操作を有効化
+      scrollZoom: false,        // マウスホイールでのズームを無効化
+    };
+    
+    // 親クラスの初期化処理を実行
+    this.maplibreGLLayer = L.MaplibreGL.prototype.initialize.call(this, mapOptions);
+
+    // ズーム制限の値を保存
+    this._maxZoom = options.maxZoom;
+    this._minZoom = options.minZoom;
+
+    // ハイライト表示用の設定を初期化
+    this.highlightedFeatures = new Set();
+    this.highlightedProperty = null;
+  },
+
+  // 地図にレイヤーを追加する処理
+  onAdd: function (map) {
+    // 親クラスのレイヤー追加処理を実行
+    L.MaplibreGL.prototype.onAdd.call(this, map);
+    
+    // レイヤーを適切な位置に配置
+    if (this._container && this._container.parentNode) {
+      this._container.parentNode.removeChild(this._container);
+    }
+    map._panes.overlayPane.appendChild(this._container);
+    
+    // レイヤーの表示設定を適用
+    this._updateZIndex();      // 重なり順を設定
+    this.setGrayscale();       // グレースケール設定を適用
+    this.setOpacity(this.options.opacity);  // 透明度を設定
+    this._map.setMinZoom(this.options.minZoom + 1);  // 最小ズームレベルを設定
+
+    // 地図のクリックイベントを設定
+    map.on('click', this._onClick, this);
+  },
+
+  // 地図からレイヤーを削除する処理
+  onRemove: function (map) {
+    // ハイライト表示をクリア
+    this._clearHighlight();
+    // クリックイベントを解除
+    map.off('click', this._onClick, this);
+    
+    // レイヤーのコンテナを削除
+    if (this._container && this._container.parentNode === map._panes.overlayPane) {
+      map._panes.overlayPane.removeChild(this._container);
+    }
+
+    // ズーム設定をリセット
+    this._map.setMinZoom(0);
+    
+    // MapLibreGLの地図を削除
+    if (this._glMap) {
+      this._glMap.remove();
+      this._glMap = null;
+    }
+
+    // ポップアップを閉じる
+    if (this._popup) {
+      map.closePopup(this._popup);
+      this._popup = null;
+    }
+
+    // 参照を削除
+    this._container = null;
+    this._map = null;
+  },
+
+  // 地図クリック時の処理
+  _onClick: function (e) {
+    if (!this._glMap) return;
+
+    try {
+      // クリックした位置の座標を取得
+      const point = this._glMap.project([e.latlng.lng, e.latlng.lat]);
+      
+      // デバッグ情報を出力
+      const layers = this._glMap.getStyle().layers;
+      const activeLayer = layers.find(layer => 
+        layer.layout?.visibility !== 'none' && 
+        (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol')
+      );
+      console.log('Current filter:', activeLayer ? this._glMap.getFilter(activeLayer.id) : 'No active layer');
+      
+      // クリックした位置の地物情報を取得
+      const features = this._glMap.queryRenderedFeatures(point);
+      
+      // 地物が存在する場合、ポップアップを表示
+      if (features.length > 0) {
+        const feature = features[0];
+        const html = this._createPopupContent(feature.properties);
+        
+        // 既存のポップアップを閉じる
+        if (this._popup) {
+          this._map.closePopup(this._popup);
+        }
+
+        // 新しいポップアップを作成して表示
+        this._popup = L.popup({
+          offset: [0, -10],
+          className: 'pmtiles-popup'
+        })
+          .setLatLng(e.latlng)
+          .setContent(html)
+          .openOn(this._map);
+      }
+    } catch (error) {
+      console.error('Error in click handler:', error);
+    }
+  },
+
+  // ポップアップを閉じる処理
+  _clearPopup: function () {
+    if (this._popup && this._map) {
+      this._map.closePopup(this._popup);
+      this._popup = null;
+    }
+  },
+
+  // ポップアップの内容を作成する処理
+  _createPopupContent: function (properties) {
+    if (!properties) return 'No properties found';
+
+    // ポップアップのHTML要素を作成
+    let html = '<div class="maplibregl-popup-content-wrapper">';
+    html += '<table class="maplibregl-popup-content-table">';
+    
+    // プロパティの内容をテーブルで表示
+    for (const [key, value] of Object.entries(properties)) {
+      html += `
+        <tr>
+          <td class="property-key">${key}</td>
+          <td class="property-value">${value}</td>
+          <td class="property-action">
+            <button 
+              class="highlight-btn ${this.highlightedProperty === key + '-' + value ? 'active' : ''}"
+              data-key="${key}"
+              data-value="${value}"
+              onclick="window.handleHighlight('${key}', '${value}')"
+            >
+              ${this.highlightedProperty === key + '-' + value ? '解除' : '強調'}
+            </button>
+          </td>
+        </tr>
+      `;
+    }
+    html += '</table>';
+    html += '</div>';
+
+    // ハイライト機能のイベントハンドラを設定
+    window.handleHighlight = (key, value) => {
+      this._handleHighlight(key, value);
+    };
+
+    return html;
+  },
+
+  // 地物のハイライト表示を処理
+  _handleHighlight: function(key, value) {
+    // 同じ項目が選択された場合はハイライトを解除
+    if (this.highlightedProperty === key + '-' + value) {
+      this._clearHighlight();
+    } else {
+      // 新しいハイライトを設定
+      this._clearHighlight();
+      this.highlightedProperty = key + '-' + value;
+      
+      // 表示中のレイヤーを取得
+      const layers = this._glMap.getStyle().layers;
+      const targetLayer = layers.find(layer => 
+        layer.layout?.visibility !== 'none' && 
+        (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol')
+      );
+
+      if (!targetLayer) {
+        console.warn('No suitable layer found');
+        return;
+      }
+
+      // 元のスタイルを保存
+      this._highlightedLayer = {
+        id: targetLayer.id,
+        type: targetLayer.type,
+        originalStyle: this._getOriginalStyle(targetLayer)
+      };
+
+      const originalStyle = this._highlightedLayer.originalStyle;
+
+      // レイヤーの種類に応じてハイライト表示を設定
+      switch (targetLayer.type) {
+        case 'fill':  // 塗りつぶしの場合
+          this._glMap.setPaintProperty(targetLayer.id, 'fill-color', [
+            'case',
+            ['==', ['get', key], value],
+            '#ffa500',  // ハイライト色（オレンジ）
+            originalStyle.color
+          ]);
+          this._glMap.setPaintProperty(targetLayer.id, 'fill-opacity', [
+            'case',
+            ['==', ['get', key], value],
+            0.5,  // ハイライト時の透明度
+            originalStyle.opacity
+          ]);
+          break;
+        case 'line':  // 線の場合
+          this._glMap.setPaintProperty(targetLayer.id, 'line-color', [
+            'case',
+            ['==', ['get', key], value],
+            '#ffa500',
+            originalStyle.color
+          ]);
+          this._glMap.setPaintProperty(targetLayer.id, 'line-opacity', [
+            'case',
+            ['==', ['get', key], value],
+            0.8,
+            originalStyle.opacity
+          ]);
+          this._glMap.setPaintProperty(targetLayer.id, 'line-width', [
+            'case',
+            ['==', ['get', key], value],
+            3,  // ハイライト時の線幅
+            originalStyle.width
+          ]);
+          break;
+        case 'symbol':  // テキストやアイコンの場合
+          this._glMap.setPaintProperty(targetLayer.id, 'text-color', [
+            'case',
+            ['==', ['get', key], value],
+            '#ffa500',
+            originalStyle.color
+          ]);
+          this._glMap.setPaintProperty(targetLayer.id, 'text-opacity', [
+            'case',
+            ['==', ['get', key], value],
+            1,
+            originalStyle.opacity
+          ]);
+          break;
+      }
+    }
+    
+    // ポップアップの内容を更新
+    if (this._popup) {
+      const feature = this._glMap.queryRenderedFeatures(
+        this._glMap.project([this._popup.getLatLng().lng, this._popup.getLatLng().lat])
+      )[0];
+      if (feature) {
+        this._popup.setContent(this._createPopupContent(feature.properties));
+      }
+    }
+  },
+
+  // レイヤーの元のスタイルを取得
+  _getOriginalStyle: function(layer) {
+    const style = {};
+    try {
+      // レイヤーの種類に応じて必要なスタイル情報を取得
+      switch (layer.type) {
+        case 'fill':
+          style.color = this._glMap.getPaintProperty(layer.id, 'fill-color');
+          style.opacity = this._glMap.getPaintProperty(layer.id, 'fill-opacity');
+          break;
+        case 'line':
+          style.color = this._glMap.getPaintProperty(layer.id, 'line-color');
+          style.opacity = this._glMap.getPaintProperty(layer.id, 'line-opacity');
+          style.width = this._glMap.getPaintProperty(layer.id, 'line-width');
+          break;
+        case 'symbol':
+          style.color = this._glMap.getPaintProperty(layer.id, 'text-color');
+          style.opacity = this._glMap.getPaintProperty(layer.id, 'text-opacity');
+          break;
+      }
+    } catch (error) {
+      console.error('Error getting original style:', error);
+    }
+    return style;
+  },
+
+  // ハイライト表示をクリア
+  _clearHighlight: function() {
+    if (this.highlightedProperty && this._highlightedLayer) {
+      const layers = this._glMap.getStyle().layers;
+      const targetLayer = layers.find(layer => layer.id === this._highlightedLayer.id);
+      
+      // レイヤーが存在する場合、元のスタイルに戻す
+      if (targetLayer) {
+        switch (targetLayer.type) {
+          case 'fill':
+            this._glMap.setPaintProperty(targetLayer.id, 'fill-color', this._highlightedLayer.originalStyle.color);
+            this._glMap.setPaintProperty(targetLayer.id, 'fill-opacity', this._highlightedLayer.originalStyle.opacity);
+            break;
+          case 'line':
+            this._glMap.setPaintProperty(targetLayer.id, 'line-color', this._highlightedLayer.originalStyle.color);
+            this._glMap.setPaintProperty(targetLayer.id, 'line-opacity', this._highlightedLayer.originalStyle.opacity);
+            this._glMap.setPaintProperty(targetLayer.id, 'line-width', this._highlightedLayer.originalStyle.width);
+            break;
+          case 'symbol':
+            this._glMap.setPaintProperty(targetLayer.id, 'text-color', this._highlightedLayer.originalStyle.color);
+            this._glMap.setPaintProperty(targetLayer.id, 'text-opacity', this._highlightedLayer.originalStyle.opacity);
+            break;
+        }
+      }
+      
+      // ハイライト情報をクリア
+      this.highlightedProperty = null;
+      this._highlightedLayer = null;
+    } else {
+      console.log('No highlight to clear');
+    }
+  },
+
+  // レイヤーの重なり順を設定
+  setZIndex: function (zIndex) {
+    this.options.zIndex = zIndex;
+    this._updateZIndex();
+    return this;
+  },
+
+  // 重なり順を実際に適用
+  _updateZIndex: function () {
+    if (this._container && this.options.zIndex !== undefined) {
+      this._container.style.zIndex = this.options.zIndex;
+    }
+  },
+
+  // レイヤーの透明度を設定
+  setOpacity: function (opacity) {
+    if (this._glMap) {
+      var mapContainer = this._glMap.getContainer();
+      mapContainer.style.opacity = opacity;
+    }
+  },
+
+  // 地図のイベントハンドラーを設定
+  getEvents: function () {
+    return {
+      move: this._fastupdate,      // 地図移動時
+      zoomanim: this._animateZoom, // ズームアニメーション時
+      zoom: this._pinchZoom,       // ピンチズーム時
+      zoomstart: this._zoomStart,  // ズーム開始時
+      zoomend: this._zoomEnd,      // ズーム終了時
+      resize: this._resize         // リサイズ時
+    };
+  },
+
+  // 地図の表示を素早く更新する関数
+  _fastupdate: function (e) {
+    // 現在の地図のズームレベルを取得
+    const currentZoom = this._map.getZoom();
+    // 地図で表示可能な最大ズームレベルを取得
+    const mapMaxZoom = this._map.getMaxZoom();
+    // 実際に使用する最大ズームレベルを設定（地図の制限と設定値の小さい方を使用）
+    const effectiveMaxZoom = Math.min(mapMaxZoom, this._maxZoom);
+
+    // ズームレベルが表示可能範囲外の場合は地図を非表示にする
+    if (currentZoom > effectiveMaxZoom || currentZoom < this._minZoom) {
+      if (this._container) {
+        this._container.style.display = 'none';
+      }
+      return;
+    } else if (this._container) {
+      this._container.style.display = '';
+    }
+
+    // 地図の表示位置のずれを計算
+    this._offset = this._map.containerPointToLayerPoint([0, 0]);
+    
+    // ズーム中は更新を行わない
+    if (this._zooming) { return; }
+    
+    // 地図の表示に必要な値を計算
+    var size = this.getSize(),
+    container = this._container,
+    gl = this._glMap,
+    offset = this._map.getSize().multiplyBy(this.options.padding),
+    topLeft = this._map.containerPointToLayerPoint([0, 0]).subtract(offset);
+
+    // WebGL地図の表示を更新
+    this._transformGL(gl);
+    // 地図コンテナの位置を設定
+    L.DomUtil.setPosition(container, this._roundPoint(topLeft));
+
+    // アニメーションフレームで地図の更新を行う
+    L.Util.requestAnimFrame(function () {
+      // 現在のズームレベルを再確認
+      const zoom = this._map.getZoom();
+      const mapMaxZoom = this._map.getMaxZoom();
+      const effectiveMaxZoom = Math.min(mapMaxZoom, this._maxZoom);
+      
+      // ズームレベルが範囲外なら更新しない
+      if (zoom > effectiveMaxZoom || zoom < this._minZoom) {
+        return;
+      }
+
+      // 地図のサイズが変更されている場合は再設定
+      if (gl.transform.width !== size.x || gl.transform.height !== size.y) {
+        container.style.width  = size.x + 'px';
+        container.style.height = size.y + 'px';
+        // 地図のリサイズ処理を実行
+        if (gl._resize !== null && gl._resize !== undefined) {
+          gl._resize();
+        } else {
+          gl.resize();
+        }
+      } else {
+        // サイズ変更がない場合は通常の更新のみ
+        if (gl._update !== null && gl._update !== undefined) {
+          gl._update();
+        } else {
+          gl.update();
+        }
+      }
+    }, this);
+  },
+
+  // 地図の中心座標を設定する関数
+  _setView: function (coordinate) {
+    // 経度と緯度を指定して地図の中心を設定
+    this._glMap.setCenter([coordinate.lng, coordinate.lat]);
+  },
+
+  // 地図の表示を初期状態に戻す関数
+  _resetView: function () {
+    // 現在の地図の中心位置に表示をリセット
+    this._setView(this._map.getCenter());
+  },
+
+  // 地図のグレースケール表示を切り替える関数
+  setGrayscale: function () {
+    // 地図のコンテナを取得
+    let mapContainer = this._glMap.getContainer();
+    // グレースケールが有効な場合はフィルターを適用、そうでない場合は解除
+    if (this.isGrayScale) {
+      mapContainer.style.filter = 'grayscale(1)';
+    } else {
+      mapContainer.style.filter = '';
+    }
+  },
+
+  // 地図を再描画する関数
+  redraw: function () {
+    if (this._glMap) {
+      // 基本スタイルが未設定の場合は保存
+      if (!this._baseStyles) {
+        this._baseStyles = this._glMap.getStyle();
+      }
+      // グレースケールと透明度の設定を適用
+      this.setGrayscale();
+      this.setOpacity(this.options.opacity);
+    }
+  }
+});
+
+// スタイルシートの追加
+const style = document.createElement('style');
+style.textContent = `
+.maplibregl-popup-content-wrapper {
+  max-height: 500px;  /* ポップアップの最大高さを設定 */
+  overflow-y: auto;   /* 縦方向のスクロールを有効化 */
+}
+
+.highlight-btn {
+  padding: 2px 8px;
+  margin-left: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.highlight-btn.active {
+  background: #ffa500;
+}
+
+.maplibregl-popup-content-table {
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+}
+
+.maplibregl-popup-content-table, .maplibregl-popup-content-table td, .maplibregl-popup-content-table th {
+  border: 1px solid #ccc;
+}
+
+.maplibregl-popup-content-table td,
+.maplibregl-popup-content-table th {
+  word-break: break-all;
+}
+
+.maplibregl-popup-content-table td:nth-child(1) {
+  min-width: 60px;
+}
+
+.maplibregl-popup-content-table td:nth-child(3) {
+  width: 60px;
+}
+
+.property-action {
+  text-align: right;
+}
+`;
+document.head.appendChild(style);
+
+GSI.pmTileLayer = function (url, options) {
+  return new GSI.PMTileLayer(url, options);
 };

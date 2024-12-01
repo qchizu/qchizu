@@ -2,6 +2,31 @@
   "layers": [
     {
       "type": "LayerGroup",
+      "title": "法務局地番図",
+      "iconUrl": "",
+      "toggleall": false,
+      "id": "",
+      "entries": [
+        {
+          "type": "Layer",
+          "id": "60_moj_chiban_2022_01",
+          "title": "2022年2月 登記所備付地図",
+          "iconUrl": "",
+          "url": "/layers_json/60_moj_chiban_2022_01.pm.json",
+          "subdomains": "",
+          "attribution": "<a target=\"_blank\"href=\"https://amx-project.github.io/a-spec/\">amx-a</a>(<a target=\"_blank\"href=\"https://www.moj.go.jp/MINJI/minji05_00494.html\">法務省</a>)",
+          "errorTileUrl": "",
+          "cocotile": false,
+          "minZoom": 2,
+          "maxZoom": 20,
+          "maxNativeZoom": 16,
+          "legendUrl": "",
+          "html": ""
+        }
+      ]
+    },
+    {
+      "type": "LayerGroup",
       "title": " 令和6年(2024年)能登半島地震",
       "iconUrl": "../image/layers_txt/folder-q.png",
       "toggleall": false,
