@@ -376,7 +376,7 @@ input[type=search] {
 	height: 40px;
 	line-height: 40px;
 	padding: 0 3px 0 2px;
-	padding-left: 100px;
+	padding-left: 140px;  /* ★ロゴ追加に伴い修正 */
 }
 #header.mobile {
 	padding-left:38px;
@@ -397,10 +397,27 @@ input[type=search] {
 	*/
 }
 
+/* ★変更箇所 */
 #header .logoarea {
-	position: absolute;
-	left: 4px;
-	top: 5px;
+    position: absolute;
+    left: 4px;
+    top: 5px;
+    display: flex;
+    align-items: center;
+    background-color: #e6b422;
+    padding: 0px 10px 1px 3px;
+    border-radius: 3px;
+}
+
+/* ★追加 */
+#header.mobile .logoarea {
+    padding: 0px 0px 0px 0px;
+}
+
+/* ★追加: ロゴ画像のスタイル */
+#header .logoarea img {
+    height: 30px; /* ロゴの高さを調整 */
+    width: auto;
 }
 
 #header .logoarea .logoimage {
@@ -5746,19 +5763,17 @@ form {
 #title_logo_upper { /*★★変更部分（フォント＆色）★★*/
 	font-family: 'ヒラギノ丸ゴ Pro W4', 'ヒラギノ丸ゴ Pro', 'Hiragino Maru Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'BIZ UDゴシック','HG丸ｺﾞｼｯｸM-PRO', 'HGMaruGothicMPRO';
 	margin-top: 3px;
-	text-align: center;
+	text-align: left;
 	font-size: 18px;
 	color: #000000;
-	background-color: #e6b422;
 	line-height: 18px;
 }
 
 #title_logo_lower { /*★★変更部分（フォント＆色）★★*/
 	font-family: 'ヒラギノ丸ゴ Pro W4', 'ヒラギノ丸ゴ Pro', 'Hiragino Maru Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'BIZ UDゴシック', 'HG丸ｺﾞｼｯｸM-PRO', 'HGMaruGothicMPRO';
-	text-align: center;
+	text-align: left;
 	font-size: 11px;
 	color: #000000;
-	background-color: #e6b422;
 	line-height: 11px;
 }
 
