@@ -15,6 +15,14 @@
           "toggleall": false,
           "id": "",
           "src": "https://raw.githubusercontent.com/qchizu/fukuoka-coastline/refs/heads/main/layers/layer1.txt"
+        },
+        {
+          "type": "LayerGroup",
+          "title": "20241203マッピングパーティー盛岡",
+          "iconUrl": "",
+          "toggleall": false,
+          "id": "",
+          "src": "https://raw.githubusercontent.com/qchizu/20241203mapping-party/refs/heads/main/layers/layer1.txt"
         }
       ]
     }
