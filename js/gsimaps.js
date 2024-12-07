@@ -54730,7 +54730,63 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
 
   //----- 同一属性地物のハイライト機能 -----//
 
-  // 地物のハイライト表示を処理
+  // 新しい関数を定義
+  _setHighlight: function(targetLayer, key, value, highlightColor) {
+    const originalStyle = this._highlightedLayer.originalStyle;
+  
+    switch (targetLayer.type) {
+      case 'fill':  // 塗りつぶしの場合
+        this._glMap.setPaintProperty(targetLayer.id, 'fill-color', [
+          'case',
+          ['==', ['get', key], value],
+          highlightColor,  // ハイライト色
+          originalStyle.color
+        ]);
+        this._glMap.setPaintProperty(targetLayer.id, 'fill-opacity', [
+          'case',
+          ['==', ['get', key], value],
+          0.5,  // ハイライト時の透明度
+          originalStyle.opacity
+        ]);
+        break;
+      case 'line':  // 線の場合
+        this._glMap.setPaintProperty(targetLayer.id, 'line-color', [
+          'case',
+          ['==', ['get', key], value],
+          highlightColor,
+          originalStyle.color
+        ]);
+        this._glMap.setPaintProperty(targetLayer.id, 'line-opacity', [
+          'case',
+          ['==', ['get', key], value],
+          0.8,
+          originalStyle.opacity
+        ]);
+        this._glMap.setPaintProperty(targetLayer.id, 'line-width', [
+          'case',
+          ['==', ['get', key], value],
+          3,  // ハイライト時の線幅
+          originalStyle.width
+        ]);
+        break;
+      case 'symbol':  // テキストやアイコンの場合
+        this._glMap.setPaintProperty(targetLayer.id, 'text-color', [
+          'case',
+          ['==', ['get', key], value],
+          highlightColor,
+          originalStyle.color
+        ]);
+        this._glMap.setPaintProperty(targetLayer.id, 'text-opacity', [
+          'case',
+          ['==', ['get', key], value],
+          1,
+          originalStyle.opacity
+        ]);
+        break;
+    }
+  },
+  
+  // _handleHighlight 関数の変更
   _handleHighlight: function(key, value) {
     // 同じ項目が選択された場合はハイライトを解除
     if (this.highlightedProperty === key + '-' + value) {
@@ -54746,72 +54802,21 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
         layer.layout?.visibility !== 'none' && 
         (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol')
       );
-
+  
       if (!targetLayer) {
         console.warn('No suitable layer found');
         return;
       }
-
+  
       // 元のスタイルを保存
       this._highlightedLayer = {
         id: targetLayer.id,
         type: targetLayer.type,
         originalStyle: this._getOriginalStyle(targetLayer)
       };
-
-      const originalStyle = this._highlightedLayer.originalStyle;
-
-      // レイヤーの種類に応じてハイライト表示を設定
-      switch (targetLayer.type) {
-        case 'fill':  // 塗りつぶしの場合
-          this._glMap.setPaintProperty(targetLayer.id, 'fill-color', [
-            'case',
-            ['==', ['get', key], value],
-            '#ffa500',  // ハイライト色（オレンジ）
-            originalStyle.color
-          ]);
-          this._glMap.setPaintProperty(targetLayer.id, 'fill-opacity', [
-            'case',
-            ['==', ['get', key], value],
-            0.5,  // ハイライト時の透明度
-            originalStyle.opacity
-          ]);
-          break;
-        case 'line':  // 線の場合
-          this._glMap.setPaintProperty(targetLayer.id, 'line-color', [
-            'case',
-            ['==', ['get', key], value],
-            '#ffa500',
-            originalStyle.color
-          ]);
-          this._glMap.setPaintProperty(targetLayer.id, 'line-opacity', [
-            'case',
-            ['==', ['get', key], value],
-            0.8,
-            originalStyle.opacity
-          ]);
-          this._glMap.setPaintProperty(targetLayer.id, 'line-width', [
-            'case',
-            ['==', ['get', key], value],
-            3,  // ハイライト時の線幅
-            originalStyle.width
-          ]);
-          break;
-        case 'symbol':  // テキストやアイコンの場合
-          this._glMap.setPaintProperty(targetLayer.id, 'text-color', [
-            'case',
-            ['==', ['get', key], value],
-            '#ffa500',
-            originalStyle.color
-          ]);
-          this._glMap.setPaintProperty(targetLayer.id, 'text-opacity', [
-            'case',
-            ['==', ['get', key], value],
-            1,
-            originalStyle.opacity
-          ]);
-          break;
-      }
+  
+      // 新しい関数を呼び出してハイライトを設定
+      this._setHighlight(targetLayer, key, value, '#ffa500');
     }
     
     // ポップアップの内容を更新
@@ -54824,7 +54829,7 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       }
     }
   },
-
+  
   // レイヤーの元のスタイルを取得
   _getOriginalStyle: function(layer) {
     const style = {};
