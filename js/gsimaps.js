@@ -54531,10 +54531,10 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
 
     // ポップアップを閉じる
-    if (this._popup) {
-      map.closePopup(this._popup);
-      this._popup = null;
-    }
+      const existingPopup = document.getElementById('custom-popup');
+      if (existingPopup) {
+        existingPopup.remove();
+      }
 
     // 参照を削除
     this._container = null;
@@ -54631,9 +54631,9 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
   },
 
-//----- クリックとポップアップ処理 -----//
+  //----- クリックとポップアップ処理 -----//
 
-// 地図クリック時の処理
+  // 地図クリック時の処理
   _onClick: function (e) {
     if (!this._glMap) return;
 
@@ -54643,25 +54643,24 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       
       // クリックした位置の地物情報を取得
       const features = this._glMap.queryRenderedFeatures(point);
+
+      // 既存のポップアップを削除
+      const existingPopup = document.getElementById('custom-popup');
+      if (existingPopup) {
+        existingPopup.remove();
+      }
       
       // 地物が存在する場合、ポップアップを表示
       if (features.length > 0) {
         const feature = features[0];
         const html = this._createPopupContent(feature.properties);
-        
-        // 既存のポップアップを閉じる
-        if (this._popup) {
-          this._map.closePopup(this._popup);
-        }
 
         // 新しいポップアップを作成して表示
-        this._popup = L.popup({
-          offset: [0, -10],
-          className: 'pmtiles-popup'
-        })
-          .setLatLng(e.latlng)
-          .setContent(html)
-          .openOn(this._map);
+        const popup = document.createElement('div');
+        popup.id = 'custom-popup';
+        popup.className = 'custom-popup';
+        popup.innerHTML = html;
+        document.body.appendChild(popup);
       }
     } catch (error) {
       console.error('Error in click handler:', error);
@@ -54671,25 +54670,31 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
   // ポップアップの内容を作成する処理
   _createPopupContent: function (properties) {
     if (!properties) return 'No properties found';
-
+  
     // ポップアップのHTML要素を作成
     let html = '<div class="maplibregl-popup-content-wrapper">';
+    html += '<div class="popup-header">';
+    html += '<span class="popup-title">クリックした地物</span>';
+    html += '<button class="popup-close-btn" onclick="document.getElementById(\'custom-popup\').remove()">×</button>';
+    html += '</div>';
+    html += '<div class="popup-body">';
     html += '<table class="maplibregl-popup-content-table">';
     
     // プロパティの内容をテーブルで表示
     for (const [key, value] of Object.entries(properties)) {
+      const isHighlighted = this.highlightedProperty === `${key}-${value}`;
       html += `
         <tr>
           <td class="property-key">${key}</td>
           <td class="property-value">${value}</td>
           <td class="property-action">
             <button 
-              class="highlight-btn ${this.highlightedProperty === key + '-' + value ? 'active' : ''}"
+              class="highlight-btn ${isHighlighted ? 'active' : ''}"
               data-key="${key}"
               data-value="${value}"
-              onclick="window.handleHighlight('${key}', '${value}')"
+              onclick="window.handleHighlight('${key}', '${value}', this)"
             >
-              ${this.highlightedProperty === key + '-' + value ? '解除' : '強調'}
+              ${isHighlighted ? '解除' : '強調'}
             </button>
           </td>
         </tr>
@@ -54697,16 +54702,33 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
     html += '</table>';
     html += '</div>';
-
+    html += '</div>';
+  
     // ハイライト機能のイベントハンドラを設定
-    window.handleHighlight = (key, value) => {
+    window.handleHighlight = (key, value, buttonElement) => {
+      // ボタンの状態を切り替え
+      const isHighlighted = buttonElement.classList.contains('active');
+      if (isHighlighted) {
+        buttonElement.classList.remove('active');
+        buttonElement.textContent = '強調';
+      } else {
+        // 他のすべてのボタンをリセット
+        document.querySelectorAll('.highlight-btn').forEach(btn => {
+          btn.classList.remove('active');
+          btn.textContent = '強調';
+        });
+        // クリックされたボタンをアクティブに
+        buttonElement.classList.add('active');
+        buttonElement.textContent = '解除';
+      }
+      
       this._handleHighlight(key, value);
     };
-
+  
     return html;
   },
 
-  //----- ハイライト機能 -----//
+  //----- 同一属性地物のハイライト機能 -----//
 
   // 地物のハイライト表示を処理
   _handleHighlight: function(key, value) {
@@ -54866,9 +54888,60 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
 // スタイルシートの追加
 const style = document.createElement('style');
 style.textContent = `
-.maplibregl-popup-content-wrapper {
-  max-height: 500px;  /* ポップアップの最大高さを設定 */
-  overflow-y: auto;   /* 縦方向のスクロールを有効化 */
+.custom-popup {
+  position: fixed;
+  top: 50px;
+  right: 10px;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f1f1f1;
+  padding: 1px;
+  border-bottom: 1px solid #ccc;
+}
+
+.popup-title {
+  font-weight: bold;
+}
+
+.popup-close-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.popup-body {
+  padding: 10px;
+  max-height: 500px; /* 必要に応じて高さを調整 */
+  overflow-y: auto;
+}
+
+.maplibregl-popup-content-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.maplibregl-popup-content-table td {
+  padding: 2px;
+  border: 1px solid #ccc;
+}
+
+.property-key {
+  font-weight: bold;
+}
+
+.property-action .highlight-btn {
+  cursor: pointer;
 }
 
 .highlight-btn {
@@ -54884,22 +54957,17 @@ style.textContent = `
   background: #ffa500;
 }
 
-.maplibregl-popup-content-table {
-  border-collapse: collapse;
-  border: 1px solid #ccc;
-}
-
-.maplibregl-popup-content-table, .maplibregl-popup-content-table td, .maplibregl-popup-content-table th {
-  border: 1px solid #ccc;
-}
-
 .maplibregl-popup-content-table td,
 .maplibregl-popup-content-table th {
   word-break: break-all;
 }
 
 .maplibregl-popup-content-table td:nth-child(1) {
-  min-width: 60px;
+  width: 100px;
+}
+
+.maplibregl-popup-content-table td:nth-child(2) {
+  width: 150px;
 }
 
 .maplibregl-popup-content-table td:nth-child(3) {
@@ -54911,7 +54979,3 @@ style.textContent = `
 }
 `;
 document.head.appendChild(style);
-
-GSI.pmTileLayer = function (url, options) {
-  return new GSI.PMTileLayer(url, options);
-};
