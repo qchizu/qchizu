@@ -54653,14 +54653,27 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       // 地物が存在する場合、ポップアップを表示
       if (features.length > 0) {
         const feature = features[0];
+        
+        // まず前のハイライトをクリア
+        this._clearHighlight();
+        
+        // ポップアップを作成して表示
         const html = this._createPopupContent(feature.properties);
-
-        // 新しいポップアップを作成して表示
         const popup = document.createElement('div');
         popup.id = 'custom-popup';
         popup.className = 'custom-popup';
         popup.innerHTML = html;
         document.body.appendChild(popup);
+
+        // 自動的に全属性一致のハイライトを有効化
+        this._handleAllPropertiesHighlight(feature.properties);
+        
+        // ヘッダーの強調ボタンをアクティブに設定
+        const headerHighlightBtn = popup.querySelector('.header-highlight-btn');
+        if (headerHighlightBtn) {
+          headerHighlightBtn.classList.add('active');
+          headerHighlightBtn.textContent = '解除';
+        }
       }
     } catch (error) {
       console.error('Error in click handler:', error);
@@ -54671,10 +54684,20 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
   _createPopupContent: function (properties) {
     if (!properties) return 'No properties found';
   
-    // ポップアップのHTML要素を作成
     let html = '<div class="maplibregl-popup-content-wrapper">';
     html += '<div class="popup-header">';
     html += '<span class="popup-title">クリックした地物</span>';
+    
+    // ヘッダーの強調ボタンは初期状態でアクティブになる
+    html += `
+      <button 
+        class="highlight-btn header-highlight-btn"
+        onclick="window.handleAllPropertiesHighlight(this)"
+      >
+        強調
+      </button>
+    `;
+    
     html += '<button class="popup-close-btn" onclick="document.getElementById(\'custom-popup\').remove()">×</button>';
     html += '</div>';
     html += '<div class="popup-body">';
@@ -54703,48 +54726,121 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     html += '</table>';
     html += '</div>';
     html += '</div>';
+
+    // 現在のプロパティを保存
+    this._currentProperties = properties;
   
-    // ハイライト機能のイベントハンドラを設定
+    // 既存のハイライト機能のイベントハンドラ
     window.handleHighlight = (key, value, buttonElement) => {
-      // ボタンの状態を切り替え
       const isHighlighted = buttonElement.classList.contains('active');
       if (isHighlighted) {
         buttonElement.classList.remove('active');
         buttonElement.textContent = '強調';
       } else {
-        // 他のすべてのボタンをリセット
+        // すべてのボタンをリセット
         document.querySelectorAll('.highlight-btn').forEach(btn => {
           btn.classList.remove('active');
           btn.textContent = '強調';
         });
-        // クリックされたボタンをアクティブに
         buttonElement.classList.add('active');
         buttonElement.textContent = '解除';
       }
       
       this._handleHighlight(key, value);
     };
+
+    // 全属性一致のハイライト機能のイベントハンドラ
+    window.handleAllPropertiesHighlight = (buttonElement) => {
+      const isHighlighted = buttonElement.classList.contains('active');
+      if (isHighlighted) {
+        buttonElement.classList.remove('active');
+        buttonElement.textContent = '強調';
+        this._clearHighlight();
+      } else {
+        // すべてのボタンをリセット
+        document.querySelectorAll('.highlight-btn').forEach(btn => {
+          btn.classList.remove('active');
+          btn.textContent = '強調';
+        });
+        buttonElement.classList.add('active');
+        buttonElement.textContent = '解除';
+        this._handleAllPropertiesHighlight(this._currentProperties);
+      }
+    };
   
     return html;
   },
 
+  // 全属性一致のハイライト処理
+  _handleAllPropertiesHighlight: function(properties) {
+    if (!properties) return;
+
+    // 同じプロパティセットが選択された場合はハイライトを解除
+    const propsKey = 'all-props-' + JSON.stringify(properties);
+    if (this.highlightedProperty === propsKey) {
+      this._clearHighlight();
+    } else {
+      // 新しいハイライトを設定
+      this._clearHighlight();
+      this.highlightedProperty = propsKey;
+      
+      // 表示中のレイヤーを取得
+      const layers = this._glMap.getStyle().layers;
+      const targetLayer = layers.find(layer => 
+        layer.layout?.visibility !== 'none' && 
+        (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol')
+      );
+  
+      if (!targetLayer) {
+        console.warn('No suitable layer found');
+        return;
+      }
+  
+      // 元のスタイルを保存
+      this._highlightedLayer = {
+        id: targetLayer.id,
+        type: targetLayer.type,
+        originalStyle: this._getOriginalStyle(targetLayer)
+      };
+  
+      // すべてのプロパティのキーと値を配列に変換
+      const keys = Object.keys(properties);
+      const values = Object.values(properties);
+      
+      // ハイライトを設定
+      this._setHighlight(targetLayer, keys, values, '#ffa500');
+    }
+  },
+
+
   //----- 同一属性地物のハイライト機能 -----//
 
-  // 新しい関数を定義
-  _setHighlight: function(targetLayer, key, value, highlightColor) {
+  // ハイライト表示を設定する関数
+  _setHighlight: function(targetLayer, keys, values, highlightColor) {
     const originalStyle = this._highlightedLayer.originalStyle;
+  
+    // 条件を作成するヘルパー関数
+    const createConditions = (keys, values) => {
+      let conditions = ['all'];
+      for (let i = 0; i < keys.length; i++) {
+        conditions.push(['==', ['get', keys[i]], values[i]]);
+      }
+      return conditions;
+    };
+  
+    const conditions = createConditions(keys, values);
   
     switch (targetLayer.type) {
       case 'fill':  // 塗りつぶしの場合
         this._glMap.setPaintProperty(targetLayer.id, 'fill-color', [
           'case',
-          ['==', ['get', key], value],
+          conditions,
           highlightColor,  // ハイライト色
           originalStyle.color
         ]);
         this._glMap.setPaintProperty(targetLayer.id, 'fill-opacity', [
           'case',
-          ['==', ['get', key], value],
+          conditions,
           0.5,  // ハイライト時の透明度
           originalStyle.opacity
         ]);
@@ -54752,19 +54848,19 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       case 'line':  // 線の場合
         this._glMap.setPaintProperty(targetLayer.id, 'line-color', [
           'case',
-          ['==', ['get', key], value],
+          conditions,
           highlightColor,
           originalStyle.color
         ]);
         this._glMap.setPaintProperty(targetLayer.id, 'line-opacity', [
           'case',
-          ['==', ['get', key], value],
+          conditions,
           0.8,
           originalStyle.opacity
         ]);
         this._glMap.setPaintProperty(targetLayer.id, 'line-width', [
           'case',
-          ['==', ['get', key], value],
+          conditions,
           3,  // ハイライト時の線幅
           originalStyle.width
         ]);
@@ -54772,13 +54868,13 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       case 'symbol':  // テキストやアイコンの場合
         this._glMap.setPaintProperty(targetLayer.id, 'text-color', [
           'case',
-          ['==', ['get', key], value],
+          conditions,
           highlightColor,
           originalStyle.color
         ]);
         this._glMap.setPaintProperty(targetLayer.id, 'text-opacity', [
           'case',
-          ['==', ['get', key], value],
+          conditions,
           1,
           originalStyle.opacity
         ]);
@@ -54786,7 +54882,7 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
   },
   
-  // _handleHighlight 関数の変更
+  // 同一属性のハイライト
   _handleHighlight: function(key, value) {
     // 同じ項目が選択された場合はハイライトを解除
     if (this.highlightedProperty === key + '-' + value) {
@@ -54816,7 +54912,9 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       };
   
       // 新しい関数を呼び出してハイライトを設定
-      this._setHighlight(targetLayer, key, value, '#ffa500');
+      const keys = [key];
+      const values = [value];
+      this._setHighlight(targetLayer, keys, values, '#ffa500');
     }
     
     // ポップアップの内容を更新
@@ -54829,7 +54927,7 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       }
     }
   },
-  
+
   // レイヤーの元のスタイルを取得
   _getOriginalStyle: function(layer) {
     const style = {};
@@ -54981,6 +55079,19 @@ style.textContent = `
 
 .property-action {
   text-align: right;
+}
+
+.header-highlight-btn {
+  margin-right: 10px;
+  padding: 2px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.header-highlight-btn.active {
+  background: #ffa500;
 }
 `;
 document.head.appendChild(style);
