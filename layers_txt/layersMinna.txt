@@ -15,7 +15,7 @@
           "toggleall": false,
           "id": "",
           "src": "https://raw.githubusercontent.com/qchizu/fukuoka-coastline/refs/heads/main/layers/layer1.txt"
-        },
+        },z
         {
           "type": "LayerGroup",
           "title": "20241203マッピングパーティー盛岡",
