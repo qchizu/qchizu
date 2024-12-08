@@ -12,7 +12,7 @@
           "id": "60_moj_chiban_2022_01",
           "title": "2022年2月 登記所備付地図",
           "iconUrl": "",
-          "url": "/layers_json/60_moj_chiban_2022_01.pm.json",
+          "url": "./layers_json/60_moj_chiban_2022_01.pm.json",
           "subdomains": "",
           "attribution": "<a target=\"_blank\"href=\"https://amx-project.github.io/a-spec/\">amx-a</a>(<a target=\"_blank\"href=\"https://www.moj.go.jp/MINJI/minji05_00494.html\">法務省</a>)",
           "errorTileUrl": "",
