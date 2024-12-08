@@ -54450,66 +54450,63 @@ function getFileeData(url, key) {
 // ★追加部分
 // keichan34の以下のコードをベースに追加
 // https://github.com/keichan34/gsimaps/tree/003-pmtiles-support-with-layerstxt
+// （https://github.com/maplibre/maplibre-gl-leaflet?tab=readme-ov-fileを参照して作成されてもの）
 /************************************************************************
  L.MaplibreGL
   - GSI.PMTileLayer
     PMTiles
  ************************************************************************/
+
+//----- 初期化と基本設定 -----//
 // PMTileLayerクラスを定義し、MapLibreGLの機能を拡張する
 GSI.PMTileLayer = L.MaplibreGL.extend({
-  // レイヤーの基本設定を定義
   options: {
-    opacity: 1,    // 透明度を設定（1は完全に不透明）
-    zIndex: 1,     // レイヤーの重なり順を設定（数字が大きいほど上に表示）
+    opacity: 1,
+    zIndex: 1,
+    updateInterval: 32,
+    padding: 0.1,
+    interactive: false,
+    pane: 'overlayPane' // オーバーレイとして扱う
   },
 
   // レイヤーの初期設定を行う関数
   initialize: function (url, options) {
-    // PMTilesプロトコルを設定して、タイル読み込みを可能にする
     let protocol = new pmtiles.Protocol();
     maplibregl.addProtocol("pmtiles", protocol.tile);
     
-    // 地図の表示オプションを設定
     const mapOptions = {
-      ...options,
       style: url,
-      maxzoom: options.maxZoom,  // 最大ズームレベル
-      minzoom: options.minZoom,  // 最小ズームレベル
-      interactive: true,         // マウス操作を有効化
-      scrollZoom: false,        // マウスホイールでのズームを無効化
+      ...(options.maxZoom && { maxzoom: options.maxZoom }),
+      ...(options.minZoom && { minzoom: options.minZoom }),
+      ...options,
     };
     
-    // 親クラスの初期化処理を実行
-    this.maplibreGLLayer = L.MaplibreGL.prototype.initialize.call(this, mapOptions);
-
-    // ズーム制限の値を保存
+    L.MaplibreGL.prototype.initialize.call(this, mapOptions);
+    
     this._maxZoom = options.maxZoom;
     this._minZoom = options.minZoom;
-
-    // ハイライト表示用の設定を初期化
     this.highlightedFeatures = new Set();
     this.highlightedProperty = null;
+
+    // スロットル処理を継承
+    this._throttledUpdate = L.Util.throttle(this._update, this.options.updateInterval, this);
   },
 
   // 地図にレイヤーを追加する処理
   onAdd: function (map) {
-    // 親クラスのレイヤー追加処理を実行
     L.MaplibreGL.prototype.onAdd.call(this, map);
     
-    // レイヤーを適切な位置に配置
-    if (this._container && this._container.parentNode) {
-      this._container.parentNode.removeChild(this._container);
-    }
-    map._panes.overlayPane.appendChild(this._container);
+    this._updateZIndex();
+    this.setGrayscale();
+    this.setOpacity(this.options.opacity);
+    this._map.setMinZoom(this.options.minZoom + 1);
     
-    // レイヤーの表示設定を適用
-    this._updateZIndex();      // 重なり順を設定
-    this.setGrayscale();       // グレースケール設定を適用
-    this.setOpacity(this.options.opacity);  // 透明度を設定
-    this._map.setMinZoom(this.options.minZoom + 1);  // 最小ズームレベルを設定
-
-    // 地図のクリックイベントを設定
     map.on('click', this._onClick, this);
+
+    // ズームアニメーション対応
+    if (map.options.zoomAnimation) {
+      L.DomEvent.on(map._proxy, L.DomUtil.TRANSITION_END, this._transitionEnd, this);
+    }
   },
 
   // 地図からレイヤーを削除する処理
@@ -54534,15 +54531,107 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
 
     // ポップアップを閉じる
-    if (this._popup) {
-      map.closePopup(this._popup);
-      this._popup = null;
-    }
+      const existingPopup = document.getElementById('custom-popup');
+      if (existingPopup) {
+        existingPopup.remove();
+      }
 
     // 参照を削除
     this._container = null;
     this._map = null;
   },
+
+  // 地図のイベントハンドラーを設定
+  getEvents: function () {
+    return {
+      move: this._throttledUpdate,
+      zoomanim: this._animateZoom,
+      zoom: this._pinchZoom,
+      zoomstart: this._zoomStart,
+      zoomend: this._zoomEnd,
+      resize: this._resize
+    };
+  },
+
+  //----- 更新と描画制御 -----//
+
+  // 地図の表示を更新する関数
+  _update: function (e) {
+    if (!this._map) return;
+  
+    const currentZoom = this._map.getZoom();
+    const mapMaxZoom = this._map.getMaxZoom();
+    const effectiveMaxZoom = Math.min(mapMaxZoom, this._maxZoom);
+  
+    if (currentZoom > effectiveMaxZoom || currentZoom < this._minZoom) {
+      if (this._container) this._container.style.display = 'none';
+      return;
+    } else if (this._container) {
+      this._container.style.display = '';
+    }
+  
+    L.MaplibreGL.prototype._update.call(this, e);
+  },
+
+  // 既存の機能を維持しつつ、MaplibreGLの基本実装を使用
+  _transformGL: L.MaplibreGL.prototype._transformGL,
+  _pinchZoom: L.MaplibreGL.prototype._pinchZoom,
+  _animateZoom: L.MaplibreGL.prototype._animateZoom,
+  _zoomStart: L.MaplibreGL.prototype._zoomStart,
+  _zoomEnd: L.MaplibreGL.prototype._zoomEnd,
+  _transitionEnd: L.MaplibreGL.prototype._transitionEnd,
+  _resize: L.MaplibreGL.prototype._resize,
+
+  // 地図を再描画する関数
+  redraw: function () {
+    if (this._glMap) {
+      // 基本スタイルが未設定の場合は保存
+      if (!this._baseStyles) {
+        this._baseStyles = this._glMap.getStyle();
+      }
+      // グレースケールと透明度の設定を適用
+      this.setGrayscale();
+      this.setOpacity(this.options.opacity);
+    }
+  },
+
+  //----- レイヤー管理 -----//
+
+  // レイヤーの重なり順を設定
+  setZIndex: function (zIndex) {
+    this.options.zIndex = zIndex;
+    this._updateZIndex();
+    return this;
+  },
+
+  // 重なり順を実際に適用
+  _updateZIndex: function () {
+    if (this._container && this.options.zIndex !== undefined) {
+      this._container.style.zIndex = this.options.zIndex;
+    }
+  },
+
+  // レイヤーの透明度を設定
+  setOpacity: function (opacity) {
+    if (this._glMap) {
+      var mapContainer = this._glMap.getContainer();
+      mapContainer.style.opacity = opacity;
+    }
+  },
+
+  // 地図のグレースケール表示を切り替える関数
+  setGrayscale: function () {
+    // 地図のコンテナを取得
+    let mapContainer = this._glMap.getContainer();
+    // グレースケールが有効な場合はフィルターを適用、そうでない場合は解除
+    if (this.isGrayScale) {
+      mapContainer.style.filter = 'grayscale(1)';
+    } else {
+      mapContainer.style.filter = '';
+    }
+  },
+
+  //----- クリックとポップアップ処理 -----//
 
   // 地図クリック時の処理
   _onClick: function (e) {
@@ -54552,71 +54641,83 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       // クリックした位置の座標を取得
       const point = this._glMap.project([e.latlng.lng, e.latlng.lat]);
       
-      // デバッグ情報を出力
-      const layers = this._glMap.getStyle().layers;
-      const activeLayer = layers.find(layer => 
-        layer.layout?.visibility !== 'none' && 
-        (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol')
-      );
-      console.log('Current filter:', activeLayer ? this._glMap.getFilter(activeLayer.id) : 'No active layer');
-      
       // クリックした位置の地物情報を取得
       const features = this._glMap.queryRenderedFeatures(point);
+
+      // 既存のポップアップを削除
+      const existingPopup = document.getElementById('custom-popup');
+      if (existingPopup) {
+        existingPopup.remove();
+      }
       
       // 地物が存在する場合、ポップアップを表示
       if (features.length > 0) {
         const feature = features[0];
-        const html = this._createPopupContent(feature.properties);
         
-        // 既存のポップアップを閉じる
-        if (this._popup) {
-          this._map.closePopup(this._popup);
-        }
+        // まず前のハイライトをクリア
+        this._clearHighlight();
+        
+        // ポップアップを作成して表示
+        const html = this._createPopupContent(feature.properties);
+        const popup = document.createElement('div');
+        popup.id = 'custom-popup';
+        popup.className = 'custom-popup';
+        popup.innerHTML = html;
+        document.body.appendChild(popup);
 
-        // 新しいポップアップを作成して表示
-        this._popup = L.popup({
-          offset: [0, -10],
-          className: 'pmtiles-popup'
-        })
-          .setLatLng(e.latlng)
-          .setContent(html)
-          .openOn(this._map);
+        // 自動的に全属性一致のハイライトを有効化
+        this._handleAllPropertiesHighlight(feature.properties);
+        
+        // ヘッダーの強調ボタンをアクティブに設定
+        const headerHighlightBtn = popup.querySelector('.header-highlight-btn');
+        if (headerHighlightBtn) {
+          headerHighlightBtn.classList.add('active');
+          headerHighlightBtn.textContent = '解除';
+        }
       }
     } catch (error) {
       console.error('Error in click handler:', error);
     }
   },
 
-  // ポップアップを閉じる処理
-  _clearPopup: function () {
-    if (this._popup && this._map) {
-      this._map.closePopup(this._popup);
-      this._popup = null;
-    }
-  },
-
   // ポップアップの内容を作成する処理
   _createPopupContent: function (properties) {
     if (!properties) return 'No properties found';
-
-    // ポップアップのHTML要素を作成
+  
     let html = '<div class="maplibregl-popup-content-wrapper">';
+    html += '<div class="popup-header">';
+    html += '<span class="popup-title">クリックした地物</span>';
+    
+    // ヘッダーの強調ボタンは初期状態でアクティブになる
+    html += `
+      <button 
+        class="highlight-btn header-highlight-btn"
+        onclick="window.handleAllPropertiesHighlight(this)"
+      >
+        強調
+      </button>
+    `;
+    
+    html += '<button class="popup-close-btn" onclick="document.getElementById(\'custom-popup\').remove()">×</button>';
+    html += '</div>';
+    html += '<div class="popup-body">';
     html += '<table class="maplibregl-popup-content-table">';
     
     // プロパティの内容をテーブルで表示
     for (const [key, value] of Object.entries(properties)) {
+      const isHighlighted = this.highlightedProperty === `${key}-${value}`;
       html += `
         <tr>
           <td class="property-key">${key}</td>
           <td class="property-value">${value}</td>
           <td class="property-action">
             <button 
-              class="highlight-btn ${this.highlightedProperty === key + '-' + value ? 'active' : ''}"
+              class="highlight-btn ${isHighlighted ? 'active' : ''}"
               data-key="${key}"
               data-value="${value}"
-              onclick="window.handleHighlight('${key}', '${value}')"
+              onclick="window.handleHighlight('${key}', '${value}', this)"
             >
-              ${this.highlightedProperty === key + '-' + value ? '解除' : '強調'}
+              ${isHighlighted ? '解除' : '強調'}
             </button>
           </td>
         </tr>
@@ -54624,16 +54725,164 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
     html += '</table>';
     html += '</div>';
+    html += '</div>';
 
-    // ハイライト機能のイベントハンドラを設定
-    window.handleHighlight = (key, value) => {
+    // 現在のプロパティを保存
+    this._currentProperties = properties;
+  
+    // 既存のハイライト機能のイベントハンドラ
+    window.handleHighlight = (key, value, buttonElement) => {
+      const isHighlighted = buttonElement.classList.contains('active');
+      if (isHighlighted) {
+        buttonElement.classList.remove('active');
+        buttonElement.textContent = '強調';
+      } else {
+        // すべてのボタンをリセット
+        document.querySelectorAll('.highlight-btn').forEach(btn => {
+          btn.classList.remove('active');
+          btn.textContent = '強調';
+        });
+        buttonElement.classList.add('active');
+        buttonElement.textContent = '解除';
+      }
+      
       this._handleHighlight(key, value);
     };
 
+    // 全属性一致のハイライト機能のイベントハンドラ
+    window.handleAllPropertiesHighlight = (buttonElement) => {
+      const isHighlighted = buttonElement.classList.contains('active');
+      if (isHighlighted) {
+        buttonElement.classList.remove('active');
+        buttonElement.textContent = '強調';
+        this._clearHighlight();
+      } else {
+        // すべてのボタンをリセット
+        document.querySelectorAll('.highlight-btn').forEach(btn => {
+          btn.classList.remove('active');
+          btn.textContent = '強調';
+        });
+        buttonElement.classList.add('active');
+        buttonElement.textContent = '解除';
+        this._handleAllPropertiesHighlight(this._currentProperties);
+      }
+    };
+  
     return html;
   },
 
-  // 地物のハイライト表示を処理
+  // 全属性一致のハイライト処理
+  _handleAllPropertiesHighlight: function(properties) {
+    if (!properties) return;
+
+    // 同じプロパティセットが選択された場合はハイライトを解除
+    const propsKey = 'all-props-' + JSON.stringify(properties);
+    if (this.highlightedProperty === propsKey) {
+      this._clearHighlight();
+    } else {
+      // 新しいハイライトを設定
+      this._clearHighlight();
+      this.highlightedProperty = propsKey;
+      
+      // 表示中のレイヤーを取得
+      const layers = this._glMap.getStyle().layers;
+      const targetLayer = layers.find(layer => 
+        layer.layout?.visibility !== 'none' && 
+        (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol')
+      );
+  
+      if (!targetLayer) {
+        console.warn('No suitable layer found');
+        return;
+      }
+  
+      // 元のスタイルを保存
+      this._highlightedLayer = {
+        id: targetLayer.id,
+        type: targetLayer.type,
+        originalStyle: this._getOriginalStyle(targetLayer)
+      };
+  
+      // すべてのプロパティのキーと値を配列に変換
+      const keys = Object.keys(properties);
+      const values = Object.values(properties);
+      
+      // ハイライトを設定
+      this._setHighlight(targetLayer, keys, values, '#ffa500');
+    }
+  },
+
+
+  //----- 同一属性地物のハイライト機能 -----//
+
+  // ハイライト表示を設定する関数
+  _setHighlight: function(targetLayer, keys, values, highlightColor) {
+    const originalStyle = this._highlightedLayer.originalStyle;
+  
+    // 条件を作成するヘルパー関数
+    const createConditions = (keys, values) => {
+      let conditions = ['all'];
+      for (let i = 0; i < keys.length; i++) {
+        conditions.push(['==', ['get', keys[i]], values[i]]);
+      }
+      return conditions;
+    };
+  
+    const conditions = createConditions(keys, values);
+  
+    switch (targetLayer.type) {
+      case 'fill':  // 塗りつぶしの場合
+        this._glMap.setPaintProperty(targetLayer.id, 'fill-color', [
+          'case',
+          conditions,
+          highlightColor,  // ハイライト色
+          originalStyle.color
+        ]);
+        this._glMap.setPaintProperty(targetLayer.id, 'fill-opacity', [
+          'case',
+          conditions,
+          0.5,  // ハイライト時の透明度
+          originalStyle.opacity
+        ]);
+        break;
+      case 'line':  // 線の場合
+        this._glMap.setPaintProperty(targetLayer.id, 'line-color', [
+          'case',
+          conditions,
+          highlightColor,
+          originalStyle.color
+        ]);
+        this._glMap.setPaintProperty(targetLayer.id, 'line-opacity', [
+          'case',
+          conditions,
+          0.8,
+          originalStyle.opacity
+        ]);
+        this._glMap.setPaintProperty(targetLayer.id, 'line-width', [
+          'case',
+          conditions,
+          3,  // ハイライト時の線幅
+          originalStyle.width
+        ]);
+        break;
+      case 'symbol':  // テキストやアイコンの場合
+        this._glMap.setPaintProperty(targetLayer.id, 'text-color', [
+          'case',
+          conditions,
+          highlightColor,
+          originalStyle.color
+        ]);
+        this._glMap.setPaintProperty(targetLayer.id, 'text-opacity', [
+          'case',
+          conditions,
+          1,
+          originalStyle.opacity
+        ]);
+        break;
+    }
+  },
+  
+  // 同一属性のハイライト
   _handleHighlight: function(key, value) {
     // 同じ項目が選択された場合はハイライトを解除
     if (this.highlightedProperty === key + '-' + value) {
@@ -54649,72 +54898,23 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
         layer.layout?.visibility !== 'none' && 
         (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol')
       );
-
+  
       if (!targetLayer) {
         console.warn('No suitable layer found');
         return;
       }
-
+  
       // 元のスタイルを保存
       this._highlightedLayer = {
         id: targetLayer.id,
         type: targetLayer.type,
         originalStyle: this._getOriginalStyle(targetLayer)
       };
-
-      const originalStyle = this._highlightedLayer.originalStyle;
-
-      // レイヤーの種類に応じてハイライト表示を設定
-      switch (targetLayer.type) {
-        case 'fill':  // 塗りつぶしの場合
-          this._glMap.setPaintProperty(targetLayer.id, 'fill-color', [
-            'case',
-            ['==', ['get', key], value],
-            '#ffa500',  // ハイライト色（オレンジ）
-            originalStyle.color
-          ]);
-          this._glMap.setPaintProperty(targetLayer.id, 'fill-opacity', [
-            'case',
-            ['==', ['get', key], value],
-            0.5,  // ハイライト時の透明度
-            originalStyle.opacity
-          ]);
-          break;
-        case 'line':  // 線の場合
-          this._glMap.setPaintProperty(targetLayer.id, 'line-color', [
-            'case',
-            ['==', ['get', key], value],
-            '#ffa500',
-            originalStyle.color
-          ]);
-          this._glMap.setPaintProperty(targetLayer.id, 'line-opacity', [
-            'case',
-            ['==', ['get', key], value],
-            0.8,
-            originalStyle.opacity
-          ]);
-          this._glMap.setPaintProperty(targetLayer.id, 'line-width', [
-            'case',
-            ['==', ['get', key], value],
-            3,  // ハイライト時の線幅
-            originalStyle.width
-          ]);
-          break;
-        case 'symbol':  // テキストやアイコンの場合
-          this._glMap.setPaintProperty(targetLayer.id, 'text-color', [
-            'case',
-            ['==', ['get', key], value],
-            '#ffa500',
-            originalStyle.color
-          ]);
-          this._glMap.setPaintProperty(targetLayer.id, 'text-opacity', [
-            'case',
-            ['==', ['get', key], value],
-            1,
-            originalStyle.opacity
-          ]);
-          break;
-      }
+  
+      // 新しい関数を呼び出してハイライトを設定
+      const keys = [key];
+      const values = [value];
+      this._setHighlight(targetLayer, keys, values, '#ffa500');
     }
     
     // ポップアップの内容を更新
@@ -54786,155 +54986,65 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       console.log('No highlight to clear');
     }
   },
-
-  // レイヤーの重なり順を設定
-  setZIndex: function (zIndex) {
-    this.options.zIndex = zIndex;
-    this._updateZIndex();
-    return this;
-  },
-
-  // 重なり順を実際に適用
-  _updateZIndex: function () {
-    if (this._container && this.options.zIndex !== undefined) {
-      this._container.style.zIndex = this.options.zIndex;
-    }
-  },
-
-  // レイヤーの透明度を設定
-  setOpacity: function (opacity) {
-    if (this._glMap) {
-      var mapContainer = this._glMap.getContainer();
-      mapContainer.style.opacity = opacity;
-    }
-  },
-
-  // 地図のイベントハンドラーを設定
-  getEvents: function () {
-    return {
-      move: this._fastupdate,      // 地図移動時
-      zoomanim: this._animateZoom, // ズームアニメーション時
-      zoom: this._pinchZoom,       // ピンチズーム時
-      zoomstart: this._zoomStart,  // ズーム開始時
-      zoomend: this._zoomEnd,      // ズーム終了時
-      resize: this._resize         // リサイズ時
-    };
-  },
-
-  // 地図の表示を素早く更新する関数
-  _fastupdate: function (e) {
-    // 現在の地図のズームレベルを取得
-    const currentZoom = this._map.getZoom();
-    // 地図で表示可能な最大ズームレベルを取得
-    const mapMaxZoom = this._map.getMaxZoom();
-    // 実際に使用する最大ズームレベルを設定（地図の制限と設定値の小さい方を使用）
-    const effectiveMaxZoom = Math.min(mapMaxZoom, this._maxZoom);
-
-    // ズームレベルが表示可能範囲外の場合は地図を非表示にする
-    if (currentZoom > effectiveMaxZoom || currentZoom < this._minZoom) {
-      if (this._container) {
-        this._container.style.display = 'none';
-      }
-      return;
-    } else if (this._container) {
-      this._container.style.display = '';
-    }
-
-    // 地図の表示位置のずれを計算
-    this._offset = this._map.containerPointToLayerPoint([0, 0]);
-    
-    // ズーム中は更新を行わない
-    if (this._zooming) { return; }
-    
-    // 地図の表示に必要な値を計算
-    var size = this.getSize(),
-    container = this._container,
-    gl = this._glMap,
-    offset = this._map.getSize().multiplyBy(this.options.padding),
-    topLeft = this._map.containerPointToLayerPoint([0, 0]).subtract(offset);
-
-    // WebGL地図の表示を更新
-    this._transformGL(gl);
-    // 地図コンテナの位置を設定
-    L.DomUtil.setPosition(container, this._roundPoint(topLeft));
-
-    // アニメーションフレームで地図の更新を行う
-    L.Util.requestAnimFrame(function () {
-      // 現在のズームレベルを再確認
-      const zoom = this._map.getZoom();
-      const mapMaxZoom = this._map.getMaxZoom();
-      const effectiveMaxZoom = Math.min(mapMaxZoom, this._maxZoom);
-      
-      // ズームレベルが範囲外なら更新しない
-      if (zoom > effectiveMaxZoom || zoom < this._minZoom) {
-        return;
-      }
-
-      // 地図のサイズが変更されている場合は再設定
-      if (gl.transform.width !== size.x || gl.transform.height !== size.y) {
-        container.style.width  = size.x + 'px';
-        container.style.height = size.y + 'px';
-        // 地図のリサイズ処理を実行
-        if (gl._resize !== null && gl._resize !== undefined) {
-          gl._resize();
-        } else {
-          gl.resize();
-        }
-      } else {
-        // サイズ変更がない場合は通常の更新のみ
-        if (gl._update !== null && gl._update !== undefined) {
-          gl._update();
-        } else {
-          gl.update();
-        }
-      }
-    }, this);
-  },
-
-  // 地図の中心座標を設定する関数
-  _setView: function (coordinate) {
-    // 経度と緯度を指定して地図の中心を設定
-    this._glMap.setCenter([coordinate.lng, coordinate.lat]);
-  },
-
-  // 地図の表示を初期状態に戻す関数
-  _resetView: function () {
-    // 現在の地図の中心位置に表示をリセット
-    this._setView(this._map.getCenter());
-  },
-
-  // 地図のグレースケール表示を切り替える関数
-  setGrayscale: function () {
-    // 地図のコンテナを取得
-    let mapContainer = this._glMap.getContainer();
-    // グレースケールが有効な場合はフィルターを適用、そうでない場合は解除
-    if (this.isGrayScale) {
-      mapContainer.style.filter = 'grayscale(1)';
-    } else {
-      mapContainer.style.filter = '';
-    }
-  },
-
-  // 地図を再描画する関数
-  redraw: function () {
-    if (this._glMap) {
-      // 基本スタイルが未設定の場合は保存
-      if (!this._baseStyles) {
-        this._baseStyles = this._glMap.getStyle();
-      }
-      // グレースケールと透明度の設定を適用
-      this.setGrayscale();
-      this.setOpacity(this.options.opacity);
-    }
-  }
 });
 
 // スタイルシートの追加
 const style = document.createElement('style');
 style.textContent = `
-.maplibregl-popup-content-wrapper {
-  max-height: 500px;  /* ポップアップの最大高さを設定 */
-  overflow-y: auto;   /* 縦方向のスクロールを有効化 */
+.custom-popup {
+  position: fixed;
+  top: 50px;
+  right: 10px;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f1f1f1;
+  padding: 1px;
+  border-bottom: 1px solid #ccc;
+}
+
+.popup-title {
+  font-weight: bold;
+}
+
+.popup-close-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.popup-body {
+  padding: 10px;
+  max-height: 500px; /* 必要に応じて高さを調整 */
+  overflow-y: auto;
+}
+
+.maplibregl-popup-content-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.maplibregl-popup-content-table td {
+  padding: 2px;
+  border: 1px solid #ccc;
+}
+
+.property-key {
+  font-weight: bold;
+}
+
+.property-action .highlight-btn {
+  cursor: pointer;
 }
 
 .highlight-btn {
@@ -54950,22 +55060,17 @@ style.textContent = `
   background: #ffa500;
 }
 
-.maplibregl-popup-content-table {
-  border-collapse: collapse;
-  border: 1px solid #ccc;
-}
-
-.maplibregl-popup-content-table, .maplibregl-popup-content-table td, .maplibregl-popup-content-table th {
-  border: 1px solid #ccc;
-}
-
 .maplibregl-popup-content-table td,
 .maplibregl-popup-content-table th {
   word-break: break-all;
 }
 
 .maplibregl-popup-content-table td:nth-child(1) {
-  min-width: 60px;
+  width: 100px;
+}
+
+.maplibregl-popup-content-table td:nth-child(2) {
+  width: 150px;
 }
 
 .maplibregl-popup-content-table td:nth-child(3) {
@@ -54975,9 +55080,18 @@ style.textContent = `
 .property-action {
   text-align: right;
 }
+
+.header-highlight-btn {
+  margin-right: 10px;
+  padding: 2px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.header-highlight-btn.active {
+  background: #ffa500;
+}
 `;
 document.head.appendChild(style);
-
-GSI.pmTileLayer = function (url, options) {
-  return new GSI.PMTileLayer(url, options);
-};
