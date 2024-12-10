@@ -30,7 +30,7 @@
           "iconUrl": "",
           "toggleall": false,
           "id": "",
-          "src": "https://raw.githubusercontent.com/xbridge-dev/ameniwa/1a30130f6400a38bce675afaa5a9d37e3516324f/layers/layer1.txt"
+          "src": "https://raw.githubusercontent.com/xbridge-dev/ameniwa/refs/heads/main/layers/layer1.txt"
         }
       ]
     }

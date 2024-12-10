@@ -22,6 +22,22 @@
           "maxNativeZoom": 16,
           "legendUrl": "",
           "html": ""
+        },
+                {
+          "type": "Layer",
+          "id": "kokuyurinya",
+          "title": "国有林野",
+          "iconUrl": "",
+          "url": "./layers_json/kokuyurinya.pm.json",
+          "subdomains": "",
+          "attribution": "<a target=\"_blank\"href=\"https://amx-project.github.io/a-spec/\">amx-a</a>(<a target=\"_blank\"href=\"https://www.moj.go.jp/MINJI/minji05_00494.html\">法務省</a>)",
+          "errorTileUrl": "",
+          "cocotile": false,
+          "minZoom": 2,
+          "maxZoom": 20,
+          "maxNativeZoom": 16,
+          "legendUrl": "",
+          "html": ""
         }
       ]
     },
