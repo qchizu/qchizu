@@ -54473,16 +54473,16 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
   initialize: function (url, options) {
     let protocol = new pmtiles.Protocol();
     maplibregl.addProtocol("pmtiles", protocol.tile);
-    
+
     const mapOptions = {
       style: url,
       ...(options.maxZoom && { maxzoom: options.maxZoom }),
       ...(options.minZoom && { minzoom: options.minZoom }),
       ...options,
     };
-    
+
     L.MaplibreGL.prototype.initialize.call(this, mapOptions);
-    
+
     this._maxZoom = options.maxZoom;
     this._minZoom = options.minZoom;
     this.highlightedFeatures = new Set();
@@ -54495,12 +54495,17 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
   // 地図にレイヤーを追加する処理
   onAdd: function (map) {
     L.MaplibreGL.prototype.onAdd.call(this, map);
-    
-    this._updateZIndex();
+
+    console.log(map.getPane(this.options.pane));
+
+    this._setAutoZIndex(map.getPane(this.options.pane), Math.max);
+
+    console.log("setAutoZIndex終了");
+
     this.setGrayscale();
     this.setOpacity(this.options.opacity);
     this._map.setMinZoom(this.options.minZoom + 1);
-    
+
     map.on('click', this._onClick, this);
 
     // ズームアニメーション対応
@@ -54597,19 +54602,19 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
 
   //----- レイヤー管理 -----//
 
-  // レイヤーの重なり順を設定
-  setZIndex: function (zIndex) {
+  // レイヤーの重なり順を設定　いる？
+/*   setZIndex: function (zIndex) {
     this.options.zIndex = zIndex;
     this._updateZIndex();
     return this;
   },
 
-  // 重なり順を実際に適用
+  // 重なり順を実際に適用　いる？
   _updateZIndex: function () {
     if (this._container && this.options.zIndex !== undefined) {
       this._container.style.zIndex = this.options.zIndex;
     }
-  },
+  }, */
 
   // レイヤーの透明度を設定
   setOpacity: function (opacity) {
@@ -54617,6 +54622,31 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       var mapContainer = this._glMap.getContainer();
       mapContainer.style.opacity = opacity;
     }
+  },
+
+  _setAutoZIndex: function (pane, compare) {
+
+    var layers = pane.children,
+      edgeZIndex = -compare(Infinity, -Infinity), // -Infinity for max, Infinity for min
+      zIndex, i, len;
+
+    for (i = 0, len = layers.length; i < len; i++) {
+
+      if (layers[i] !== this._container) {
+        zIndex = parseInt(layers[i].style.zIndex, 10);
+
+        if (!isNaN(zIndex)) {
+          edgeZIndex = compare(edgeZIndex, zIndex);
+        }
+      }
+    }
+
+    this.options.zIndex = this._container.style.zIndex =
+      (isFinite(edgeZIndex) ? edgeZIndex : 0) + compare(1, -1);
+    
+    console.log('edgeZIndex:', edgeZIndex);
+    console.log('this.options.zIndex:', this.options.zIndex);
+    console.log('this._container.style.zIndex:', this._container.style.zIndex);
   },
 
   // 地図のグレースケール表示を切り替える関数

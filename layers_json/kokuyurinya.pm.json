@@ -1,0 +1,138 @@
+{
+  "version": 8,
+  "name": "pmtiles-test1",
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "sources": {
+    "kokuyurinya": {
+      "type": "vector",
+      "url": "pmtiles://https://mapdata.qchizu.xyz/test/kokuyurinya.pmtiles",
+      "attribution": ""
+    }
+  },
+  "layers": [
+    {
+      "id": "bereau",
+      "source": "kokuyurinya",
+      "source-layer": "bereau",
+      "type": "fill",
+      "paint": {
+        "fill-color": "rgb(128, 0, 128, 0.3)",
+        "fill-opacity": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 2,
+      "maxzoom": 6
+    },
+    {
+      "id": "bereau-line",
+      "source": "kokuyurinya",
+      "source-layer": "bereau",
+      "type": "line",
+      "paint": {
+        "line-color": "rgb(128, 0, 128)",
+        "line-opacity": 0.5,
+        "line-width": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 2,
+      "maxzoom": 6
+    },
+    {
+      "id": "office",
+      "source": "kokuyurinya",
+      "source-layer": "office",
+      "type": "fill",
+      "paint": {
+        "fill-color": "rgb(128, 0, 128, 0.3)",
+        "fill-opacity": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 6,
+      "maxzoom": 9
+    },
+    {
+      "id": "office-line",
+      "source": "kokuyurinya",
+      "source-layer": "office",
+      "type": "line",
+      "paint": {
+        "line-color": "rgb(128, 0, 128)",
+        "line-opacity": 0.5,
+        "line-width": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 6,
+      "maxzoom": 9
+    },
+    {
+      "id": "city",
+      "source": "kokuyurinya",
+      "source-layer": "city",
+      "type": "fill",
+      "paint": {
+        "fill-color": "rgb(128, 0, 128, 0.3)",
+        "fill-opacity": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 9,
+      "maxzoom": 14
+    },
+    {
+      "id": "city-line",
+      "source": "kokuyurinya",
+      "source-layer": "city",
+      "type": "line",
+      "paint": {
+        "line-color": "rgb(128, 0, 128)",
+        "line-opacity": 0.5,
+        "line-width": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 9,
+      "maxzoom": 14
+    },
+    {
+      "id": "detail",
+      "source": "kokuyurinya",
+      "source-layer": "detail",
+      "type": "fill",
+      "paint": {
+        "fill-color": "rgb(128, 0, 128, 0.3)",
+        "fill-opacity": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 14,
+      "maxzoom": 20
+    },
+    {
+      "id": "detail-line",
+      "source": "kokuyurinya",
+      "source-layer": "detail",
+      "type": "line",
+      "paint": {
+        "line-color": "rgb(128, 0, 128)",
+        "line-opacity": 0.5,
+        "line-width": 1
+      },
+      "layout": {
+        "visibility": "visible"
+      },
+      "minzoom": 14,
+      "maxzoom": 20
+    }
+  ]
+}

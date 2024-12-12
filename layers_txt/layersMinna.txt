@@ -23,6 +23,14 @@
           "toggleall": false,
           "id": "",
           "src": "https://raw.githubusercontent.com/qchizu/20241203mapping-party/refs/heads/main/layers/layer1.txt"
+        },
+        {
+          "type": "LayerGroup",
+          "title": "雨庭パートナーズ",
+          "iconUrl": "",
+          "toggleall": false,
+          "id": "",
+          "src": "https://raw.githubusercontent.com/xbridge-dev/ameniwa/refs/heads/main/layers/layer1.txt"
         }
       ]
     }
