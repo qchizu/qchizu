@@ -2,7 +2,7 @@
   "layers": [
     {
       "type": "LayerGroup",
-      "title": "みんなのQ地図",
+      "title": "10.みんなのQ地図",
       "iconUrl": "../image/layers_txt/folder-q.png",
       "toggleall": false,
       "html" : "<div class='layer_text'>全国Q地図では、皆様に地図を使った情報発信の場を提供しています。あなたが作成した地図をQ地図に掲載して、多くの方に発信しませんか？<a target=\"_blank\" href=\"https://info.qchizu.xyz/Minna\">詳細</a></div>",
@@ -30,7 +30,7 @@
           "iconUrl": "",
           "toggleall": false,
           "id": "",
-          "src": "https://raw.githubusercontent.com/xbridge-dev/ameniwa/1a30130f6400a38bce675afaa5a9d37e3516324f/layers/layer1.txt"
+          "src": "https://raw.githubusercontent.com/xbridge-dev/ameniwa/refs/heads/main/layers/layer1.txt"
         }
       ]
     }

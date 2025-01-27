@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "name": "pmtiles-test1",
+  "name": "60_moj_chiban_2022_01",
   "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   "sources": {
     "amx-a": {
@@ -69,7 +69,7 @@
       "maxzoom": 20
     },
     {
-      "id": "amx-a-ooaza",
+      "id": "amx-a-chiban",
       "source": "amx-a",
       "source-layer": "fude",
       "type": "symbol",
