@@ -8991,6 +8991,8 @@ GSI.Utils.infoToLayer = function (info, noFinishMove) {
 
     if ((info.minZoom == 0 || info.minZoom) && info.minZoom != "") options.minZoom = info.minZoom;
     if ((info.maxZoom == 0 || info.maxZoom) && info.maxZoom != "") options.maxZoom = info.maxZoom;
+    if (info.id && info.id != "") options.id = info.id; // IDを取得
+    console.log("info.id:" + info.id);
     if (info.attribution) options.attribution = info.attribution;
     if (info.bounds && info.bounds != "") options.bounds = info.bounds;
 
@@ -28596,7 +28598,7 @@ _createLinkContainer: function (parentContainer) {
     let pref = muniArray[1];
     let city = muniArray[3];
     let prefCode = muniArray[0].padStart(2, '0') + '000'; // 先頭に0を補完して5桁にする
-    let cityCode = muniArray[2];
+    let cityCode = muniArray[2].padStart(5, '0'); // 先頭に0を補完して5桁にする
   
 /*     console.log('Normalized codes:', { 
       pref, city, 
@@ -54462,11 +54464,18 @@ function getFileeData(url, key) {
 GSI.PMTileLayer = L.MaplibreGL.extend({
   options: {
     opacity: 1,
-    zIndex: 1,
     updateInterval: 32,
     padding: 0.1,
     interactive: false,
-    pane: 'overlayPane' // オーバーレイとして扱う
+  },
+
+  // レイヤーのzIndexを管理するための静的プロパティ
+  statics: {
+    currentMaxZIndex: 400, // 初期値
+    getNextZIndex: function() {
+      this.currentMaxZIndex += 1;
+      return this.currentMaxZIndex;
+    }
   },
 
   // レイヤーの初期設定を行う関数
@@ -54485,6 +54494,13 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
 
     this._maxZoom = options.maxZoom;
     this._minZoom = options.minZoom;
+    this._id = options.id;
+    console.log("id", this._id);
+
+    // zIndexを自動的に割り当て
+    this._zIndex = GSI.PMTileLayer.getNextZIndex();
+    console.log("Layer created with zIndex:", this._zIndex);
+
     this.highlightedFeatures = new Set();
     this.highlightedProperty = null;
 
@@ -54494,14 +54510,8 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
 
   // 地図にレイヤーを追加する処理
   onAdd: function (map) {
+    this._createCustomPane(map); // CustomPaneを作成
     L.MaplibreGL.prototype.onAdd.call(this, map);
-
-    console.log(map.getPane(this.options.pane));
-
-    this._setAutoZIndex(map.getPane(this.options.pane), Math.max);
-
-    console.log("setAutoZIndex終了");
-
     this.setGrayscale();
     this.setOpacity(this.options.opacity);
     this._map.setMinZoom(this.options.minZoom + 1);
@@ -54514,12 +54524,65 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
   },
 
+  _createCustomPane: function (map) {
+    const paneName = `pmtiles-pane-${this._id}`;
+    
+    // 常に新しいpaneを作成
+    if (map.getPane(paneName)) {
+      map.getPane(paneName).remove();
+    }
+    map.createPane(paneName);
+    const pane = map.getPane(paneName);
+    
+    pane.style.zIndex = this._zIndex;
+    this.options.zIndex = this._zIndex;
+    console.log("zIndex", this.options.zIndex);
+    
+    // コンテナが存在する場合は新しいpaneに追加
+    if (this._container) {
+      // 既存の親要素から削除してから追加
+      if (this._container.parentNode) {
+        this._container.parentNode.removeChild(this._container);
+      }
+      pane.appendChild(this._container);
+    }
+    
+    this.options.pane = paneName;
+  },
+
+/*   setZIndex: function (zIndex) {
+    this.options.zIndex = zIndex;
+    this._updateZIndex();
+    return this;
+  }, */
+
+  _updateZIndex: function () {
+    if (this._map && this.options.pane) {
+      const pane = this._map.getPane(this.options.pane);
+      if (pane && this.options.zIndex !== undefined) {
+        pane.style.zIndex = this.options.zIndex;
+      }
+    }
+  },
+
   // 地図からレイヤーを削除する処理
   onRemove: function (map) {
     // ハイライト表示をクリア
     this._clearHighlight();
     // クリックイベントを解除
     map.off('click', this._onClick, this);
+
+    if (this._container && this._map.getPane(this.options.pane)) {
+        const pane = this._map.getPane(this.options.pane);
+        if (pane.contains(this._container)) {
+            pane.removeChild(this._container);
+        }
+    }
+    
+    // カスタムペインを削除
+    if (this._map.getPane(this.options.pane)) {
+      this._map.getPane(this.options.pane).remove();
+    }
     
     // レイヤーのコンテナを削除
     if (this._container && this._container.parentNode === map._panes.overlayPane) {
@@ -54536,10 +54599,10 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
 
     // ポップアップを閉じる
-      const existingPopup = document.getElementById('custom-popup');
-      if (existingPopup) {
-        existingPopup.remove();
-      }
+    const existingPopup = document.getElementById('custom-popup');
+    if (existingPopup) {
+      existingPopup.remove();
+    }
 
     // 参照を削除
     this._container = null;
@@ -54572,7 +54635,8 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       if (this._container) this._container.style.display = 'none';
       return;
     } else if (this._container) {
-      this._container.style.display = '';
+      this._container.style.visibility = 'visible';
+      this._updateZIndex();
     }
   
     L.MaplibreGL.prototype._update.call(this, e);
@@ -54602,20 +54666,6 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
 
   //----- レイヤー管理 -----//
 
-  // レイヤーの重なり順を設定　いる？
-/*   setZIndex: function (zIndex) {
-    this.options.zIndex = zIndex;
-    this._updateZIndex();
-    return this;
-  },
-
-  // 重なり順を実際に適用　いる？
-  _updateZIndex: function () {
-    if (this._container && this.options.zIndex !== undefined) {
-      this._container.style.zIndex = this.options.zIndex;
-    }
-  }, */
-
   // レイヤーの透明度を設定
   setOpacity: function (opacity) {
     if (this._glMap) {
@@ -54624,7 +54674,7 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     }
   },
 
-  _setAutoZIndex: function (pane, compare) {
+/*   _setAutoZIndex: function (pane, compare) {
 
     var layers = pane.children,
       edgeZIndex = -compare(Infinity, -Infinity), // -Infinity for max, Infinity for min
@@ -54647,7 +54697,7 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     console.log('edgeZIndex:', edgeZIndex);
     console.log('this.options.zIndex:', this.options.zIndex);
     console.log('this._container.style.zIndex:', this._container.style.zIndex);
-  },
+  }, */
 
   // 地図のグレースケール表示を切り替える関数
   setGrayscale: function () {
@@ -54668,27 +54718,52 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
     if (!this._glMap) return;
 
     try {
-      // クリックした位置の座標を取得
       const point = this._glMap.project([e.latlng.lng, e.latlng.lat]);
       
-      // クリックした位置の地物情報を取得
-      const features = this._glMap.queryRenderedFeatures(point);
+      // 地図上の全PMTileLayerを取得し、zIndexでソート
+      const allPMTileLayers = [];
+      this._map.eachLayer(layer => {
+        if (layer instanceof GSI.PMTileLayer) {
+          allPMTileLayers.push({
+            layer: layer,
+            zIndex: layer._zIndex
+          });
+        }
+      });
+      
+      // zIndexの降順（上のレイヤーから）でソート
+      allPMTileLayers.sort((a, b) => b.zIndex - a.zIndex);
+
+      // 上位レイヤーから順に地物を探索
+      let topFeature = null;
+      let topLayer = null;
+
+      for (const {layer} of allPMTileLayers) {
+        if (layer._glMap) {
+          const features = layer._glMap.queryRenderedFeatures(point);
+          if (features.length > 0) {
+            topFeature = features[0];
+            topLayer = layer;
+            break; // 最上位の地物が見つかったら探索終了
+          }
+        }
+      }
 
       // 既存のポップアップを削除
       const existingPopup = document.getElementById('custom-popup');
       if (existingPopup) {
         existingPopup.remove();
       }
+
+      // 全レイヤーのハイライトをクリア
+      allPMTileLayers.forEach(({layer}) => {
+        layer._clearHighlight();
+      });
       
-      // 地物が存在する場合、ポップアップを表示
-      if (features.length > 0) {
-        const feature = features[0];
-        
-        // まず前のハイライトをクリア
-        this._clearHighlight();
-        
+      // 最上位の地物が存在する場合、ポップアップを表示
+      if (topFeature && topLayer) {
         // ポップアップを作成して表示
-        const html = this._createPopupContent(feature.properties);
+        const html = topLayer._createPopupContent(topFeature.properties);
         const popup = document.createElement('div');
         popup.id = 'custom-popup';
         popup.className = 'custom-popup';
@@ -54696,7 +54771,7 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
         document.body.appendChild(popup);
 
         // 自動的に全属性一致のハイライトを有効化
-        this._handleAllPropertiesHighlight(feature.properties);
+        topLayer._handleAllPropertiesHighlight(topFeature.properties);
         
         // ヘッダーの強調ボタンをアクティブに設定
         const headerHighlightBtn = popup.querySelector('.header-highlight-btn');
@@ -54709,7 +54784,7 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       console.error('Error in click handler:', error);
     }
   },
-
+  
   // ポップアップの内容を作成する処理
   _createPopupContent: function (properties) {
     if (!properties) return 'No properties found';
@@ -54814,25 +54889,30 @@ GSI.PMTileLayer = L.MaplibreGL.extend({
       this._clearHighlight();
       this.highlightedProperty = propsKey;
       
+      // 現在のズームレベルを取得
+      const zoomLevel = this._glMap.getZoom();
+      
       // 表示中のレイヤーを取得
       const layers = this._glMap.getStyle().layers;
       const targetLayer = layers.find(layer => 
         layer.layout?.visibility !== 'none' && 
-        (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol')
+        (layer.type === 'fill' || layer.type === 'line' || layer.type === 'symbol') &&
+        layer.minzoom <= zoomLevel && 
+        layer.maxzoom >= zoomLevel
       );
-  
+    
       if (!targetLayer) {
         console.warn('No suitable layer found');
         return;
       }
-  
+    
       // 元のスタイルを保存
       this._highlightedLayer = {
         id: targetLayer.id,
         type: targetLayer.type,
         originalStyle: this._getOriginalStyle(targetLayer)
       };
-  
+    
       // すべてのプロパティのキーと値を配列に変換
       const keys = Object.keys(properties);
       const values = Object.values(properties);
